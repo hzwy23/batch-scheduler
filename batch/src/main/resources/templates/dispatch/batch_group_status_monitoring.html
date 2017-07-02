@@ -1,0 +1,131 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 16px;">批次运行历史 <i class="icon-caret-left"></i> 任务组运行历史</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-history-batch-desc" th:text="${batchDesc}"></span></span>
+        <span id="h-dispatch-batch-history-uuid" style="display: none;" th:text="${uuid}"></span>
+    </div>
+</div>
+<div class="row" id="h-dispatch-batch-group-monitoring-content" style="padding-top: 6px;overflow-y: auto;"></div>
+<script type="text/javascript">
+    var BatchGroupHistoryObj = {
+        getJobHistory:function (gid,group_desc) {
+            var uuid = $("#h-dispatch-batch-history-uuid").html();
+            var batch_desc = $("#h-dispatch-batch-group-history-batch-desc").html();
+            Hutils.openTab({
+                url:"/v1/dispatch/batch/job/monitoring/page",
+                id:"hzwy23##jobhistory",
+                title:group_desc+" 任务运行历史",
+                data:{gid:gid,uuid:uuid,batch_desc:batch_desc,group_desc:group_desc}
+            })
+        },
+        init:function (uuid) {
+            $("#h-dispatch-batch-group-monitoring-content").html("");
+            $.getJSON("/v1/dispatch/batch/group/history",{uuid:uuid},function (data) {
+                $(data).each(function (index, element) {
+                    var pdiv = document.createElement("div");
+                    pdiv.className = "col-sm-6 col-md-3";
+
+                    var pdiv2 = document.createElement("div");
+                    pdiv2.className = "thumbnail";
+
+                    var chartdiv = document.createElement("div");
+                    chartdiv.className = "col-sm-12";
+                    chartdiv.style.height = "230px";
+
+                    var pdiv3 = document.createElement("div");
+                    pdiv3.className = "caption";
+
+
+                    var ph3 = document.createElement("h4");
+                    ph3.innerHTML = element.statusDesc;
+
+                    var pp = document.createElement("div");
+                    var pplavel = document.createElement("label");
+                    pplavel.innerHTML = "开始时间:&nbsp;";
+                    var ppvalue = document.createElement("span");
+                    ppvalue.innerHTML = element.startTime;
+                    pp.appendChild(pplavel);
+                    pp.appendChild(ppvalue);
+
+                    var pval = document.createElement("div");
+                    var pvallavel = document.createElement("label");
+                    pvallavel.innerHTML = "结束时间:&nbsp;";
+                    var pvalvalue = document.createElement("span");
+                    pvalvalue.innerHTML = element.endTime;
+                    pval.appendChild(pvallavel);
+                    pval.appendChild(pvalvalue);
+
+                    var pbtn = document.createElement("button");
+                    pbtn.className = "btn btn-info";
+                    pbtn.setAttribute("role","button");
+                    pbtn.innerHTML = "任务详情";
+                    pbtn.setAttribute("onclick","BatchGroupHistoryObj.getJobHistory('"+element.gid+"','"+element.groupDesc+"')");
+
+                    var pbatchDesc = document.createElement("h3");
+                    pbatchDesc.innerHTML = element.groupDesc;
+
+
+                    var pgid = document.createElement("div");
+                    var pgidlabel = document.createElement("label");
+                    pgidlabel.innerHTML = "id:&nbsp;";
+                    var pgidvalue = document.createElement("span");
+                    pgidvalue.innerHTML = element.gid;
+                    pgid.appendChild(pgidlabel);
+                    pgid.appendChild(pgidvalue);
+
+                    pdiv3.appendChild(pgid);
+                    pdiv3.appendChild(pp);
+                    pdiv3.appendChild(pval);
+                    pdiv3.appendChild(pbtn);
+
+                    pdiv2.appendChild(ph3);
+                    pdiv2.appendChild(chartdiv);
+                    pdiv2.appendChild(pbatchDesc);
+                    pdiv2.appendChild(pdiv3);
+
+                    pdiv.appendChild(pdiv2);
+
+                    document.getElementById("h-dispatch-batch-group-monitoring-content").appendChild(pdiv);
+                    /*<![CDATA[*/
+                    var myChart = echarts.init(chartdiv);
+                    var radio = 0;
+                    if (element.status != "0") {
+                        if (element.totalJobsCnt == 0){
+                            radio = 100;
+                        } else {
+                            radio = (element.completeJobsCnt / element.totalJobsCnt * 100).toFixed(0);
+                        }
+                    }
+                    /*]]>*/
+                    myChart.setOption(option = {
+                        tooltip : {
+                            formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        series: [
+                            {
+                                name: '任务组中job完成比例',
+                                type: 'gauge',
+                                detail: {formatter:'{value}%'},
+                                data: [{value: radio, name: '完成率'}]
+                            }
+                        ]
+                    });
+                })
+            })
+        },
+    };
+
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-batch-group-monitoring-content").height(hwindow - 139);
+        var uuid = $("#h-dispatch-batch-history-uuid").html();
+        BatchGroupHistoryObj.init(uuid);
+    });
+</script>
+</html>

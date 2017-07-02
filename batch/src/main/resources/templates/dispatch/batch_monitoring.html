@@ -1,0 +1,253 @@
+<script src="/js/echarts-liquidfill.min.js" type="text/javascript"></script>
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 16px;">批次监控</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;所属域：</span>
+        <select id="h-dispatch-batch-monitoring-domain-list" class="form-control pull-left"
+                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
+        </select>
+    </div>
+</div>
+<div class="row" id="h-dispatch-batch-monitoring-content" style="padding-top: 6px;"></div>
+<script type="text/javascript">
+
+    var BatchMonitoringObj = {
+        noBatch:function () {
+            if (document.getElementById("h-dispatch-batch-monitoring-no-batch") == null){
+                var imgdiv = document.createElement("div");
+                imgdiv.id = "h-dispatch-batch-monitoring-no-batch";
+                imgdiv.className = "col-sm-12 col-md-12 col-lg-12";
+                imgdiv.style.textAlign = "center";
+
+                var mimg = document.createElement("img");
+                mimg.setAttribute("src","/images/dispatch_icon/no_batch.gif");
+
+                var span = document.createElement("div");
+                span.style.fontSize = "16px";
+                span.style.fontWeight = "600";
+                span.style.marginTop = "12px";
+                span.innerHTML = "木有运行中的批次";
+                imgdiv.appendChild(mimg);
+                imgdiv.appendChild(span);
+                document.getElementById("h-dispatch-batch-monitoring-content").appendChild(imgdiv);
+            }
+        },
+        details:function (batchId,batchDesc) {
+            Hutils.openTab({
+                url:"/v1/dispatch/batch/group/running/monitoring/page",
+                title: batchDesc + " 批次运行监控",
+                id:"hzwy23#runninggroup",
+                data:{
+                    batch_id:batchId,
+                    batch_desc:batchDesc
+                },
+            })
+        },
+        stop:function (batchId) {
+            $.HAjaxRequest({
+                url:"/v1/dispatch/batch/define/stop",
+                type:"POST",
+                data:{batch_id:batchId},
+                success:function () {
+                    $.Notify({
+                        message:"停止批次成功",
+                        type:"success",
+                    });
+                }
+            })
+        },
+        scan:function (element) {
+            if (!$("[data-id='0503020000']").hasClass("active")){
+                return;
+            }
+            if (document.getElementById("h-dispatch-batch-monitoring-no-batch") != null){
+                $("#h-dispatch-batch-monitoring-no-batch").remove();
+            }
+            var div = document.createElement("div");
+            div.style.border = "#fcfcfc solid 1px";
+            div.className = "thumbnail";
+            div.style.height = "400px";
+            div.id = element.batch_id;
+            var divchart = document.createElement("div");
+            divchart.style.height = "280px";
+            divchart.style.minWidth = "300px";
+            div.appendChild(divchart);
+
+            var thumbnailDiv = document.createElement("div");
+            thumbnailDiv.className = "col-sm-6 col-md-4 col-lg-3 ";
+            thumbnailDiv.appendChild(div);
+            $("#h-dispatch-batch-monitoring-content").append(thumbnailDiv);
+
+            var div1 = BatchMonitoringObj.addSpan("批次编码:",element.code_number);
+            var div2 = BatchMonitoringObj.addSpan("批次名称:",element.batch_desc);
+            var div3 = BatchMonitoringObj.addSpan("批次日期:",element.as_of_date);
+
+            BatchMonitoringObj.initChart(divchart,element.batch_id,element.batch_desc,div3);
+
+            div.appendChild(div1);
+            div.appendChild(div2);
+            div.appendChild(div3);
+
+
+            var btn1 = document.createElement("button");
+            var btn2 = document.createElement("button");
+            btn1.className = "btn btn-info btn-sm";
+            btn1.innerHTML = "详情";
+            btn1.setAttribute("onclick","BatchMonitoringObj.details('"+element.batch_id+"','"+element.batch_desc+"')")
+
+            btn2.className = "btn btn-warning btn-sm";
+            btn2.style.marginLeft = "12px";
+            btn2.innerHTML = "暂停";
+            btn2.setAttribute("onclick","BatchMonitoringObj.stop('"+element.batch_id+"')")
+
+            var btndiv = document.createElement("div");
+            btndiv.className = "col-sm-12 col-md-12 col-lg-12";
+            btndiv.style.textAlign = "center";
+            btndiv.style.paddingTop = "6px";
+            btndiv.style.paddingBottom = "6px";
+            btndiv.appendChild(btn1);
+            btndiv.appendChild(btn2);
+            div.appendChild(btndiv);
+        },
+        getRunning:function () {
+            BatchMonitoringObj.noBatch();
+            var domain_id = $("#h-dispatch-batch-monitoring-domain-list").val();
+            var timer = setInterval(function () {
+                if(document.getElementById("h-dispatch-batch-monitoring-content") == null){
+                    clearInterval(timer);
+                };
+
+                $.HAjaxRequest({
+                    url:"/v1/dispatch/monitoring",
+                    type:"GET",
+                    data:{domain_id:domain_id},
+                    success:function (data) {
+                        if (data.length == 0){
+                            if (document.getElementById("h-dispatch-batch-monitoring-no-batch") == null) {
+                                $("#h-dispatch-batch-monitoring-content").html("");
+                                return false;
+                            }
+                        }
+                        $(data).each(function (index, element) {
+                            if (!$("[data-id='0503020000']").hasClass("active")){
+                                return false;
+                            }
+                            if(document.getElementById(element.batch_id) == null){
+                                BatchMonitoringObj.scan(element);
+                            }
+                        });
+                    }
+                });
+                if ($("#h-dispatch-batch-monitoring-content").html() == "") {
+                    BatchMonitoringObj.noBatch();
+                }
+            },1000);
+        },
+        addSpan:function (label,value) {
+            var div = document.createElement("div");
+            div.className += "col-sm-12 col-md-12 col-lg-12";
+
+            var key = document.createElement("label");
+            key.className += " col-sm-5 col-md-5 col-lg-5";
+            key.style.textAlign = "right";
+            key.innerHTML = label;
+
+            var span = document.createElement("span");
+            span.className += " col-sm-7 col-md-7 col-lg-7";
+            span.style.fontWeight = 600;
+            span.style.paddingLeft = "2px";
+            span.style.textAlign = "left";
+            span.innerHTML = value;
+            div.appendChild(key);
+            div.appendChild(span);
+            return div;
+        },
+        initChart:function (dom,batchId,batchDesc,obj) {
+            /*<![CDATA[*/
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(dom);
+//            myChart.showLoading();
+            // 指定图表的配置项和数据
+            $.getJSON("/v1/dispatch/monitoring/radio",{batch_id:batchId}).done(function (data) {
+                if (!$("[data-id='0503020000']").hasClass("active")){
+                    return false;
+                }
+                var batchIdExists = document.getElementById(batchId);
+                if (batchIdExists != null){
+                    myChart.setOption({
+                        series: [{
+                            type: 'liquidFill',
+                            data: [data.ratio],
+                            name:"运行中的批次...",
+                        }],
+                        tooltip: {
+                            show: true
+                        }});
+                }
+            });
+            var timer = setInterval(function () {
+                $.getJSON("/v1/dispatch/monitoring/radio",{batch_id:batchId},function (data) {
+                    if (!$("[data-id='0503020000']").hasClass("active")){
+                        return false;
+                    }
+                    $(obj).find("span").html(data.as_of_date);
+                    var batchIdExists = document.getElementById(batchId);
+                    if (batchIdExists == null){
+                        clearInterval(timer)
+                    } else {
+                        myChart.setOption({
+                            series: [{
+                                type: 'liquidFill',
+                                data: [data.ratio],
+                                name:batchDesc+" 运行中...",
+                            }],
+                            tooltip: {
+                                show: true
+                            }});
+                    }
+//                    console.log(data.as_of_date,data==1)
+                    if (data.as_of_date == null){
+                        clearInterval(timer);
+                        $.Notify({
+                            message:batchDesc+" 运行完成",
+                            type:"success",
+                        });
+                        $("#"+batchId).remove();
+                    }
+                });
+            },3000);
+            /*]]>*/
+        },
+    }
+
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-batch-monitoring-content").height(hwindow - 130);
+
+        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+            var arr = new Array()
+            $(data.owner_list).each(function (index, element) {
+                var ijs = {};
+                ijs.id = element.domain_id
+                ijs.text = element.domain_desc
+                ijs.upId = "####hzwy23###"
+                arr.push(ijs)
+            });
+            $("#h-dispatch-batch-monitoring-domain-list").Hselect({
+                data: arr,
+                height: "24px",
+                width: "180px",
+                value: data.domain_id,
+                onclick: function () {
+                    //todo
+                },
+            });
+            BatchMonitoringObj.getRunning();
+        });
+    });
+</script>

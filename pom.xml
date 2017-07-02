@@ -9,6 +9,7 @@
 	<modules>
 		<module>hauth</module>
 		<module>admin</module>
+		<module>batch</module>
 	</modules>
 	<packaging>pom</packaging>
 

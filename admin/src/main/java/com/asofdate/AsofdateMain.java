@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RestController;
+import com.asofdate.batch.InitBatch;
 
-@ComponentScan(basePackages = {"com.asofdate.utils", "com.asofdate.hauth"})
+@ComponentScan(basePackages = {"com.asofdate.utils", "com.asofdate.hauth","com.asofdate.batch"})
 @SpringBootApplication
 @RestController
 @EnableAutoConfiguration
@@ -16,5 +17,6 @@ public class AsofdateMain {
     public static void main(String[] args) {
         SpringApplication.run(AsofdateMain.class, args);
         Adaptor.initDb();
+        InitBatch.initBatchInfo();
     }
 }

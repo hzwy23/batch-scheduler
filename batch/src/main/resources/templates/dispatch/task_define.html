@@ -1,0 +1,449 @@
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 14px;">任务定义</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;所属域：</span>
+        <select id="h-dispatch-task-define-domain-list" class="form-control pull-left"
+                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
+        </select>
+    </div>
+    <div id="h-dispatch-task-define-toolbar-list" class="pull-right">
+        <button onclick="DispatchTaskDefineObj.add()" class="btn btn-info btn-sm" title="新增机构信息">
+            <i class="icon-plus"> 新增</i>
+        </button>
+        <button onclick="DispatchTaskDefineObj.edit()" class="btn btn-info btn-sm" title="编辑机构信息">
+            <span class="icon-edit"> 编辑</span>
+        </button>
+        <button onclick="DispatchTaskDefineObj.delete()" class="btn btn-danger btn-sm" title="删除机构信息">
+            <span class="icon-trash"> 删除</span>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div id="h-dispatch-task-define-table-info" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-task-define-info-table-details"
+               data-toggle="table"
+               data-striped="true"
+               data-page-size="30"
+               data-unique-id="taskId"
+               data-url="/v1/dispatch/task/define"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-page-list="[20,30, 50, 100, 200,1000]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-align="center" data-formatter="DispatchTaskDefineObj.formatterindex">序号</th>
+                <th data-sortable="true" data-align="center" data-field="codeNumber">任务编码</th>
+                <th data-sortable="true" data-field="taskDesc">任务描述</th>
+                <th data-sortable="true" data-field="taskTypeDesc">任务类型</th>
+                <th data-sortable="true" data-field="scriptFile">任务路径</th>
+                <th data-sortable="true" data-field="createUser">创建人</th>
+                <th data-sortable="true" data-field="createDate">创建时间</th>
+                <th data-sortable="true" data-field="modifyUser">修改人</th>
+                <th data-sortable="true" data-field="modifyDate">修改时间</th>
+                <th data-align="center" data-formatter="DispatchTaskDefineObj.formatter">任务参数管理</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var DispatchTaskDefineObj = {
+        $table: $('#h-dispatch-task-define-info-table-details'),
+        formatter: function (value, row, index) {
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchTaskDefineObj.getArgs(\'' + row.taskId + '\',\''+ row.taskDesc+'\')"> 参数管理</span>'
+        },
+        formatterindex:function (value, row, index) {
+            return index+1;
+        },
+        formatterArg:function (value, row, index) {
+            var uuid = row.uuid;
+            return [
+                '<a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i onclick="DispatchTaskDefineObj.deleteArg(\''+uuid+'\')" class="h-td-btn btn-danger btn-xs icon-trash"> 删除</i>',
+                '</a>'
+            ].join('');
+        },
+        deleteArg:function (uuid) {
+            $.HAjaxRequest({
+                url:"/v1/dispatch/task/define/argument/delete",
+                type:"POST",
+                data:{uuid:uuid},
+                success:function () {
+                    $("#h-dispatch-task-argument-relation-table").bootstrapTable('removeByUniqueId',uuid);
+                }
+            });
+
+        },
+        addArgument:function (taskId,taskDesc) {
+            $.Hmodal({
+                header:"["+taskDesc + "]添加参数",
+                height: "430px",
+                body:$("#h-dispatch-task-argument-add-src").html(),
+                preprocess:function () {
+                    var domain_id = $("#h-dispatch-task-define-domain-list").val();
+                    $("#h-dispatch-task-argument-add-form").find("input[name='domain_id']").val(domain_id);
+                    $("#h-dispatch-task-argument-add-form").find("input[name='task_id']").val(taskId);
+                    $.getJSON("/v1/dispatch/argument/define",{domain_id:domain_id},function (data) {
+                        var arr = new Array();
+                        $(data).each(function (index, element) {
+                            var e = {};
+                            e.id = element.arg_id;
+                            e.text = element.arg_desc;
+                            e.upId = "##hzwy23##";
+                            arr.push(e);
+                        });
+
+                        $("#h-dispatch-task-argument-add-form").find("select[name='arg_id']").Hselect({
+                            data:arr,
+                            height:"30px",
+                            onclick:function () {
+                                var argId = $("#h-dispatch-task-argument-add-form").find("select[name='arg_id']").val();
+                                $.getJSON("/v1/dispatch/task/define/argument/type",{arg_id:argId},function (argObj) {
+                                    if(argObj.arg_type == "2"){
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").attr("readonly",false).val("");
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().show();
+                                    } else if (argObj.arg_type == "1") {
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().show();
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").val(argObj.arg_value).attr("readonly","readonly");
+                                    } else {
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").val("");
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().hide();
+                                    }
+                                })
+                            }
+                        });
+                    });
+                },
+                callback:function (newArg) {
+                    $.HAjaxRequest({
+                        url:"/v1/dispatch/task/define/argument/add",
+                        type:"POST",
+                        data:$("#h-dispatch-task-argument-add-form").serialize(),
+                        success:function () {
+                            $(newArg).remove();
+                            $.getJSON("/v1/dispatch/task/define/argument",{task_id:taskId},function (data) {
+                                $("#h-dispatch-task-argument-relation-table").bootstrapTable('load',data);
+                                $("#h-dispatch-task-argument-relation-table").find("tbody tr").each(function (index, element) {
+                                    var typeId = "1";
+                                    switch ($(element).find("td:eq(4)").html()){
+                                        case "固定参数":
+                                            break;
+                                        case "任务参数":
+                                            typeId = "2";
+                                            break;
+                                        case "任务组参数":
+                                            typeId = "3";
+                                            break;
+                                        case "批次参数":
+                                            typeId = "4";
+                                            break;
+                                    };
+                                    if (typeId == "1"){
+                                        var argValue = $(element).find("td:eq(2) a").attr("data-value");
+                                        $(element).find("td:eq(2)").html(argValue);
+                                    } else if (typeId == "4" || typeId == "3"){
+                                        $(element).find("td:eq(2)").html("---");
+                                    }
+                                });
+                            });
+                        },
+                    });
+                },
+            })
+        },
+        getArgs: function (taskId,taskDesc) {
+            $.Hmodal({
+                header:"["+taskDesc + "]参数列表",
+                height: "430px",
+                body:$("#h-dispatch-task-argument-relation-src").html(),
+                cancelBtn:false,
+                submitIcon:"icon-plus",
+                submitDesc:"新增",
+                callback:function (hmode) {
+                    DispatchTaskDefineObj.addArgument(taskId,taskDesc);
+                },
+                preprocess:function () {
+                    $("#h-dispatch-task-argument-relation-table").bootstrapTable();
+                    $.getJSON("/v1/dispatch/task/define/argument",{task_id:taskId},function (data) {
+                        $("#h-dispatch-task-argument-relation-table").bootstrapTable('load',data);
+                        $("#h-dispatch-task-argument-relation-table").find("tbody tr").each(function (index, element) {
+                            var typeId = "1";
+                            switch ($(element).find("td:eq(4)").html()){
+                                case "固定参数":
+                                    break;
+                                case "任务参数":
+                                    typeId = "2";
+                                    break;
+                                case "任务组参数":
+                                    typeId = "3";
+                                    break;
+                                case "批次参数":
+                                    typeId = "4";
+                                    break;
+                            };
+                            if (typeId == "1"){
+                                var argValue = $(element).find("td:eq(2) a").attr("data-value");
+                                $(element).find("td:eq(2)").html(argValue);
+                            } else if (typeId == "4" || typeId == "3"){
+                                $(element).find("td:eq(2)").html("---");
+                            }
+                        });
+
+                        $("#h-dispatch-task-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
+                            if ( "sort_id" == field) {
+                                var sort_id = row.sort_id;
+                                var uuid = row.uuid;
+                                $.HAjaxRequest({
+                                    url:"/v1/dispatch/task/define/argument/sort",
+                                    type:"put",
+                                    data:{sort_id:sort_id,uuid:uuid},
+                                })
+                            } else if ("arg_value" == field){
+                                if (row.arg_type == "2"){
+                                    $.HAjaxRequest({
+                                        url:"/v1/dispatch/task/define/argument/value",
+                                        type:"post",
+                                        data:{arg_value:row.arg_value,uuid:row.uuid},
+                                    })
+                                } else {
+                                    $.notifyClose()
+                                    $.Notify({
+                                        message:"任务定义中,只能给参数类型为[任务参数]的参数赋值",
+                                        type:"warning",
+                                    })
+                                }
+                            }
+                            $("#h-dispatch-task-argument-relation-table").bootstrapTable('refresh')
+                        });
+                    });
+                }
+            })
+        },
+        add: function () {
+            $.Hmodal({
+                body: $("#h-dispatch-task-define-src").html(),
+                height: "360px",
+                header: "新增任务",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/task/define",
+                        data: $("#h-dispatch-task-define-form").serialize(),
+                        type: "POST",
+                        success: function (data) {
+                            $.Notify({
+                                message: "新增费用信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchTaskDefineObj.$table.bootstrapTable("refresh")
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-task-define-domain-list").val();
+
+                    $("#h-dispatch-task-define-form").find("select[name='taskType']").Hselect({
+                        height: "30px",
+                        checkbox: false,
+                        nodeSelect: false,
+                    });
+
+                    $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id)
+                }
+            })
+        },
+        edit: function () {
+            var row = $("#h-dispatch-task-define-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的费用信息",
+                    type: "info",
+                })
+                return
+            } else if (row.length > 1) {
+                $.Notify({
+                    message: "您选择了多行信息,请选择一行进行编辑",
+                    type: "info",
+                })
+                return
+            }
+
+            $.Hmodal({
+                body: $("#h-dispatch-task-define-src").html(),
+                height: "360px",
+                header: "编辑任务",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/task/define",
+                        data: $("#h-dispatch-task-define-form").serialize(),
+                        type: "PUT",
+                        success: function (data) {
+                            $.Notify({
+                                message: "修改任务信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchTaskDefineObj.$table.bootstrapTable("refresh")
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-task-define-domain-list").val();
+                    // 初始化成本池
+                    $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id);
+                    $("#h-dispatch-task-define-form").find("input[name='taskId']").val(row[0].codeNumber).attr("readonly","readonly");
+                    $("#h-dispatch-task-define-form").find("input[name='taskDesc']").val(row[0].taskDesc);
+                    $("#h-dispatch-task-define-form").find("select[name='taskType']").Hselect({
+                        value:row[0].taskType,
+                        height:"30px",
+                    });
+                    $("#h-dispatch-task-define-form").find("input[name='scriptFile']").val(row[0].scriptFile);
+                }
+            })
+        },
+        delete: function () {
+            var row = $("#h-dispatch-task-define-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的任务信息",
+                    type: "info",
+                })
+                return
+            }
+            $.Hconfirm({
+                body: "点击确定,删除任务信息",
+                callback: function () {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/task/define/delete",
+                        type: "POST",
+                        data: {JSON: JSON.stringify(row)},
+                        success: function () {
+                            $.Notify({
+                                message: "删除任务信息成功",
+                                type: "success",
+                            });
+                            $(row).each(function (index, element) {
+                                DispatchTaskDefineObj.$table.bootstrapTable("removeByUniqueId", element.taskId)
+                            })
+                        },
+                    })
+                }
+            })
+        },
+    };
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-task-define-info-table-details").bootstrapTable({
+            height: hwindow - 130,
+            queryParams: function (params) {
+                params.domain_id = $("#h-dispatch-task-define-domain-list").val();
+                return params;
+            }
+        });
+
+        $("#h-dispatch-task-define-table-info").height(hwindow - 130);
+
+        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+            var arr = new Array()
+            $(data.owner_list).each(function (index, element) {
+                var ijs = {};
+                ijs.id = element.domain_id
+                ijs.text = element.domain_desc
+                ijs.upId = "####hzwy23###"
+                arr.push(ijs)
+            });
+            $("#h-dispatch-task-define-domain-list").Hselect({
+                data: arr,
+                height: "24px",
+                width: "180px",
+                value: data.domain_id,
+                onclick: function () {
+                    $("#h-dispatch-task-define-info-table-details").bootstrapTable('refresh');
+                },
+            });
+        });
+    });
+</script>
+
+<script id="h-dispatch-task-define-src" type="text/html">
+    <form id="h-dispatch-task-define-form">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>任务编码:</span>
+            <input name="taskId" placeholder="由1-30位字母,数字组成" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>任务描述:</span>
+            <input name="taskDesc" placeholder="任务详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>任务类型:</span>
+            <select name="taskType" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
+                <option value="1">shell 脚本</option>
+                <option value="2">存储过程</option>
+                <option value="3">CMD 脚本</option>
+                <option value="4">Jar 包</option>
+                <option value="5">二进制程序</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>脚本名称:</span>
+            <input name="scriptFile" placeholder="脚本文件地址与名称" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <input name="domainId" style="display: none;"/>
+    </form>
+</script>
+
+<script id="h-dispatch-task-argument-relation-src" type="text/html">
+    <table id="h-dispatch-task-argument-relation-table"
+           data-toggle="table"
+           data-striped="true"
+           data-unique-id="uuid"
+           data-side-pagination="client"
+           data-height="290"
+           data-pagination="false"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-align="center" data-field="code_number">参数编码</th>
+            <th data-align="left" data-field="arg_desc">参数名称</th>
+            <th data-align="right" data-field="arg_value" data-editable="true">参数设定值</th>
+            <th data-align="center" data-field="sort_id" data-editable="true">序号</th>
+            <th data-align="center" data-field="arg_type_desc" >参数类型</th>
+            <th data-align="center" data-formatter="DispatchTaskDefineObj.formatterArg">操作</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+
+<script id="h-dispatch-task-argument-add-src" type="text/html">
+    <form id="h-dispatch-task-argument-add-form">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>参数编码:</span>
+            <select name="arg_id" placeholder="由1-30位字母,数字组成" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;">
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>排序:</span>
+            <input name="sort_id" placeholder="怕序号" class="form-control"
+                    style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="display: none; margin-top: 20px;">
+            <span>参数值:</span>
+            <input name="arg_value" placeholder="由1-30位字母,数字组成" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <input name="domain_id" style="display: none;"/>
+        <input name="task_id" style="display: none;"/>
+    </form>
+</script>

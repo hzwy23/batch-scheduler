@@ -1,0 +1,154 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 16px;">批次运行历史 <i class="icon-caret-left"></i> 任务组运行历史 <i class="icon-caret-left"></i> 任务运行历史</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;批次名称 = <span th:text="${batchDesc}"></span></span>
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span th:text="${groupDesc}"></span></span>
+        <span id="h-dispatch-batch-job-history-uuid" style="display: none;" th:text="${uuid}"></span>
+        <span id="h-dispatch-batch-job-history-gid" style="display: none;" th:text="${gid}"></span>
+    </div>
+</div>
+<div class="row" id="h-dispatch-batch-job-monitoring-content" style="padding-top: 6px; overflow-y: auto;"></div>
+<script type="text/javascript">
+    var BatchJobHistoryObj = {
+        init:function (uuid,gid) {
+            $("#h-dispatch-batch-job-monitoring-content").html("");
+            $.getJSON("/v1/dispatch/batch/job/history",{uuid:uuid,gid:gid},function (data) {
+                $(data).each(function (index, element) {
+                    var pdiv = document.createElement("div");
+                    pdiv.className = "col-sm-6 col-md-3";
+
+                    var pdiv2 = document.createElement("div");
+                    pdiv2.className = "thumbnail";
+
+                    var pdiv3 = document.createElement("div");
+                    pdiv3.className = "caption";
+
+
+                    var ph3 = document.createElement("h4");
+                    ph3.innerHTML = element.statusDesc;
+
+                    var pp = document.createElement("div");
+                    var pplavel = document.createElement("label");
+                    pplavel.innerHTML = "开始时间:&nbsp;";
+                    var ppvalue = document.createElement("span");
+                    ppvalue.innerHTML = element.startTime;
+                    pp.appendChild(pplavel);
+                    pp.appendChild(ppvalue);
+
+                    var pval = document.createElement("div");
+                    var pvallavel = document.createElement("label");
+                    pvallavel.innerHTML = "结束时间:&nbsp;";
+                    var pvalvalue = document.createElement("span");
+                    pvalvalue.innerHTML = element.endTime;
+                    pval.appendChild(pvallavel);
+                    pval.appendChild(pvalvalue);
+                    /*<![CDATA[*/
+                    var start = new Date(element.startTime.substr(0,19));
+                    var end = new Date(element.endTime.substr(0,19));
+
+                    var diff = (end - start)/1000;
+
+                    if (diff < 0){
+                        diff = 0;
+                    }
+                    var costTime = diff+"s";
+
+                    if (diff >= 60){
+                        if (diff % 60 != 0){
+                            costTime = (diff % 60 ).toFixed(0) + "s";
+                        }
+                        // 转换成分钟
+                        diff = (diff / 60).toFixed(0);
+                        if (diff >= 60) {
+                            if (diff % 60 != 0){
+                                costTime = (diff % 60).toFixed(0) + "m " + costTime;
+                            }
+                            // 转换成小时
+                            diff = (diff / 24).toFixed();
+                            if (diff >= 24){
+                                if (diff % 24 != 0){
+                                    costTime = (diff % 60).toFixed(0) + "h " + costTime;
+                                }
+                                costTime = (diff % 24).toFixed(0) + "d" + costTime;
+                            } else {
+                                costTime = diff + "h " + costTime;
+                            }
+                        } else {
+                            costTime = diff + "m "+ costTime;
+                        }
+                    }
+
+                    /*]]>*/
+                    var chartdiv = document.createElement("div");
+                    chartdiv.className = "col-sm-12";
+                    chartdiv.style.height = "120px";
+                    chartdiv.style.lineHeight = "120px";
+                    chartdiv.style.fontWeight = "700";
+                    chartdiv.style.fontSize = "36px";
+                    chartdiv.style.color = "#140dff";
+                    chartdiv.style.textAlign = "center";
+
+                    chartdiv.innerHTML = costTime;
+
+                    var pbatchDesc = document.createElement("h3");
+                    pbatchDesc.innerHTML = element.taskDesc;
+
+
+                    var pgid = document.createElement("div");
+                    var pgidlabel = document.createElement("label");
+                    pgidlabel.innerHTML = "id:&nbsp;";
+                    var pgidvalue = document.createElement("span");
+                    pgidvalue.innerHTML = element.tid;
+                    pgid.appendChild(pgidlabel);
+                    pgid.appendChild(pgidvalue);
+
+                    pdiv3.appendChild(pgid);
+                    pdiv3.appendChild(pp);
+                    pdiv3.appendChild(pval);
+
+                    pdiv2.appendChild(ph3);
+                    pdiv2.appendChild(chartdiv);
+                    pdiv2.appendChild(pbatchDesc);
+                    pdiv2.appendChild(pdiv3);
+
+                    pdiv.appendChild(pdiv2);
+                    switch (element.status){
+                        case "0":
+                            pdiv2.style.backgroundColor = "#e5e1ff";
+                            break;
+                        case "1":
+                            pdiv2.style.backgroundColor = "#fffee8";
+                            break;
+                        case "2":
+                            pdiv2.style.backgroundColor = "#f5ffe8";
+                            break;
+                        case "3":
+                            pdiv2.style.backgroundColor = "#ffccc8";
+                            break;
+                        case "4":
+                            pdiv2.style.backgroundColor = "#f9e3ff";
+                            break;
+                    }
+
+                    document.getElementById("h-dispatch-batch-job-monitoring-content").appendChild(pdiv);
+                })
+            })
+        },
+    };
+
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-batch-job-monitoring-content").height(hwindow - 139);
+        var uuid = $("#h-dispatch-batch-job-history-uuid").html();
+        var gid = $("#h-dispatch-batch-job-history-gid").html();
+        BatchJobHistoryObj.init(uuid,gid);
+    });
+</script>
+</html>

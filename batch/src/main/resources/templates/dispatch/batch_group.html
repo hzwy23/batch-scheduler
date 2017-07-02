@@ -1,0 +1,287 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span>任务组配置管理</span>
+        <i  id="h-batch-group-batch-id" style="display: none;" th:text="${batchId}"></i>
+        <i id="h-batch-group-domain-id" style="display: none;" th:text="${domainId}"></i>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;批次描述 = <span th:text="${batchDesc}"></span></span>
+    </div>
+
+    <div id="h-dispatch-batch-group-toolbar-list" class="pull-right">
+        <button onclick="DispatchBatchGroupObj.addGroup()" class="btn btn-info btn-sm" title="新增任务">
+            <span class="icon-plus"> 添加任务组</span>
+        </button>
+        <button onclick="DispatchBatchGroupObj.delete()" class="btn btn-danger btn-sm" title="新增任务">
+            <span class="icon-plus"> 删除</span>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div id="h-dispatch-batch-group-table-info" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-batch-group-relation-table"
+               data-toggle="table"
+               data-striped="true"
+               data-url="/v1/dispatch/batch/define/group"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterindex">序号</th>
+                <th data-field="id">批次内唯一任务组ID号</th>
+                <th data-align="center" data-field="code_number">任务组编码</th>
+                <th data-align="left" data-field="group_desc">任务组名称</th>
+                <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterGroup">上级任务组</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        var batchId = $("#h-batch-group-batch-id").html();
+
+        $("#h-dispatch-batch-group-relation-table").bootstrapTable({
+            height:hwindow-130,
+            queryParams:function (params) {
+                params.batch_id = batchId;
+                return params;
+            }
+        });
+
+        $("#h-dispatch-group-task-button-list").height(hwindow - 130);
+        $("#h-dispatch-batch-group-dependency-info").height(hwindow - 130);
+    });
+
+    var DispatchBatchGroupObj = {
+        formatterindex:function (value, row, index) {
+            return index+1;
+        },
+        formatterDependency:function (value, row, index) {
+            return '<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteDependency(\'' + row.uuid + '\',\''+row.id+'\')"><i class="icon-trash"> 删除</i></span>'
+        },
+        formatterGroup: function (value, row, index) {
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchGroupObj.getDependency(\'' + row.id + '\',\''+row.group_desc+'\')"><i class="icon-circle-arrow-up"> 查询依赖</i></span>'+
+                 '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchGroupObj.deleteGroup(\'' + row.id + '\')"><i class="icon-trash"> 删除</i></span>';
+        },
+        addDependency:function (id,groupDesc) {
+            var batchId = $("#h-batch-group-batch-id").html();
+            $.Hmodal({
+                body:$("#h-dispatch-batch-group-add-dependency-src").html(),
+                header:groupDesc+ " 新增依赖任务组",
+                height:"430px",
+                preprocess:function () {
+                    $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable({
+                        height:280,
+                        queryParams:function (params) {
+                            params.batch_id = batchId;
+                            params.id = id;
+                            return params;
+                        },
+                        onPostBody:function () {
+                            $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable('removeByUniqueId',id);
+                        }
+                    });
+                },
+                callback:function (hmode) {
+                    var rows = $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable('getSelections')
+                    var arg = new Array();
+                    $(rows).each(function (index, element) {
+                        var e = {};
+                        e.id = id;
+                        e.up_id = element.id;
+                        e.domain_id = element.domain_id;
+                        arg.push(e);
+                    });
+
+                    $.HAjaxRequest({
+                        url:"/v1/dispatch/batch/define/group/dependency",
+                        type:"POST",
+                        data:{JSON:JSON.stringify(arg)},
+                        success:function () {
+                            $(hmode).remove();
+                            $.getJSON("/v1/dispatch/batch/define/group/dependency",{id:id},function (data) {
+                                $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load',data);
+                            });
+                        }
+                    })
+                },
+            })
+        },
+        deleteDependency:function (uuid,id) {
+            $.HAjaxRequest({
+                url:"/v1/dispatch/batch/define/group/dependency/delete",
+                type:"post",
+                data:{uuid:uuid},
+                success:function () {
+                    $.getJSON("/v1/dispatch/batch/define/group/dependency",{id:id},function (data) {
+                        $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load',data);
+                    });
+                }
+            })
+        },
+        getDependency:function (id,desc) {
+            $.Hmodal({
+                header:desc,
+                body:$("#h-dispatch-batch-group-dependency-src").html(),
+                height:"430px",
+                submitDesc:"新增任务组依赖",
+                submitIcon:"icon-plus",
+                preprocess:function () {
+                    $("#h-dispatch-batch-group-dependency-table").bootstrapTable({
+                        height:290,
+                        url:"/v1/dispatch/batch/define/group/dependency",
+                        queryParams:function (params) {
+                            params.id = id;
+                            return params;
+                        }
+                    });
+                    $("#h-dispatch-group-task-current-id").html(id);
+                },
+                callback:function () {
+                    DispatchBatchGroupObj.addDependency(id,desc);
+                }
+            })
+        },
+        refresh:function () {
+            $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh');
+        },
+        delete:function () {
+            var rows = $("#h-dispatch-batch-group-relation-table").bootstrapTable('getSelections');
+            var arr = new Array();
+            $(rows).each(function (index, element) {
+                var e = {};
+                e.id = element.id;
+                arr.push(e);
+            })
+            $.HAjaxRequest({
+                url:"/v1/dispatch/batch/define/group/list/delete",
+                type:"POST",
+                data:{JSON:JSON.stringify(arr)},
+                success:function () {
+                    $.Notify({
+                        message:"删除批次中配置的任务信息成功",
+                        type:"success",
+                    });
+                    DispatchBatchGroupObj.refresh();
+                }
+            })
+        },
+        deleteGroup:function (id) {
+            $.HAjaxRequest({
+                url:"/v1/dispatch/batch/define/group/delete",
+                type:"POST",
+                data:{id:id},
+                success:function () {
+                    $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh')
+                }
+            })
+        },
+        addGroup:function () {
+            var batchId = $("#h-batch-group-batch-id").html();
+            var domain_id = $("#h-batch-group-domain-id").html();
+            $.Hmodal({
+                body:$("#h-dispatch-batch-group-add-src").html(),
+                height:"430px",
+                header:"添加任务组",
+                preprocess:function () {
+                    $("#h-dispatch-batch-group-add-table").bootstrapTable({
+                        height: 290,
+                        queryParams: function (params) {
+                            params.domain_id = domain_id;
+                            return params;
+                        }
+                    });
+                },
+                callback:function (hmode) {
+                    var rows = $("#h-dispatch-batch-group-add-table").bootstrapTable('getSelections')
+                    $.HAjaxRequest({
+                        url:"/v1/dispatch/batch/define/group",
+                        type:"POST",
+                        data:{JSON:JSON.stringify(rows),domain_id:domain_id,batch_id:batchId},
+                        success:function () {
+                            $(hmode).remove();
+                            $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh')
+                        }
+                    })
+                }
+            })
+        }
+    }
+</script>
+<script id="h-dispatch-batch-group-add-dependency-src" type="text/html">
+    <table id="h-dispatch-batch-group-dependency-add-table"
+           data-toggle="table"
+           data-striped="true"
+           data-unique-id="id"
+           data-click-to-select="true"
+           data-url="/v1/dispatch/batch/define/group/dependency/add"
+           data-side-pagination="client"
+           data-pagination="false"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterindex">序号</th>
+            <th data-field="id">批次内唯一任务组ID号</th>
+            <th data-align="center" data-field="code_number">任务组编码</th>
+            <th data-align="left" data-field="group_desc">任务组名称</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+<script id="h-dispatch-batch-group-add-src" type="text/html">
+    <table id="h-dispatch-batch-group-add-table"
+           data-toggle="table"
+           data-striped="true"
+           data-unique-id="group_id"
+           data-url="/v1/dispatch/group/define"
+           data-side-pagination="client"
+           data-click-to-select="true"
+           data-pagination="false"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterindex">序号</th>
+            <th data-sortable="true" data-align="center" data-field="code_number">任务组编码</th>
+            <th data-sortable="true" data-field="group_desc">任务组描述</th>
+            <th data-sortable="true" data-align="center" data-field="create_user">创建人</th>
+            <th data-sortable="true" data-align="center" data-field="create_date">创建时间</th>
+            <th data-sortable="true" data-align="center" data-field="modify_user">修改人</th>
+            <th data-sortable="true" data-align="center" data-field="modify_date">修改时间</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+<script id="h-dispatch-batch-group-dependency-src" type="text/html">
+    <table id="h-dispatch-batch-group-dependency-table"
+           data-toggle="table"
+           data-toolbar="#h-dispatch-up-group-toolbar-list"
+           data-striped="true"
+           data-unique-id="uuid"
+           data-click-to-select="true"
+           data-url="/v1/dispatch/batch/define/group/dependency"
+           data-side-pagination="client"
+           data-pagination="false"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterindex">序号</th>
+            <th data-align="center" data-field="up_id">任务组内上级唯一任务ID号</th>
+            <th data-align="center" data-field="code_number">任务组编码</th>
+            <th data-align="left" data-field="group_desc">任务组名称</th>
+            <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterDependency">操作</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+</html>

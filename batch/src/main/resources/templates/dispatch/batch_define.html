@@ -1,0 +1,464 @@
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 16px;">批次定义</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
+              class="pull-left">&nbsp;所属域：</span>
+        <select id="h-dispatch-batch-domain-list" class="form-control pull-left"
+                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
+        </select>
+    </div>
+    <div id="h-dispatch-batch-manage-toolbar-list" class="pull-right">
+        <button onclick="DispatchBatchDefineObj.refresh()" class="btn btn-info btn-sm" title="刷新批次信息">
+            <span class="icon-refresh"> 刷新</span>
+        </button>
+        <button onclick="DispatchBatchDefineObj.add()" class="btn btn-info btn-sm" title="新增批次信息">
+            <i class="icon-plus"> 新增</i>
+        </button>
+        <button onclick="DispatchBatchDefineObj.edit()" class="btn btn-info btn-sm" title="编辑批次信息">
+            <span class="icon-edit"> 编辑</span>
+        </button>
+        <button onclick="DispatchBatchDefineObj.start()" class="btn btn-info btn-sm" title="启动批次">
+            <span class="icon-play"> 启动</span>
+        </button>
+        <button onclick="DispatchBatchDefineObj.stop()" class="btn btn-warning btn-sm" title="停止批次">
+            <span class="icon-pause"> 停止</span>
+        </button>
+        <button onclick="DispatchBatchDefineObj.delete()" class="btn btn-danger btn-sm" title="删除批次信息">
+            <span class="icon-trash"> 删除</span>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div id="h-dispatch-batch-manage-table-info" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-batch-manage-info-table-details"
+               data-toggle="table"
+               data-striped="true"
+               data-page-size="30"
+               data-unique-id="batch_id"
+               data-url="/v1/dispatch/batch/define"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-page-list="[20,30, 50, 100, 200,1000]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-sortable="true" data-align="center" data-field="code_number">批次编码</th>
+                <th data-sortable="true" data-field="batch_desc">批次描述</th>
+                <th data-sortable="true" data-align="center" data-field="as_of_date">批次日期</th>
+                <th data-sortable="true" data-align="center" data-field="batch_status_desc">批次状态</th>
+                <th data-sortable="true" data-align="center" data-field="start_date">启动时间</th>
+                <th data-sortable="true" data-align="center" data-field="end_date">完成时间</th>
+                <th data-sortable="true" data-align="center" data-field="ret_msg">消息</th>
+                <th data-sortable="true" data-align="center" data-field="complete_date">终止日期</th>
+                <th data-sortable="true" data-align="center" data-formatter="DispatchBatchDefineObj.formatter">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var DispatchBatchDefineObj = {
+        $table: $('#h-dispatch-batch-manage-info-table-details'),
+        formatter: function (value, row, index) {
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchDefineObj.getGroups(\'' + row.batch_id + '\',\''+row.batch_desc+'\')">任务组</span>'+
+                '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchDefineObj.getBatchArg(\'' + row.batch_id + '\',\''+row.batch_desc+'\')"> 参数</span>';
+        },
+        start:function () {
+            var rows = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的费用信息",
+                    type: "info",
+                })
+                return
+            } else if (rows.length > 1) {
+                $.Notify({
+                    message: "您选择了多行信息,请选择一行进行编辑",
+                    type: "info",
+                })
+                return
+            }
+
+            $.Hmodal({
+                header:"["+rows[0].batch_desc + "] 设置批次启动参数",
+                height: "430px",
+                body:$("#h-dispatch-batch-argument-relation-src").html(),
+                submitDesc:"启动批次",
+                preprocess:function () {
+                    $("#h-dispatch-batch-argument-relation-table").bootstrapTable({
+                        height:290,
+                        queryParams:function (params) {
+                            params.batch_id = rows[0].batch_id;
+                            return params;
+                        }
+                    });
+
+                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
+                        if (row.bind_as_of_date == "0") {
+                            // 批次非绑定日期变量
+                            var arr = new Array();
+                            var e = {};
+                            e.batch_id = row.batch_id;
+                            e.arg_id = row.arg_id;
+                            e.arg_value = row.arg_value;
+                            e.domain_id = row.domain_id;
+                            arr.push(e);
+
+                            $.HAjaxRequest({
+                                url: "/v1/dispatch/batch/define/argument",
+                                type: "post",
+                                data: {JSON:JSON.stringify(arr)},
+                            })
+                        } else {
+                            // 绑定批次日期变量
+                            $.HAjaxRequest({
+                                url: "/v1/dispatch/batch/define/asofdate",
+                                type: "PUT",
+                                data: {batch_id:row.batch_id,as_of_date:row.arg_value},
+                            })
+                        }
+
+                        $("#h-dispatch-batch-argument-relation-table").bootstrapTable('refresh')
+                    });
+                },
+                callback:function (hmode) {
+                    $.HAjaxRequest({
+                        url:"/v1/dispatch/start",
+                        type:"get",
+                        data:{domain_id:rows[0].domain_id,batch_id:rows[0].batch_id},
+                        success:function () {
+                            $.Notify({
+                                message:"批次启动成功",
+                                type:"success",
+                            });
+                            DispatchBatchDefineObj.refresh();
+                            $(hmode).remove();
+                        }
+                    })
+                }
+            })
+        },
+        stop:function () {
+            var row = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的费用信息",
+                    type: "info",
+                })
+                return
+            } else if (row.length > 1) {
+                $.Notify({
+                    message: "您选择了多行信息,请选择一行进行编辑",
+                    type: "info",
+                })
+                return
+            }
+
+            $.HAjaxRequest({
+                url:"/v1/dispatch/batch/define/stop",
+                type:"POST",
+                data:{batch_id:row[0].batch_id},
+                success:function () {
+                    $.Notify({
+                        message:"停止批次成功",
+                        type:"success",
+                    });
+                    DispatchBatchDefineObj.refresh();
+                }
+            })
+        },
+        refresh:function () {
+            $("#h-dispatch-batch-manage-info-table-details").bootstrapTable("refresh");
+        },
+        getBatchArg:function (batchId, batchDesc) {
+            $.Hmodal({
+                header:"["+batchDesc + "]参数列表",
+                height: "430px",
+                body:$("#h-dispatch-batch-argument-relation-src").html(),
+                submitBtn:false,
+                preprocess:function () {
+                    $("#h-dispatch-batch-argument-relation-table").bootstrapTable({
+                        height:290,
+                        queryParams:function (params) {
+                            params.batch_id = batchId;
+                            return params;
+                        }
+                    });
+
+
+                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
+                        if (row.bind_as_of_date == "0") {
+                            // 批次非绑定日期变量
+                            var arr = new Array();
+                            var e = {};
+                            e.batch_id = row.batch_id;
+                            e.arg_id = row.arg_id;
+                            e.arg_value = row.arg_value;
+                            e.domain_id = row.domain_id;
+                            arr.push(e);
+
+                            $.HAjaxRequest({
+                                url: "/v1/dispatch/batch/define/argument",
+                                type: "post",
+                                data: {JSON:JSON.stringify(arr)},
+                            })
+                        } else {
+                            // 绑定批次日期变量
+                            $.HAjaxRequest({
+                                url: "/v1/dispatch/batch/define/asofdate",
+                                type: "PUT",
+                                data: {batch_id:row.batch_id,as_of_date:row.arg_value},
+                            })
+                        }
+
+                        $("#h-dispatch-batch-argument-relation-table").bootstrapTable('refresh')
+                    });
+                }
+            })
+        },
+        getGroups: function (batchId,batchDesc) {
+            /*<![CDATA[*/
+            var name = batchDesc+"中任务组配置";
+            Hutils.openTab({
+                url:"/v1/dispatch/batchAndGroup/page",
+                id:"batchGroup1989",
+                data:{batchId:batchId,batchDesc:batchDesc},
+                title:name,
+                error:function (m) {
+                    $.Notify({
+                        title:"温馨提示：",
+                        message:"您没有被授权访问这个域。",
+                        type:"info",
+                    })
+                }
+            });
+            /*]]>*/
+        },
+        add: function () {
+            $.Hmodal({
+                body: $("#h-dispatch-batch-define-src").html(),
+                height: "360px",
+                header: "新增批次",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/batch/define",
+                        data: $("#h-dispatch-batch-define-form").serialize(),
+                        type: "post",
+                        success: function (data) {
+                            $.Notify({
+                                message: "新增批次信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchBatchDefineObj.$table.bootstrapTable("refresh")
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-batch-domain-list").val();
+
+                    $("#h-dispatch-batch-define-form").find("select[name='batch_status']").Hselect({
+                        height: "30px",
+                        checkbox: false,
+                        nodeSelect: false,
+                        disabled:true,
+                        value:0,
+                    });
+                    $("#h-dispatch-batch-define-form").find("select[name='batch_status']").parent().hide();
+                    $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id)
+                }
+            })
+        },
+        edit: function () {
+            var row = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的费用信息",
+                    type: "info",
+                })
+                return
+            } else if (row.length > 1) {
+                $.Notify({
+                    message: "您选择了多行信息,请选择一行进行编辑",
+                    type: "info",
+                })
+                return
+            }
+
+            $.Hmodal({
+                body: $("#h-dispatch-batch-define-src").html(),
+                height: "360px",
+                header: "编辑批次",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/batch/define",
+                        data: $("#h-dispatch-batch-define-form").serialize(),
+                        type: "PUT",
+                        success: function (data) {
+                            $.Notify({
+                                message: "修改批次信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchBatchDefineObj.$table.bootstrapTable("refresh")
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-batch-domain-list").val();
+                    // 初始化成本池
+                    $("#h-dispatch-batch-define-form").find("select[name='batch_status']").Hselect({
+                        height: "30px",
+                        checkbox: false,
+                        nodeSelect: false,
+                        value: row[0].batch_status,
+                    });
+                    $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id);
+                    $("#h-dispatch-batch-define-form").find("input[name='batch_id']").val(row[0].code_number).attr("readonly","readonly");
+                    $("#h-dispatch-batch-define-form").find("input[name='as_of_date']").val(row[0].as_of_date);
+                    $("#h-dispatch-batch-define-form").find("input[name='complete_date']").val(row[0].complete_date);
+                    $("#h-dispatch-batch-define-form").find("input[name='batch_desc']").val(row[0].batch_desc);
+                }
+            })
+        },
+        delete: function () {
+            var row = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的批次信息",
+                    type: "info",
+                })
+                return
+            }
+            $.Hconfirm({
+                body: "点击确定,删除批次信息",
+                callback: function () {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/batch/define/delete",
+                        type: "post",
+                        data: {JSON: JSON.stringify(row)},
+                        success: function (data) {
+
+                            $.Notify({
+                                message: "删除批次信息成功",
+                                type: "success",
+                            });
+                            $(row).each(function (index, element) {
+                                DispatchBatchDefineObj.$table.bootstrapTable("removeByUniqueId", element.batch_id)
+                            })
+
+                        },
+                    })
+                }
+            })
+        },
+//        download: function () {
+//            var domain_id = $("#h-dispatch-batch-domain-list").val();
+//            $.Hdownload({
+//                url: "/v1/ca/driver/manage/download?domain_id=" + domain_id,
+//                name: "动因值详细信息",
+//            })
+//        },
+//        upload: function () {
+//            $.Hupload({
+//                url: "/v1/ca/driver/manage/upload",
+//                header: "动因值上传",
+//                callback: function () {
+//                    DispatchBatchDefineObj.$table.bootstrapTable("refresh");
+//                }
+//            })
+//        },
+    };
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-batch-manage-table-info").height(hwindow - 130);
+
+        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+            var arr = new Array()
+            $(data.owner_list).each(function (index, element) {
+                var ijs = {};
+                ijs.id = element.domain_id
+                ijs.text = element.domain_desc
+                ijs.upId = "####hzwy23###"
+                arr.push(ijs)
+            });
+            $("#h-dispatch-batch-domain-list").Hselect({
+                data: arr,
+                height: "24px",
+                width: "180px",
+                value: data.domain_id,
+                onclick: function () {
+                    $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('refresh');
+                },
+            });
+
+            $("#h-dispatch-batch-manage-info-table-details").bootstrapTable({
+                height: hwindow - 130,
+                queryParams: function (params) {
+                    params.domain_id = $("#h-dispatch-batch-domain-list").val();
+                    return params;
+                }
+            });
+        });
+    });
+</script>
+
+<script id="h-dispatch-batch-define-src" type="text/html">
+    <form id="h-dispatch-batch-define-form">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>批次编码</span>
+            <input name="batch_id" placeholder="由1-30位字母,数字组成" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>批次名称</span>
+            <input name="batch_desc" placeholder="批次详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>批次日期</span>
+            <input name="as_of_date" onclick="laydate(this)" placeholder="批次运行日期" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>终止日期</span>
+            <input name="complete_date" onclick="laydate(this)" placeholder="批次运行终止日期" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>批次状态</span>
+            <select name="batch_status" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
+                <option value="0">初始化</option>
+                <option value="1">运行中</option>
+                <option value="2">已完成</option>
+                <option value="3">错误</option>
+                <option value="4">停止</option>
+            </select>
+        </div>
+        <input name="domain_id" style="display: none;"/>
+    </form>
+</script>
+
+<script id="h-dispatch-batch-argument-relation-src" type="text/html">
+    <table id="h-dispatch-batch-argument-relation-table"
+           data-toggle="table"
+           data-striped="true"
+           data-url="/v1/dispatch/batch/define/argument"
+           data-side-pagination="client"
+           data-unique-id="arg_id"
+           data-pagination="false"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-align="center" data-field="code_number">参数编码</th>
+            <th data-align="left" data-field="arg_desc">参数名称</th>
+            <th data-align="left" data-editable="true" data-field="arg_value">参数设定值</th>
+        </tr>
+        </thead>
+    </table>
+</script>

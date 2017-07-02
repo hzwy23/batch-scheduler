@@ -1,0 +1,326 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 14px;">任务参数定义</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;"
+              class="pull-left">&nbsp;所属域：</span>
+        <select id="h-dispatch-argument-define-domain-list" class="form-control pull-left"
+                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
+        </select>
+    </div>
+    <div id="h-dispatch-argument-define-toolbar-list" class="pull-right">
+        <button onclick="DispatchArgumentDefineObj.add()" class="btn btn-info btn-sm" title="新增机构信息">
+            <span class="icon-plus"> 新增</span>
+        </button>
+        <button onclick="DispatchArgumentDefineObj.edit()" class="btn btn-info btn-sm" title="编辑机构信息">
+            <span class="icon-edit"> 编辑</span>
+        </button>
+        <button onclick="DispatchArgumentDefineObj.delete()" class="btn btn-danger btn-sm" title="删除机构信息">
+            <span class="icon-trash"> 删除</span>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div id="h-dispatch-argument-define-table-info" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-argument-define-info-table-details"
+               data-toggle="table"
+               data-striped="true"
+               data-page-size="30"
+               data-unique-id="arg_id"
+               data-toolbar-align="right" data-url="/v1/dispatch/argument/define"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-page-list="[20,30, 50, 100, 200,1000]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-sortable="true" data-align="center" data-field="code_number">参数编码</th>
+                <th data-sortable="true" data-field="arg_desc">参数描述</th>
+                <th data-sortable="true" data-align="center" data-field="arg_type_desc">参数类型</th>
+                <th data-sortable="true" data-align="right" data-field="arg_value">参数初始值</th>
+                <th data-sortable="true" data-align="right" data-field="bind_as_of_date" data-formatter="DispatchArgumentDefineObj.formatter">是否绑定批次日期</th>
+                <th data-align="center" data-field="create_user">创建人</th>
+                <th data-align="center" data-field="create_date">创建时间</th>
+                <th data-align="center" data-field="modify_user">修改人</th>
+                <th data-align="center" data-field="modify_date">修改时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    var DispatchArgumentDefineObj = {
+        $table: $('#h-dispatch-argument-define-info-table-details'),
+        formatter:function (value, row, index) {
+            if (row.arg_type == 4){
+                if (value == "0"){
+                    return "不绑定";
+                } else {
+                    return "绑定";
+                }
+            } else {
+                return "-";
+            }
+        },
+        add: function () {
+            $.Hmodal({
+                body: $("#h-dispatch-argument-src").html(),
+                height: "360px",
+                header: "新增参数",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/argument/define",
+                        data: $("#h-dispatch-argument-define-form").serialize(),
+                        type: "POST",
+                        success: function (data) {
+                            $.Notify({
+                                message: "新增费用信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchArgumentDefineObj.$table.bootstrapTable("refresh")
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-argument-define-domain-list").val();
+                    var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                    $bind.Hselect({
+                        height:"30px",
+                    });
+
+                    $("#h-dispatch-argument-define-form").find("select[name='arg_type']").Hselect({
+                        height: "30px",
+                        checkbox: false,
+                        nodeSelect: false,
+                        onclick:function () {
+                            var argType = $("#h-dispatch-argument-define-form").find("select[name='arg_type']").val();
+                            switch (argType){
+                                case "1":
+                                    var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                                    $bind.parent().hide();
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly",false);
+                                    break;
+                                case "2":
+                                    var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                                    $bind.parent().hide();
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    break;
+                                case "3":
+                                    var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                                    $bind.parent().hide();
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    break;
+                                case "4":
+                                    var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                                    $bind.parent().show();
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    break
+                            }
+                        }
+                    });
+
+                    $("#h-dispatch-argument-define-form").find("input[name='domain_id']").val(domain_id)
+                }
+            })
+        },
+        edit: function () {
+            var row = $("#h-dispatch-argument-define-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的参数信息",
+                    type: "info",
+                })
+                return
+            } else if (row.length > 1) {
+                $.Notify({
+                    message: "您选择了多行信息,请选择一行进行编辑",
+                    type: "info",
+                })
+                return
+            }
+
+            $.Hmodal({
+                body: $("#h-dispatch-argument-src").html(),
+                height: "360px",
+                header: "编辑参数",
+                callback: function (hmode) {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/argument/define",
+                        data: $("#h-dispatch-argument-define-form").serialize(),
+                        type: "PUT",
+                        success: function (data) {
+                            $.Notify({
+                                message: "修改参数信息成功",
+                                type: "success",
+                            });
+                            $(hmode).remove();
+                            DispatchArgumentDefineObj.$table.bootstrapTable("refresh");
+                        },
+                    })
+                },
+                preprocess: function () {
+                    var domain_id = $("#h-dispatch-argument-define-domain-list").val();
+                    $("#h-dispatch-argument-define-form").find("input[name='domain_id']").val(domain_id)
+                    $("#h-dispatch-argument-define-form").find("input[name='arg_id']").val(row[0].code_number).attr("readonly", "readonly");
+                    $("#h-dispatch-argument-define-form").find("input[name='arg_desc']").val(row[0].arg_desc)
+                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").val(row[0].arg_value)
+                    $("#h-dispatch-argument-define-form").find("select[name='arg_type']").Hselect({
+                        value: row[0].arg_type,
+                        height: "30px",
+                        disabled:true,
+                    });
+
+                    switch (row[0].arg_type){
+                        case "1":
+                            var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                            $bind.parent().hide();
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly",false);
+                            break;
+                        case "2":
+                            var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                            $bind.parent().hide();
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            break;
+                        case "3":
+                            var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                            $bind.parent().hide();
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            break;
+                        case "4":
+                            var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
+                            $bind.parent().show();
+                            $bind.Hselect({
+                                height:"30px",
+                                value:row[0].bind_as_of_date,
+                            });
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            break
+                    }
+                }
+            })
+        },
+        delete: function () {
+            var row = $("#h-dispatch-argument-define-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的参数信息",
+                    type: "info",
+                })
+                return
+            }
+            $.Hconfirm({
+                body: "点击确定,删除参数信息",
+                callback: function () {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/argument/define/delete",
+                        type: "POST",
+                        data: {JSON: JSON.stringify(row)},
+                        success: function () {
+                            $.Notify({
+                                message: "删除参数信息成功",
+                                type: "success",
+                            });
+                            $(row).each(function (index, element) {
+                                DispatchArgumentDefineObj.$table.bootstrapTable("removeByUniqueId", element.arg_id);
+                            })
+                        },
+                    })
+                }
+            })
+        },
+//        download:function(){
+//            var domain_id = $("#h-dispatch-argument-define-domain-list").val();
+//            $.Hdownload({
+//                url:"/v1/ca/driver/manage/download?domain_id="+domain_id,
+//                name:"动因值详细信息",
+//            })
+//        },
+//        upload:function(){
+//            $.Hupload({
+//                url:"/v1/ca/driver/manage/upload",
+//                header:"动因值上传",
+//                callback:function () {
+//                    DispatchArgumentDefineObj.$table.bootstrapTable("refresh");
+//                }
+//            })
+//        },
+    };
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-argument-define-table-info").height(hwindow - 130);
+
+        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+            var arr = new Array()
+            $(data.owner_list).each(function (index, element) {
+                var ijs = {};
+                ijs.id = element.domain_id
+                ijs.text = element.domain_desc
+                ijs.upId = "####hzwy23###"
+                arr.push(ijs)
+            });
+            $("#h-dispatch-argument-define-domain-list").Hselect({
+                data: arr,
+                height: "24px",
+                width: "180px",
+                value: data.domain_id,
+                onclick: function () {
+                    $("#h-dispatch-argument-define-info-table-details").bootstrapTable('refresh');
+                },
+            });
+
+            $("#h-dispatch-argument-define-info-table-details").bootstrapTable({
+                height: hwindow - 130,
+                queryParams: function (params) {
+                    params.domain_id = $("#h-dispatch-argument-define-domain-list").val();
+                    return params;
+                }
+            });
+        });
+    });
+</script>
+
+<script id="h-dispatch-argument-src" type="text/html">
+    <form id="h-dispatch-argument-define-form">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>参数编码</span>
+            <input name="arg_id" placeholder="由1-30位字母,数字组成" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span>参数名称</span>
+            <input name="arg_desc" placeholder="参数描述信息" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>参数类型</span>
+            <select name="arg_type" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
+                <option value="1">固定参数</option>
+                <option value="2">任务参数</option>
+                <option value="3">任务组参数</option>
+                <option value="4">批次参数</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>参数初始值</span>
+            <input name="arg_value" readonly="readonly" placeholder="参数类型为[固定参数]时,填写这个选项" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px; display: none;">
+            <span>与批次日期绑定</span>
+            <select name="bind_as_of_date" class="form-control"
+                    style="height: 30px; line-height: 30px; width: 100%;">
+                <option value="0" selected="selected">不绑定</option>
+                <option value="1">绑定</option>
+            </select>
+        </div>
+        <input name="domain_id" style="display: none;"/>
+    </form>
+</script>
+</html>

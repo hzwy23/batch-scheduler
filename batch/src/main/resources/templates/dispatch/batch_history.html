@@ -1,0 +1,138 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="row subsystem-header">
+    <div class="pull-left">
+        <span style="font-size: 14px;">批次历史信息查询</span>
+    </div>
+</div>
+<div class="row subsystem-toolbar">
+    <div style="height: 44px; line-height: 44px;display: inline;">
+        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;"
+              class="pull-left">&nbsp;所属域：</span>
+        <select id="h-dispatch-batch-history-domain-list" class="form-control pull-left"
+                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
+        </select>
+    </div>
+    <div id="h-dispatch-batch-history-toolbar-list" class="pull-right">
+        <button onclick="DispatchBatchHistoryObj.refresh()" class="btn btn-info btn-sm" title="编辑机构信息">
+            <span class="icon-refresh"> 刷新</span>
+        </button>
+        <button onclick="DispatchBatchHistoryObj.delete()" class="btn btn-danger btn-sm" title="删除机构信息">
+            <span class="icon-trash"> 删除</span>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div id="h-dispatch-batch-history-table-info" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-batch-history-info-table-details"
+               data-toggle="table"
+               data-striped="true"
+               data-page-size="30"
+               data-unique-id="uuid"
+               data-toolbar-align="right"
+               data-url="/v1/dispatch/history"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-page-list="[20,30, 50, 100, 200,1000]"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-align="center" data-formatter="DispatchBatchHistoryObj.formatterindex">序号</th>
+                <th data-sortable="true" data-align="center" data-field="codeNumber">批次编码</th>
+                <th data-sortable="true" data-field="batchDesc">批次描述</th>
+                <th data-sortable="true" data-align="center" data-field="batchStatusDesc">批次状态</th>
+                <th data-sortable="true" data-align="center" data-field="asOfDate">批次日期</th>
+                <th data-sortable="true" data-align="center" data-field="startTime">开始日期</th>
+                <th data-sortable="true" data-align="center" data-field="endTime">结束时间</th>
+                <th data-field="retMsg">退出消息</th>
+                <th data-align="center" data-formatter="DispatchBatchHistoryObj.formatter">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    var DispatchBatchHistoryObj = {
+        $table: $('#h-dispatch-batch-history-info-table-details'),
+        formatterindex:function (value, row, index) {
+            return index+1;
+        },
+        formatter:function (value,row,index) {
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchHistoryObj.getGroupHistory(\'' + row.uuid + '\',\''+row.batchDesc+'\')"> 详细信息</span>';
+        },
+        getGroupHistory:function (uuid,BatchDesc) {
+            Hutils.openTab({
+                url:"/v1/dispatch/batch/group/monitoring/page",
+                id:"hzwy23##groupBatchMonitoringPage",
+                data:{uuid:uuid,batch_desc:BatchDesc},
+                title:BatchDesc+" 任务组状态",
+            })
+        },
+        refresh:function () {
+            $("#h-dispatch-batch-history-info-table-details").bootstrapTable('refresh');
+        },
+        delete: function () {
+            var row = $("#h-dispatch-batch-history-info-table-details").bootstrapTable('getSelections');
+            if (row.length == 0) {
+                $.Notify({
+                    message: "您没有选择需要编辑的批次历史信息",
+                    type: "info",
+                })
+                return
+            }
+            $.Hconfirm({
+                body: "点击确定,删除批次历史信息",
+                callback: function () {
+                    $.HAjaxRequest({
+                        url: "/v1/dispatch/history/delete",
+                        type: "POST",
+                        data: {JSON: JSON.stringify(row)},
+                        success: function () {
+                            $.Notify({
+                                message: "删除批次历史信息成功",
+                                type: "success",
+                            });
+                            $(row).each(function (index, element) {
+                                DispatchBatchHistoryObj.$table.bootstrapTable("removeByUniqueId", element.uuid);
+                            })
+                        },
+                    })
+                }
+            })
+        },
+    };
+    $(document).ready(function () {
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-dispatch-batch-history-table-info").height(hwindow - 130);
+
+        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+            var arr = new Array();
+            $(data.owner_list).each(function (index, element) {
+                var ijs = {};
+                ijs.id = element.domain_id
+                ijs.text = element.domain_desc
+                ijs.upId = "####hzwy23###"
+                arr.push(ijs)
+            });
+
+            $("#h-dispatch-batch-history-domain-list").Hselect({
+                data: arr,
+                height: "24px",
+                width: "180px",
+                value: data.domain_id,
+                onclick: function () {
+                    $("#h-dispatch-batch-history-info-table-details").bootstrapTable('refresh');
+                },
+            });
+
+            $("#h-dispatch-batch-history-info-table-details").bootstrapTable({
+                height: hwindow - 130,
+                queryParams: function (params) {
+                    params.domain_id = $("#h-dispatch-batch-history-domain-list").val();
+                    return params;
+                }
+            });
+        });
+    });
+</script>
+</html>
