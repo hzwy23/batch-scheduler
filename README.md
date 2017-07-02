@@ -82,4 +82,4 @@ mvn clean package -DskipTests=true
 ## 交流方式
 e-mail: hzwy23@163.com
 
-QQ群：6353997
+QQ群：118183812
