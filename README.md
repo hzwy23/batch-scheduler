@@ -8,7 +8,7 @@
 **在下Java水平有限,项目中出现错误和不规范的地方,请不吝赐教,感激不尽**
 
 项目主要功能图:
-![系统主界面](./dispatch_example.gif)
+![系统主界面](./doc/dispatch_example.gif)
 
 ## batch-scheduler 项目简介
 
@@ -53,7 +53,7 @@ ETL调度系统,最小的调度单元job，job可以是下边几种类型:
 ## 创建工程
 1. batch-scheduler采用maven管理依赖关系,所以clone项目后,请安装maven工具,maven将会自动下载依赖包.
 
-2. 数据库表结构在项目根目录mysql_init.sql中.导入到mysql数据库中方法:
+2. 数据库表结构在项目db目录mysql_init.sql中.导入到mysql数据库中方法:
 ```shell
 mysql -uroot -p dbname < mysql_init.sql
 ```
