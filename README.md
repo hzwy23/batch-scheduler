@@ -49,7 +49,7 @@ mvn clean package -DskipTests=true
 ```
 在admin/target目录中，生成了可执行jar包，java -jar启动程序。
 
-打开浏览器,访问:https://localhost:8090
+打开浏览器,访问:https://localhost
 
 登录系统用户名是：demo，密码是：123456, 
 
