@@ -1,8 +1,6 @@
-[Asofdate Project Release](https://github.com/hzwy23/asofdate/releases)
-
-#### golang版本建议:
+#### jdk版本建议:
 ```
-go sdk >= 1.8
+ jdk >= 8
 ```
 
 **Golang版本地址**
