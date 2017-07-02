@@ -36,9 +36,9 @@
 
 导入数据文件方法，请修改下边“数据库名”为你的数据库中存在的数据库名
 ```shell
-mysql -uroot -p 数据库名 < ./init_hauth.sql
+mysql -uroot -p 数据库名 < ./mysql_init.sql
 ```
-提示：init_hauth.sql在src/github.com/hzwy23/hauth/script目录中
+提示：mysql_init.sql在文件根目录中。
 
 **2. 修改数据库连接密码，在admin/src/main/resources/application.properties,修改数据库连接信息
 
