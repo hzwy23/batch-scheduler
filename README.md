@@ -1,10 +1,5 @@
 [Wiki Page](https://github.com/hzwy23/asofdate-etl/wiki)
 
-## 项目状态
-持续完善中...
-
-有愿意加入项目的，请加QQ：309810957
-
 [oschina 极速下载地址](http://git.oschina.net/mirrors/asofdate-etl)
 
 [github 托管地址](https://github.com/hzwy23/asofdate-etl)
@@ -15,8 +10,10 @@
 项目主要功能图:
 ![系统主界面](./dispatch_example.gif)
 
-## asofdate-etl项目简介
-这是一个企业级ETL调度系统, 在成熟的spring框架基础上,实现ETL调度服务. 权限管理部分,采用[asofdate项目](https://github.com/hzwy23/asofdate),asofdate项目采用golang开发,asofdate-etl采用java重写了asofdate后台api,由于两个项目都是采用jwt加密用户连接信息,加密方式相同,所有,两个项目可以共同使用同一套数据模型.
+## batch-scheduler 项目简介
+
+这是一个企业级批次调度系统, 在成熟的spring框架基础上,实现ETL调度服务. 权限管理部分,采用[asofdate hauth项目](https://github.com/asofdate/hauth-java).
+batch-schduler与常见的任务调度系统侧重点不同，这个系统设计的初衷，是解决大批量存在依赖关系得任务调度。并不是为了解决定时任务调度。所以，batch-scheduler系统与通常的定时任务调度系统存在一些差异。
 
 ## 引用组件
 1. spring-boot spring社区中一款优秀的快速开发框架
@@ -54,7 +51,7 @@ ETL调度系统,最小的调度单元job，job可以是下边几种类型:
 注意:一旦出现某个job执行失败,调度器将会停止调度这个批次. 其他正常运行的批次不受影响.
 
 ## 创建工程
-1. asofdate-etl采用maven管理依赖关系,所以clone项目后,请安装maven工具,maven将会自动下载依赖包.
+1. batch-scheduler采用maven管理依赖关系,所以clone项目后,请安装maven工具,maven将会自动下载依赖包.
 
 2. 数据库表结构在项目根目录mysql_init.sql中.导入到mysql数据库中方法:
 ```shell
@@ -84,3 +81,5 @@ mvn clean package -DskipTests=true
 ```
 ## 交流方式
 e-mail: hzwy23@163.com
+
+QQ群：6353997
