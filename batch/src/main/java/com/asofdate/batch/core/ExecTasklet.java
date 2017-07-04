@@ -18,7 +18,8 @@ import java.io.InputStreamReader;
 public class ExecTasklet implements Tasklet{
     private final Logger logger = LoggerFactory.getLogger(ExecTasklet.class);
 
-    public String cmd = null;
+    private String cmd = null;
+
     public ExecTasklet(String cmd){
         this.cmd = cmd;
     }
@@ -38,10 +39,10 @@ public class ExecTasklet implements Tasklet{
         try {
             process = Runtime.getRuntime().exec(cmd + " " + jobParameters);
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "";
+            String line = null;
             while ((line = input.readLine()) != null) {
                 line = line.replaceAll("\"|\'", "");
-                System.out.println(line);
+                logger.info(line);
 //                if (END_FLAG.equals(line)) {
 //                    logger.info(jobName + " job execute completed.");
 //                    break;
@@ -57,6 +58,7 @@ public class ExecTasklet implements Tasklet{
             }
             process.waitFor();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } finally {
             if (input != null) {
