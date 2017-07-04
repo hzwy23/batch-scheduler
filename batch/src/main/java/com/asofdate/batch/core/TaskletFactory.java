@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
+
 /**
  * Created by hzwy23 on 2017/5/31.
  */
@@ -28,15 +30,19 @@ public class TaskletFactory {
     private JdbcTemplate jdbcTemplate;
 
     public Tasklet getTasklet(String typeId, String scritpFile, String basePath) {
+        String cmd = Paths.get(basePath, scritpFile).toString();
         switch (typeId) {
             case CMD_TYPE:
-                return new CmdTasklet(scritpFile, basePath);
+                cmd = "cmd /c " + cmd;
+                return new ExecTasklet(cmd);
             case SHELL_TYPE:
-                return new ShellTasklet(scritpFile, basePath);
+                cmd = "sh -x " + cmd;
+                return new ExecTasklet(cmd);
             case JAR_TYPE:
-                return new JarTasklet(scritpFile, basePath);
+                cmd = "java -jar " + cmd;
+                return new ExecTasklet(cmd);
             case BINARY_TYPE:
-                return new BinaryTasklet(scritpFile, basePath);
+                return new ExecTasklet(cmd);
             case PROC_TYPE:
                 return new ProcTasklet(scritpFile, jdbcTemplate);
         }

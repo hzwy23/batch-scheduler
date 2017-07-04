@@ -39,8 +39,8 @@ public class BatchConfiguration {
     @Autowired
     private TaskletFactory taskletFactory;
 
-    public Step stepOne(String typeId, String scriptFile, String basePath) {
-        return stepBuilderFactory.get("stepOne")
+    public Step stepOne(String jobName,String typeId, String scriptFile, String basePath) {
+        return stepBuilderFactory.get(jobName)
                 .tasklet(taskletFactory.getTasklet(typeId, scriptFile, basePath))
                 .build();
     }
@@ -52,7 +52,7 @@ public class BatchConfiguration {
     public Job job(String jobName, String typeId, String scriptFile, String basePath) throws Exception {
         return jobBuilderFactory.get(jobName)
                 .incrementer(new RunIdIncrementer())
-                .start(stepOne(typeId, scriptFile, basePath))
+                .start(stepOne(jobName,typeId, scriptFile, basePath))
                 .build();
     }
 

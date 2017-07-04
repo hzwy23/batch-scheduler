@@ -13,13 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * Created by hzwy23 on 2017/5/31.
  */
 public class ProcTasklet implements Tasklet {
-    private final String END_FLAG = "HZWY23-ASOFDATE-ETL-CMDSCRIPT-END";
-    private final Logger logger = LoggerFactory.getLogger(CmdTasklet.class);
-    private String ExitCode = "ExitCode=";
-    private String ExitMsg = "ExitMsg=";
+    private final Logger logger = LoggerFactory.getLogger(ProcTasklet.class);
+
     private JdbcTemplate jdbcTemplate;
     private String scriptFile = null;
-
 
     public ProcTasklet(String scriptFile, JdbcTemplate jdbcTemplate) {
         this.scriptFile = scriptFile;
@@ -47,6 +44,7 @@ public class ProcTasklet implements Tasklet {
             logger.info("program is :" + scriptFile + ", argument is:" + params);
             jdbcTemplate.execute("call " + scriptFile + params);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.FAILED);
         }
         return RepeatStatus.FINISHED;

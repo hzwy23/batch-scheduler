@@ -11,25 +11,20 @@ import org.springframework.batch.repeat.RepeatStatus;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Paths;
 
 /**
- * Created by hzwy23 on 2017/5/31.
+ * Created by hzwy23 on 2017/7/4.
  */
-public class BinaryTasklet implements Tasklet {
-    private final String END_FLAG = "HZWY23-ASOFDATE-ETL-CMDSCRIPT-END";
-    private final Logger logger = LoggerFactory.getLogger(CmdTasklet.class);
-    private String ExitCode = "ExitCode=";
-    private String ExitMsg = "ExitMsg=";
-    private String scritpFile;
+public class ExecTasklet implements Tasklet{
+    private final Logger logger = LoggerFactory.getLogger(ExecTasklet.class);
 
-    public BinaryTasklet(String scriptFile, String basePath) {
-        this.scritpFile = Paths.get(basePath, scriptFile).toString();
+    public String cmd = null;
+    public ExecTasklet(String cmd){
+        this.cmd = cmd;
     }
 
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-
         Object parametersObj = chunkContext.getStepContext().getJobParameters().get("JobParameters");
         String jobParameters = String.valueOf(System.currentTimeMillis());
         if (parametersObj != null) {
@@ -41,24 +36,24 @@ public class BinaryTasklet implements Tasklet {
         BufferedReader input = null;
 
         try {
-            process = Runtime.getRuntime().exec(this.scritpFile + " " + jobParameters);
+            process = Runtime.getRuntime().exec(cmd + " " + jobParameters);
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = "";
             while ((line = input.readLine()) != null) {
                 line = line.replaceAll("\"|\'", "");
-
-                if (END_FLAG.equals(line)) {
-                    logger.info(jobName + " job execute completed.");
-                    break;
-                }
-
-                if (line.indexOf(ExitCode) > -1) {
-                    if (line.equals("ExitCode=0")) {
-                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.COMPLETED);
-                    } else {
-                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.FAILED);
-                    }
-                }
+                System.out.println(line);
+//                if (END_FLAG.equals(line)) {
+//                    logger.info(jobName + " job execute completed.");
+//                    break;
+//                }
+//
+//                if (line.indexOf(ExitCode) > -1) {
+//                    if (line.equals("ExitCode=0")) {
+//                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.COMPLETED);
+//                    } else {
+//                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.FAILED);
+//                    }
+//                }
             }
             process.waitFor();
         } catch (IOException e) {

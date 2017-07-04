@@ -22,6 +22,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by hzwy23 on 2017/5/21.
@@ -99,14 +100,14 @@ public class QuartzJobLauncher extends QuartzJobBean {
 
         try {
             Job job = jobRegistry.getJob(jobName);
+
             JobExecution jobExecution = jobLauncher.run(job, getJobParameters());
+
             if (ExitStatus.COMPLETED.getExitCode().equals(jobExecution.getExitStatus().getExitCode())) {
-                logger.info("{} 任务已经完成.", jobName);
                 taskStatusService.setTaskCompleted(jobName);
                 jobRegistry.unregister(jobName);
             } else {
                 taskStatusService.setTaskError(jobName);
-                logger.info("{} 任务执行失败", jobName);
             }
 
         } catch (NoSuchJobException e) {
@@ -128,7 +129,7 @@ public class QuartzJobLauncher extends QuartzJobBean {
         String jobId = JoinCode.getTaskCode(jobName);
         List<TaskArgumentEntity> list = argumentService.queryArgument(jobId);
         if (list == null) {
-            builder.addLong("timestamp", System.currentTimeMillis());
+            builder.addString("uuid", UUID.randomUUID().toString());
             return builder.toJobParameters();
         }
 
@@ -143,10 +144,8 @@ public class QuartzJobLauncher extends QuartzJobBean {
         for (TaskArgumentEntity m : list) {
             jobParameters += " " + m.getArgValue();
         }
-
-        logger.info("job is :{},jobParameters is:{}", jobName, jobParameters.trim());
         builder.addString("JobParameters", jobParameters.trim());
-        builder.addLong("timestamp", System.currentTimeMillis());
+        builder.addString("uuid", UUID.randomUUID().toString());
 
         return builder.toJobParameters();
     }
