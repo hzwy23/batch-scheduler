@@ -2,6 +2,7 @@ package com.asofdate.batch.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.spi.LoggerFactoryBinder;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -26,12 +27,14 @@ public class ExecTasklet implements Tasklet{
 
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
+
         Object parametersObj = chunkContext.getStepContext().getJobParameters().get("JobParameters");
         String jobParameters = String.valueOf(System.currentTimeMillis());
         if (parametersObj != null) {
             jobParameters = parametersObj.toString();
         }
-        String jobName = chunkContext.getStepContext().getJobName();
+
+//        String jobName = chunkContext.getStepContext().getJobName();
 
         Process process = null;
 
@@ -40,6 +43,7 @@ public class ExecTasklet implements Tasklet{
         String line = null;
 
         try {
+
             process = Runtime.getRuntime().exec(cmd + " " + jobParameters);
 
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -49,9 +53,9 @@ public class ExecTasklet implements Tasklet{
             }
 
             process.waitFor();
+
         } catch (IOException e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
         } finally {
             if (input != null) {
                 try {
