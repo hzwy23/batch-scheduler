@@ -34,28 +34,20 @@ public class ExecTasklet implements Tasklet{
         String jobName = chunkContext.getStepContext().getJobName();
 
         Process process = null;
+
         BufferedReader input = null;
+
+        String line = null;
 
         try {
             process = Runtime.getRuntime().exec(cmd + " " + jobParameters);
+
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
+
             while ((line = input.readLine()) != null) {
-                line = line.replaceAll("\"|\'", "");
                 logger.info(line);
-//                if (END_FLAG.equals(line)) {
-//                    logger.info(jobName + " job execute completed.");
-//                    break;
-//                }
-//
-//                if (line.indexOf(ExitCode) > -1) {
-//                    if (line.equals("ExitCode=0")) {
-//                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.COMPLETED);
-//                    } else {
-//                        chunkContext.getStepContext().getStepExecution().setExitStatus(ExitStatus.FAILED);
-//                    }
-//                }
             }
+
             process.waitFor();
         } catch (IOException e) {
             logger.error(e.getMessage());

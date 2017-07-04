@@ -155,7 +155,7 @@ public class SqlDefine {
     public static String sys_rdbms_173 = "insert into dispatch_batch_group_status(batch_id,gid,status) values(?,?,?)";
     public static String sys_rdbms_174 = "update dispatch_batch_group_status set status = ? where batch_id = ? and gid = ?";
     public static String sys_rdbms_175 = "select status from dispatch_batch_group_status where batch_id = ? and gid = ?";
-    public static String sys_rdbms_176 = "update dispatch_batch_define set as_of_date = date_add(as_of_date,interval 1 day), batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date > as_of_date";
+    public static String sys_rdbms_176 = "update dispatch_batch_define set as_of_date = date_add(as_of_date,interval 1 day), batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date > as_of_date and batch_status = '2'";
     public static String sys_rdbms_177 = "select count(*) from dispatch_batch_group_status where batch_id = ? and status = '2'";
     public static String sys_rdbms_178 = "update dispatch_batch_define set batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date >= as_of_date";
     public static String sys_rdbms_179 = "update dispatch_batch_define set ret_msg = ? , end_date = now(), batch_status = ? where batch_id = ?";
