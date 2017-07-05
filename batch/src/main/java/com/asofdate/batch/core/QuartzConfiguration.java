@@ -36,6 +36,11 @@ public class QuartzConfiguration extends DefaultBatchConfigurer {
     private GroupTaskService groupTaskService;
     @Autowired
     private SysConfigService sysConfigService;
+    @Autowired
+    private JobLauncher jobLauncher;
+    @Autowired
+    private JobRegistry jobRegistry;
+
 
     private String domainId;
     private String batchId;
@@ -73,23 +78,28 @@ public class QuartzConfiguration extends DefaultBatchConfigurer {
         jobDetailFactoryBean.setDurability(true);
 
         jobDetailFactoryBean.setName(jobName);
-        JobRepository jobRepository = batchConfiguration.createJobRepository();
-        JobLauncher jobLauncher = batchConfiguration.createJobLauncher(jobRepository);
+//        JobRepository jobRepository = batchConfiguration.createJobRepository();
+//        JobLauncher jobLauncher = batchConfiguration.createJobLauncher(jobRepository);
         String taskId = this.groupTaskMap.get(JoinCode.getTaskCode(jobName)).getTaskId();
 
         TaskDefineEntity tm = this.taskDefineMap.get(taskId);
         String typeId = tm.getTaskType();
 
-        JobRegistry jobRegistry = batchConfiguration.createJobRegistry(jobName, typeId, tm.getScriptFile(), baseScriptPath);
-        JobExplorer jobExplorer = batchConfiguration.createJobExplorer();
-        JobOperator jobOperator = batchConfiguration.createJobOperator(jobLauncher, jobExplorer, jobRegistry, jobRepository);
-
+//        JobRegistry jobRegistry = batchConfiguration.createJobRegistry(jobName, typeId, tm.getScriptFile(), baseScriptPath);
+//        JobExplorer jobExplorer = batchConfiguration.createJobExplorer();
+//        JobOperator jobOperator = batchConfiguration.createJobOperator(jobLauncher, jobExplorer, jobRegistry, jobRepository);
+        try {
+            jobRegistry.register(new RegisterJob(batchConfiguration.job(jobName, typeId, tm.getScriptFile(), baseScriptPath)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("jobName", jobName);
         map.put("jobLauncher", jobLauncher);
         map.put("jobRegistry", jobRegistry);
-        map.put("jobExplorer", jobExplorer);
-        map.put("jobOperator", jobOperator);
+//        map.put("jobExplorer", jobExplorer);
+//        map.put("jobOperator", jobOperator);
+
         map.put("taskStatusService", taskStatusService);
         map.put("argumentService", argumentService);
         jobDetailFactoryBean.setJobDataAsMap(map);
@@ -130,6 +140,7 @@ public class QuartzConfiguration extends DefaultBatchConfigurer {
         }
 
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
+
         // 配置DataSource后,将会出现异常
         // JobLauncher实例化对象无法序列化
         // schedulerFactoryBean.setDataSource(dataSource);

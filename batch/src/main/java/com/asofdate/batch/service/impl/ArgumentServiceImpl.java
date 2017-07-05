@@ -7,6 +7,7 @@ import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.entity.*;
 import com.asofdate.batch.service.ArgumentService;
 import com.asofdate.batch.service.GroupTaskService;
+import com.asofdate.batch.service.TaskDefineService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
@@ -14,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by hzwy23 on 2017/5/29.
@@ -183,12 +182,13 @@ public class ArgumentServiceImpl implements ArgumentService {
             return null;
         }
 
-        List<TaskArgumentEntity> list = taskArgMap.get(taskId);
-        if (list == null) {
+        CopyOnWriteArrayList<TaskArgumentEntity> copyOnWriteArrayList = new CopyOnWriteArrayList<TaskArgumentEntity>(taskArgMap.get(taskId));
+
+        if (copyOnWriteArrayList == null) {
             return null;
         }
 
-        for (TaskArgumentEntity m : list) {
+        for (TaskArgumentEntity m : copyOnWriteArrayList) {
             String argType = argDefineMap.get(m.getArgId()).getArgType();
             switch (argType) {
                 case GROUP_ARGUMENT:
@@ -206,9 +206,16 @@ public class ArgumentServiceImpl implements ArgumentService {
                     break;
             }
         }
-        return list;
-    }
 
+        Collections.sort(copyOnWriteArrayList, new Comparator<TaskArgumentEntity>() {
+            @Override
+            public int compare(TaskArgumentEntity o1, TaskArgumentEntity o2) {
+                return Integer.parseInt(o1.getSortId()) - Integer.parseInt(o2.getSortId());
+            }
+        });
+
+        return copyOnWriteArrayList;
+    }
 
     private void initArgDefineMap() {
         String argType = null;

@@ -97,31 +97,31 @@ public class BatchConfiguration {
         return simpleJobLauncher;
     }
 
-    public JobExplorer createJobExplorer() {
-        JobExplorerFactoryBean jobExplorerFactoryBean = new JobExplorerFactoryBean();
-        jobExplorerFactoryBean.setDataSource(dataSource);
-        try {
-            jobExplorerFactoryBean.afterPropertiesSet();
-            JobExplorer jobExplorer = jobExplorerFactoryBean.getObject();
-            return jobExplorer;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//    public JobExplorer createJobExplorer() {
+//        JobExplorerFactoryBean jobExplorerFactoryBean = new JobExplorerFactoryBean();
+//        jobExplorerFactoryBean.setDataSource(dataSource);
+//        try {
+//            jobExplorerFactoryBean.afterPropertiesSet();
+//            JobExplorer jobExplorer = jobExplorerFactoryBean.getObject();
+//            return jobExplorer;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
-        return null;
-    }
-
-    public JobOperator createJobOperator(JobLauncher jobLauncher, JobExplorer jobExplorer, JobRegistry jobRegistry, JobRepository jobRepository) {
-        SimpleJobOperator simpleJobOperator = new SimpleJobOperator();
-        simpleJobOperator.setJobLauncher(jobLauncher);
-        simpleJobOperator.setJobExplorer(jobExplorer);
-        simpleJobOperator.setJobRegistry(jobRegistry);
-        simpleJobOperator.setJobRepository(jobRepository);
-        try {
-            simpleJobOperator.afterPropertiesSet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return simpleJobOperator;
-    }
+//    public JobOperator createJobOperator(JobLauncher jobLauncher, JobExplorer jobExplorer, JobRegistry jobRegistry, JobRepository jobRepository) {
+//        SimpleJobOperator simpleJobOperator = new SimpleJobOperator();
+//        simpleJobOperator.setJobLauncher(jobLauncher);
+//        simpleJobOperator.setJobExplorer(jobExplorer);
+//        simpleJobOperator.setJobRegistry(jobRegistry);
+//        simpleJobOperator.setJobRepository(jobRepository);
+//        try {
+//            simpleJobOperator.afterPropertiesSet();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return simpleJobOperator;
+//    }
 }

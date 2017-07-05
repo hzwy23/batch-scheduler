@@ -33,8 +33,8 @@ public class QuartzJobLauncher extends QuartzJobBean {
 
     private JobLauncher jobLauncher;
     private JobRegistry jobRegistry;
-    private JobExplorer jobExplorer;
-    private JobOperator jobOperator;
+//    private JobExplorer jobExplorer;
+//    private JobOperator jobOperator;
     private TaskStatusService taskStatusService;
     private ArgumentService argumentService;
     private String jobName;
@@ -63,21 +63,21 @@ public class QuartzJobLauncher extends QuartzJobBean {
         this.jobName = jobName;
     }
 
-    public JobOperator getJobOperator() {
-        return jobOperator;
-    }
-
-    public void setJobOperator(JobOperator jobOperator) {
-        this.jobOperator = jobOperator;
-    }
-
-    public JobExplorer getJobExplorer() {
-        return jobExplorer;
-    }
-
-    public void setJobExplorer(JobExplorer jobExplorer) {
-        this.jobExplorer = jobExplorer;
-    }
+//    public JobOperator getJobOperator() {
+//        return jobOperator;
+//    }
+//
+//    public void setJobOperator(JobOperator jobOperator) {
+//        this.jobOperator = jobOperator;
+//    }
+//
+//    public JobExplorer getJobExplorer() {
+//        return jobExplorer;
+//    }
+//
+//    public void setJobExplorer(JobExplorer jobExplorer) {
+//        this.jobExplorer = jobExplorer;
+//    }
 
     public JobRegistry getJobRegistry() {
         return jobRegistry;
@@ -99,6 +99,7 @@ public class QuartzJobLauncher extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         try {
+
             Job job = jobRegistry.getJob(jobName);
 
             JobExecution jobExecution = jobLauncher.run(job, getJobParameters());
@@ -132,13 +133,6 @@ public class QuartzJobLauncher extends QuartzJobBean {
             builder.addString("uuid", UUID.randomUUID().toString());
             return builder.toJobParameters();
         }
-
-        Collections.sort(list, new Comparator<TaskArgumentEntity>() {
-            @Override
-            public int compare(TaskArgumentEntity o1, TaskArgumentEntity o2) {
-                return Integer.parseInt(o1.getSortId()) - Integer.parseInt(o2.getSortId());
-            }
-        });
 
         String jobParameters = "";
         for (TaskArgumentEntity m : list) {
