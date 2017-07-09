@@ -2,7 +2,6 @@ package com.asofdate.batch.dao;
 
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface TaskDependencyDao {
 
     List<GroupTaskEntity> getGroupTasks(String groupId, String id);
 
-    int addTaskDependency(JSONArray jsonArray);
+    int addTaskDependency(List<TaskDependencyEntity> list);
 
     int deleteTaskDependency(String uuid);
 }

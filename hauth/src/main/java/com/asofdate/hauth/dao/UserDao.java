@@ -1,8 +1,7 @@
 package com.asofdate.hauth.dao;
 
+import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.UserEntity;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -16,11 +15,11 @@ public interface UserDao {
 
     int add(UserEntity userEntity);
 
-    int delete(JSONArray jsonArray);
+    int delete(List<UserEntity> list);
 
     int update(UserEntity userEntity);
 
-    int changePassword(JSONObject jsonObject);
+    int changePassword(UserDTO m);
 
     int changeStatus(String userId, String status);
 }

@@ -9,8 +9,8 @@ import com.asofdate.utils.Hret;
 import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,22 +65,15 @@ public class BatchDefineController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletResponse response, HttpServletRequest request) {
-        List<BatchDefineEntity> args = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            String batchId = jsonObject.getString("batch_id");
-            String domainId = jsonObject.getString("domain_id");
-            if (BatchStatus.BATCH_STATUS_RUNNING == batchDefineService.getStatus(batchId)) {
+        String json = request.getParameter("JSON");
+        List<BatchDefineEntity> args = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchDefineEntity>>() {
+        }.getType());
+        for (BatchDefineEntity m : args) {
+            if (BatchStatus.BATCH_STATUS_RUNNING == batchDefineService.getStatus(m.getBatchId())) {
                 response.setStatus(421);
-                return Hret.error(500, "批次正在运行中,无法被删除", null);
+                return Hret.error(421, "批次正在运行中,无法被删除", null);
             }
-
-            BatchDefineEntity batchDefineEntity = new BatchDefineEntity();
-            batchDefineEntity.setBatchId(batchId);
-            batchDefineEntity.setDomainId(domainId);
-            args.add(batchDefineEntity);
         }
 
         RetMsg msg = batchDefineService.deleteBatch(args);
@@ -105,7 +97,7 @@ public class BatchDefineController {
         BatchDefineEntity m = parse(request);
         if (batchDefineService.getStatus(m.getBatchId()) == BatchStatus.BATCH_STATUS_RUNNING) {
             response.setStatus(421);
-            return Hret.error(421, "批次正在运行中,无法编辑", JSONObject.NULL);
+            return Hret.error(421, "批次正在运行中,无法编辑", null);
         }
         RetMsg retMsg = batchDefineService.updateBatch(m);
 
@@ -140,22 +132,10 @@ public class BatchDefineController {
     @RequestMapping(value = "/argument", method = RequestMethod.POST)
     @ResponseBody
     public String addBatchArg(HttpServletResponse response, HttpServletRequest request) {
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        List<BatchArgumentDTO> list = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject js = (JSONObject) jsonArray.get(i);
-            String domainId = js.getString("domain_id");
-            String batchId = js.getString("batch_id");
-            String argId = js.getString("arg_id");
-            String argValue = js.getString("arg_value");
-            BatchArgumentDTO dto = new BatchArgumentDTO();
-            dto.setDomainId(domainId);
-            dto.setBatchId(batchId);
-            dto.setArgId(argId);
-            dto.setArgValue(argValue);
-            list.add(dto);
-        }
+        String json = request.getParameter("JSON");
+        List<BatchArgumentDTO> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<BatchArgumentDTO>>() {
+                }.getType());
 
         RetMsg retMsg = batchDefineService.addBatchArg(list);
         if (!retMsg.checkCode()) {
@@ -179,7 +159,6 @@ public class BatchDefineController {
     }
 
     private BatchDefineEntity parse(HttpServletRequest request) {
-        String userId = JwtService.getConnUser(request).getUserId();
         BatchDefineEntity batchDefineEntity = new BatchDefineEntity();
         String batchId = JoinCode.join(request.getParameter("domain_id"), request.getParameter("batch_id"));
         batchDefineEntity.setBatchId(batchId);

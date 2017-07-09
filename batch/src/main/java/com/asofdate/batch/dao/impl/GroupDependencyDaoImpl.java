@@ -4,13 +4,12 @@ import com.asofdate.batch.dao.GroupDependencyDao;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.sql.SqlDefine;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,13 +51,14 @@ public class GroupDependencyDaoImpl implements GroupDependencyDao {
         return jdbcTemplate.update(SqlDefine.sys_rdbms_153, uuid);
     }
 
+    @Transactional
     @Override
-    public int addGroupDependency(JSONArray jsonArray) {
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            String domainId = jsonObject.getString("domain_id");
-            String id = jsonObject.getString("id");
-            String upId = jsonObject.getString("up_id");
+    public int addGroupDependency(List<GroupDependencyEntity> list) {
+        for (GroupDependencyEntity m : list) {
+
+            String domainId = m.getDomainId();
+            String id = m.getId();
+            String upId = m.getUpId();
             if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_156, id, upId, domainId)) {
                 return -1;
             }

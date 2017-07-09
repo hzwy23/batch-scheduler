@@ -1,6 +1,7 @@
 package com.asofdate.batch.dao;
 
-import org.json.JSONArray;
+import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.entity.GroupTaskEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 public interface GroupTaskDao {
     List findAll(String domainId);
 
-    JSONArray getTask(String groupId);
+    List<GroupTaskEntity> getTask(String groupId);
 
     String getTaskId(String id);
 
@@ -21,5 +22,5 @@ public interface GroupTaskDao {
 
     int addTask(String id, String groupId, String taskId, String domainId);
 
-    int addArg(JSONArray jsonArray);
+    int addArg(List<GroupDefineDto> list);
 }

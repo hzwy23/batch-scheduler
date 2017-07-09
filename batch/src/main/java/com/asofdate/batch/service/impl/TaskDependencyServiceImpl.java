@@ -10,7 +10,6 @@ import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -71,9 +70,9 @@ public class TaskDependencyServiceImpl implements TaskDependencyService {
     }
 
     @Override
-    public RetMsg addTaskDependency(JSONArray jsonArray) {
+    public RetMsg addTaskDependency(List<TaskDependencyEntity> list) {
         try {
-            int size = taskDependencyDao.addTaskDependency(jsonArray);
+            int size = taskDependencyDao.addTaskDependency(list);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }

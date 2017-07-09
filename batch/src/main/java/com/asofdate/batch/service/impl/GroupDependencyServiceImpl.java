@@ -7,7 +7,6 @@ import com.asofdate.batch.service.GroupDependencyService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -81,9 +80,9 @@ public class GroupDependencyServiceImpl implements GroupDependencyService {
     }
 
     @Override
-    public RetMsg addGroupDependency(JSONArray jsonArray) {
+    public RetMsg addGroupDependency(List<GroupDependencyEntity> list) {
         try {
-            int size = groupDependencyDao.addGroupDependency(jsonArray);
+            int size = groupDependencyDao.addGroupDependency(list);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }

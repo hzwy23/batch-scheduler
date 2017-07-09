@@ -3,8 +3,6 @@ package com.asofdate.batch.dao.impl;
 import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.sql.SqlDefine;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,36 +30,21 @@ public class TaskArgumentDaoImpl implements TaskArgumentDao {
     }
 
     @Override
-    public JSONArray getTaskArg(String taskId) {
-        JSONArray jsonArray = new JSONArray();
-        jdbcTemplate.query(SqlDefine.sys_rdbms_132, new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("uuid", resultSet.getString("uuid"));
-                jsonObject.put("task_id", resultSet.getString("task_id"));
-                jsonObject.put("arg_id", resultSet.getString("arg_id"));
-                switch (resultSet.getString("arg_type")) {
-                    case "1":
-                        jsonObject.put("arg_value", resultSet.getString("fixed_arg_value"));
-                        break;
-                    case "2":
-                        jsonObject.put("arg_value", resultSet.getString("arg_value"));
-                        break;
-                    default:
-                        jsonObject.put("arg_value", "-");
-                }
-
-                jsonObject.put("sort_id", resultSet.getString("sort_id"));
-                jsonObject.put("domain_id", resultSet.getString("domain_id"));
-                jsonObject.put("arg_type", resultSet.getString("arg_type"));
-                jsonObject.put("arg_type_desc", resultSet.getString("arg_type_desc"));
-                jsonObject.put("arg_desc", resultSet.getString("arg_desc"));
-                jsonObject.put("code_number", resultSet.getString("code_number"));
-                jsonArray.put(jsonObject);
+    public List<TaskArgumentEntity> getTaskArg(String taskId) {
+        RowMapper<TaskArgumentEntity> rowMapper = new BeanPropertyRowMapper<>(TaskArgumentEntity.class);
+        List<TaskArgumentEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_132, rowMapper, taskId);
+        for (TaskArgumentEntity m : list) {
+            switch (m.getArgType()) {
+                case "1":
+                    m.setArgValue(m.getFixedArgValue());
+                    break;
+                case "2":
+                    break;
+                default:
+                    m.setArgValue("-");
             }
-        }, taskId);
-        return jsonArray;
+        }
+        return list;
     }
 
     @Override
@@ -75,28 +58,37 @@ public class TaskArgumentDaoImpl implements TaskArgumentDao {
     }
 
     @Override
-    public JSONObject getArgType(String argId) {
-        JSONObject jsonObject = new JSONObject();
+    public TaskArgumentEntity getArgType(String argId) {
+        TaskArgumentEntity taskArgumentEntity = new TaskArgumentEntity();
+
         jdbcTemplate.query(SqlDefine.sys_rdbms_143, new RowCallbackHandler() {
+
             @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                jsonObject.put("arg_id", resultSet.getString("arg_id"));
-                jsonObject.put("arg_desc", resultSet.getString("arg_desc"));
-                jsonObject.put("arg_value", resultSet.getString("arg_value"));
-                jsonObject.put("arg_type", resultSet.getString("arg_type"));
-                jsonObject.put("domain_id", resultSet.getString("domain_id"));
+            public void processRow(ResultSet arg0) throws SQLException {
+
+                String arg_id = arg0.getString("arg_id");
+                String arg_desc = arg0.getString("arg_desc");
+                String arg_value = arg0.getString("arg_value");
+                String arg_type = arg0.getString("arg_type");
+                String domain_id = arg0.getString("domain_id");
+                taskArgumentEntity.setArgId(arg_id);
+                taskArgumentEntity.setArgDesc(arg_desc);
+                taskArgumentEntity.setArgValue(arg_value);
+                taskArgumentEntity.setArgType(arg_type);
+                taskArgumentEntity.setDomainId(domain_id);
             }
+
         }, argId);
-        return jsonObject;
+        return taskArgumentEntity;
     }
 
     @Override
-    public int addArg(JSONObject jsonObject) {
-        String taskId = jsonObject.getString("task_id");
-        String argId = jsonObject.getString("arg_id");
-        String domainId = jsonObject.getString("domain_id");
-        String argValue = jsonObject.getString("arg_value");
-        String sortId = jsonObject.getString("sort_id");
+    public int addArg(TaskArgumentEntity taskArgumentEntity) {
+        String taskId = taskArgumentEntity.getTaskId();
+        String argId = taskArgumentEntity.getArgId();
+        String domainId = taskArgumentEntity.getDomainId();
+        String argValue = taskArgumentEntity.getArgValue();
+        String sortId = taskArgumentEntity.getSortId();
         return jdbcTemplate.update(SqlDefine.sys_rdbms_144, taskId, argId, domainId, argValue, sortId);
     }
 

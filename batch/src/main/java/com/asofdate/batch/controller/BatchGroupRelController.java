@@ -5,8 +5,8 @@ import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,18 +38,13 @@ public class BatchGroupRelController {
     public String addGroup(HttpServletResponse response, HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
         String domainId = request.getParameter("domain_id");
-        String JSON = request.getParameter("JSON");
+        String json = request.getParameter("JSON");
+        List<BatchGroupDTO> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDTO>>() {
+        }.getType());
 
-        JSONArray jsonArray = new JSONArray(JSON);
-        List<BatchGroupDTO> list = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            BatchGroupDTO dto = new BatchGroupDTO();
-            dto.setDomainId(domainId);
-            dto.setBatchId(batchId);
-            dto.setGroupId(jsonObject.getString("group_id"));
-            list.add(dto);
+        for (BatchGroupDTO m : list) {
+            m.setDomainId(domainId);
+            m.setBatchId(batchId);
         }
 
         RetMsg retMsg = batchGroupService.addGroup(list);
@@ -64,14 +59,9 @@ public class BatchGroupRelController {
     @RequestMapping(value = "/v1/dispatch/batch/define/group/list/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteGroupList(HttpServletResponse response, HttpServletRequest request) {
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        List<BatchGroupDTO> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            BatchGroupDTO dto = new BatchGroupDTO();
-            dto.setId(jsonObject.getString("id"));
-            list.add(dto);
-        }
+        String json = request.getParameter("JSON");
+        List<BatchGroupDTO> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDTO>>() {
+        }.getType());
         RetMsg retMsg = batchGroupService.deleteGroup(list);
         if (retMsg.checkCode()) {
             return Hret.success(retMsg);

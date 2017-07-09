@@ -9,6 +9,24 @@ public class GroupArgumentEntity {
     public String arg_id;
     public String arg_value;
     public String domain_id;
+    public String group_id;
+    public String task_id;
+
+    public String getGroupId() {
+        return group_id;
+    }
+
+    public void setGroupId(String group_id) {
+        this.group_id = group_id;
+    }
+
+    public String getTaskId() {
+        return task_id;
+    }
+
+    public void setTaskId(String task_id) {
+        this.task_id = task_id;
+    }
 
     public String getUuid() {
         return uuid;
@@ -58,6 +76,8 @@ public class GroupArgumentEntity {
                 ", arg_id='" + arg_id + '\'' +
                 ", arg_value='" + arg_value + '\'' +
                 ", domain_id='" + domain_id + '\'' +
+                ", group_id='" + group_id + '\'' +
+                ", task_id='" + task_id + '\'' +
                 '}';
     }
 }

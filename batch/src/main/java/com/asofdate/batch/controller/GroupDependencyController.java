@@ -1,11 +1,13 @@
 package com.asofdate.batch.controller;
 
 import com.asofdate.batch.entity.BatchGroupEntity;
+import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.batch.service.GroupDependencyService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,9 +52,12 @@ public class GroupDependencyController {
     @ResponseBody
     public String addDependency(HttpServletResponse response, HttpServletRequest request) {
 
-        String JSON = request.getParameter("JSON");
-        JSONArray jsonArray = new JSONArray(JSON);
-        RetMsg retMsg = groupDependencyService.addGroupDependency(jsonArray);
+        String json = request.getParameter("JSON");
+
+        List<GroupDependencyEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<GroupDependencyEntity>>() {
+                }.getType());
+        RetMsg retMsg = groupDependencyService.addGroupDependency(list);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.success(retMsg);

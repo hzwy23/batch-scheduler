@@ -4,8 +4,6 @@ import com.asofdate.batch.dao.TaskDependencyDao;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
 import com.asofdate.sql.SqlDefine;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ public class TaskDependencyDaoImpl implements TaskDependencyDao {
 
     @Override
     public List<GroupTaskEntity> getGroupTasks(String groupId, String id) {
-        logger.info("groupId is :" + groupId);
+        logger.debug("groupId is :" + groupId);
         RowMapper<GroupTaskEntity> rowMapper = new BeanPropertyRowMapper<>(GroupTaskEntity.class);
         List<GroupTaskEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_150, rowMapper, groupId);
         Set<String> set = getChildren(groupId, id);
@@ -82,15 +80,14 @@ public class TaskDependencyDaoImpl implements TaskDependencyDao {
         return list;
     }
 
+    @Transactional
     @Override
-    public int addTaskDependency(JSONArray jsonArray) {
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-
+    public int addTaskDependency(List<TaskDependencyEntity> list) {
+        for (TaskDependencyEntity m : list) {
             if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_151,
-                    jsonObject.getString("id"),
-                    jsonObject.getString("up_id"),
-                    jsonObject.getString("domain_id"))) {
+                    m.getId(),
+                    m.getUpId(),
+                    m.getDomainId())) {
                 return -1;
             }
         }

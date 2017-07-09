@@ -6,13 +6,9 @@ import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.support.MapJobRegistry;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.explore.support.JobExplorerFactoryBean;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
-import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
@@ -39,7 +35,7 @@ public class BatchConfiguration {
     @Autowired
     private TaskletFactory taskletFactory;
 
-    public Step stepOne(String jobName,String typeId, String scriptFile, String basePath) {
+    public Step stepOne(String jobName, String typeId, String scriptFile, String basePath) {
         return stepBuilderFactory.get(jobName)
                 .tasklet(taskletFactory.getTasklet(typeId, scriptFile, basePath))
                 .build();
@@ -52,7 +48,7 @@ public class BatchConfiguration {
     public Job job(String jobName, String typeId, String scriptFile, String basePath) throws Exception {
         return jobBuilderFactory.get(jobName)
                 .incrementer(new RunIdIncrementer())
-                .start(stepOne(jobName,typeId, scriptFile, basePath))
+                .start(stepOne(jobName, typeId, scriptFile, basePath))
                 .build();
     }
 

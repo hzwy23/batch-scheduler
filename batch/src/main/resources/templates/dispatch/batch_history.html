@@ -32,7 +32,7 @@
                data-url="/v1/dispatch/history"
                data-side-pagination="client"
                data-pagination="true"
-               data-page-list="[20,30, 50, 100, 200,1000]"
+               data-page-list="[20,30,50,100]"
                data-search="false">
             <thead>
             <tr>
@@ -80,13 +80,21 @@
                 })
                 return
             }
+            
+            var json = new Array();
+            $(row).each(function(index,element){
+            	var e = {};
+            	e.uuid = element.uuid;
+            	json.push(e);
+            });
+            
             $.Hconfirm({
                 body: "点击确定,删除批次历史信息",
                 callback: function () {
                     $.HAjaxRequest({
                         url: "/v1/dispatch/history/delete",
                         type: "POST",
-                        data: {JSON: JSON.stringify(row)},
+                        data: {JSON: JSON.stringify(json)},
                         success: function () {
                             $.Notify({
                                 message: "删除批次历史信息成功",

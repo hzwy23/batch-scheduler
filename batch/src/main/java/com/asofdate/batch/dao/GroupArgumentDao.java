@@ -1,7 +1,6 @@
 package com.asofdate.batch.dao;
 
 import com.asofdate.batch.entity.GroupArgumentEntity;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public interface GroupArgumentDao {
     List<GroupArgumentEntity> findAll(String domainId);
 
-    JSONArray getGroupArg(String id);
+    List<GroupArgumentEntity> getGroupArg(String id);
 
     int updateArg(String argValue, String uuid, String argId);
 }

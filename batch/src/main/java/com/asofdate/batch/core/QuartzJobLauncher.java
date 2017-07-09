@@ -10,17 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +29,7 @@ public class QuartzJobLauncher extends QuartzJobBean {
 
     private JobLauncher jobLauncher;
     private JobRegistry jobRegistry;
-//    private JobExplorer jobExplorer;
+    //    private JobExplorer jobExplorer;
 //    private JobOperator jobOperator;
     private TaskStatusService taskStatusService;
     private ArgumentService argumentService;

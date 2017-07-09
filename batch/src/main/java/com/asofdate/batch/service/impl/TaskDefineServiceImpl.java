@@ -3,14 +3,13 @@ package com.asofdate.batch.service.impl;
 import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.dao.TaskDefineDao;
 import com.asofdate.batch.entity.GroupTaskEntity;
+import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.entity.TaskDefineEntity;
 import com.asofdate.batch.service.GroupTaskService;
 import com.asofdate.batch.service.TaskDefineService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +98,7 @@ public class TaskDefineServiceImpl implements TaskDefineService {
     }
 
     @Override
-    public JSONArray getTaskArg(String taskId) {
+    public List<TaskArgumentEntity> getTaskArg(String taskId) {
         return taskArgumentDao.getTaskArg(taskId);
     }
 
@@ -130,14 +129,14 @@ public class TaskDefineServiceImpl implements TaskDefineService {
     }
 
     @Override
-    public JSONObject getArgType(String argId) {
+    public TaskArgumentEntity getArgType(String argId) {
         return taskArgumentDao.getArgType(argId);
     }
 
     @Override
-    public RetMsg addArg(JSONObject jsonObject) {
+    public RetMsg addArg(TaskArgumentEntity taskArgumentEntity) {
         try {
-            int size = taskArgumentDao.addArg(jsonObject);
+            int size = taskArgumentDao.addArg(taskArgumentEntity);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }

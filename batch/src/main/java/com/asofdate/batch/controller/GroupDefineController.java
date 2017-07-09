@@ -1,7 +1,10 @@
 package com.asofdate.batch.controller;
 
+import com.asofdate.batch.dto.GroupDefineDto;
 import com.asofdate.batch.entity.GroupDefineEntity;
 import com.asofdate.batch.entity.GroupTaskEntity;
+import com.asofdate.batch.entity.TaskArgumentEntity;
+import com.asofdate.batch.entity.TaskDependencyEntity;
 import com.asofdate.batch.service.GroupDefineService;
 import com.asofdate.batch.service.GroupTaskService;
 import com.asofdate.batch.service.TaskDependencyService;
@@ -9,8 +12,8 @@ import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by hzwy23 on 2017/6/1.
@@ -64,15 +70,11 @@ public class GroupDefineController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletResponse response, HttpServletRequest request) {
-        List<GroupDefineEntity> args = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            GroupDefineEntity groupDefineEntity = new GroupDefineEntity();
-            groupDefineEntity.setGroupId(jsonObject.getString("group_id"));
-            groupDefineEntity.setDomainId(jsonObject.getString("domain_id"));
-            args.add(groupDefineEntity);
-        }
+        String json = request.getParameter("JSON");
+
+        List<GroupDefineEntity> args = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<GroupDefineEntity>>() {
+                }.getType());
         RetMsg msg = groupDefineService.delete(args);
         if (msg.checkCode()) {
             return Hret.success(msg);
@@ -98,9 +100,9 @@ public class GroupDefineController {
 
     @RequestMapping(value = "/task", method = RequestMethod.GET)
     @ResponseBody
-    public String getTask(HttpServletRequest request) {
+    public List<GroupTaskEntity> getTask(HttpServletRequest request) {
         String groupId = request.getParameter("group_id");
-        return groupTaskService.getTask(groupId).toString();
+        return groupTaskService.getTask(groupId);
     }
 
     @RequestMapping(value = "/task/dependency", method = RequestMethod.GET)
@@ -128,8 +130,11 @@ public class GroupDefineController {
     @RequestMapping(value = "/group/task/dependency", method = RequestMethod.POST)
     @ResponseBody
     public String addGroupTask(HttpServletResponse response, HttpServletRequest request) {
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        RetMsg retMsg = taskDependencyService.addTaskDependency(jsonArray);
+        String json = request.getParameter("JSON");
+        List<TaskDependencyEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<TaskDependencyEntity>>() {
+                }.getType());
+        RetMsg retMsg = taskDependencyService.addTaskDependency(list);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
@@ -151,9 +156,9 @@ public class GroupDefineController {
 
     @RequestMapping(value = "/task/argument", method = RequestMethod.GET)
     @ResponseBody
-    public String getGroupTaskArgument(HttpServletRequest request) {
+    public List<TaskArgumentEntity> getGroupTaskArgument(HttpServletRequest request) {
         String id = request.getParameter("id");
-        return groupTaskService.getTaskArg(id).toString();
+        return groupTaskService.getTaskArg(id);
     }
 
     @RequestMapping(value = "/task/argument/update", method = RequestMethod.POST)
@@ -185,18 +190,21 @@ public class GroupDefineController {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
         }
-        return Hret.success(200, "success", JSONObject.NULL);
+        return Hret.success(200, "success", null);
     }
 
     @RequestMapping(value = "/task/list/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteTaskList(HttpServletResponse response, HttpServletRequest request) {
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
+        String json = request.getParameter("JSON");
         Set<String> args = new HashSet<>();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            args.add(jsonObject.getString("id"));
+        List<GroupDefineDto> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<GroupDefineDto>>() {
+                }.getType());
+
+        for (GroupDefineDto m : list) {
+            args.add(m.getId());
         }
 
         RetMsg retMsg = groupTaskService.deleteTask(args);
@@ -219,21 +227,21 @@ public class GroupDefineController {
 
         RetMsg retMsg = groupTaskService.addTask(id, group_id, task_id, domain_id);
         if (!retMsg.checkCode()) {
-            return Hret.success(retMsg);
+            response.setStatus(retMsg.getCode());
+            return Hret.error(retMsg);
         }
 
         if (!"[]".equals(arg_list)) {
-            JSONArray jsonArray = new JSONArray(arg_list);
-            JSONArray arg = new JSONArray();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                jsonObject.getString("arg_id");
-                jsonObject.getString("arg_value");
-                jsonObject.put("id", id);
-                jsonObject.put("domain_id", domain_id);
-                arg.put(jsonObject);
+
+            List<GroupDefineDto> list = new GsonBuilder().create().fromJson(arg_list,
+                    new TypeToken<List<GroupDefineDto>>() {
+                    }.getType());
+
+            for (GroupDefineDto m : list) {
+                m.setId(id);
+                m.setDomainId(domain_id);
             }
-            retMsg = groupTaskService.addGroupArg(arg);
+            retMsg = groupTaskService.addGroupArg(list);
             if (!retMsg.checkCode()) {
                 response.setStatus(retMsg.getCode());
                 return Hret.error(retMsg);

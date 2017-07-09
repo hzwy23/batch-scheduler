@@ -2,12 +2,11 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.OrgDao;
 import com.asofdate.hauth.dao.UserDao;
+import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.OrgEntity;
 import com.asofdate.hauth.entity.UserEntity;
 import com.asofdate.sql.SqlDefine;
 import com.asofdate.utils.CryptoAES;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -82,12 +81,11 @@ public class UserDaoImpl implements UserDao {
 
     @Transactional
     @Override
-    public int delete(JSONArray jsonArray) {
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject row = (JSONObject) jsonArray.get(i);
+    public int delete(List<UserEntity> list) {
+        for (UserEntity m : list) {
             jdbcTemplate.update(SqlDefine.sys_rdbms_007,
-                    row.getString("user_id"),
-                    row.getString("org_unit_id"));
+                    m.getUser_id(),
+                    m.getOrg_unit_id());
         }
         return 1;
     }
@@ -104,9 +102,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int changePassword(JSONObject jsonObject) {
-        String userId = jsonObject.getString("userId");
-        String newPd = jsonObject.getString("newPasswd");
+    public int changePassword(UserDTO m) {
+        String userId = m.getUserId();
+        String newPd = m.getNewPasswd();
         String passwd = CryptoAES.aesEncrypt(newPd);
         return jdbcTemplate.update(SqlDefine.sys_rdbms_015,
                 passwd, userId);

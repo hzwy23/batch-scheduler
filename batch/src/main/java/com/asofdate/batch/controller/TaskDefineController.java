@@ -1,13 +1,14 @@
 package com.asofdate.batch.controller;
 
+import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.entity.TaskDefineEntity;
 import com.asofdate.batch.service.TaskDefineService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,7 +58,7 @@ public class TaskDefineController {
         if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
-                return Hret.error(421, m.getDefaultMessage(), JSONObject.NULL);
+                return Hret.error(421, m.getDefaultMessage(), null);
             }
         }
 
@@ -76,15 +76,11 @@ public class TaskDefineController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletResponse response, HttpServletRequest request) {
-        List<TaskDefineEntity> args = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            TaskDefineEntity taskDefineEntity = new TaskDefineEntity();
-            taskDefineEntity.setTaskId(jsonObject.getString("taskId"));
-            taskDefineEntity.setDomainId(jsonObject.getString("domainId"));
-            args.add(taskDefineEntity);
-        }
+        String json = request.getParameter("JSON");
+        List<TaskDefineEntity> args = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<TaskDefineEntity>>() {
+                }.getType());
+
         RetMsg msg = taskDefineService.delete(args);
         if (msg.checkCode()) {
             return Hret.success(msg);
@@ -103,7 +99,7 @@ public class TaskDefineController {
         if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
-                return Hret.error(421, m.getDefaultMessage(), JSONObject.NULL);
+                return Hret.error(421, m.getDefaultMessage(), null);
             }
         }
 
@@ -117,10 +113,10 @@ public class TaskDefineController {
 
     @RequestMapping(value = "/argument", method = RequestMethod.GET)
     @ResponseBody
-    public String getTaskId(HttpServletRequest request) {
+    public List<TaskArgumentEntity> getTaskId(HttpServletRequest request) {
         String taskId = request.getParameter("task_id");
-        logger.info("task id is:" + taskId);
-        return taskDefineService.getTaskArg(taskId).toString();
+        logger.debug("task id is:" + taskId);
+        return taskDefineService.getTaskArg(taskId);
     }
 
     @RequestMapping(value = "/argument/sort", method = RequestMethod.PUT)
@@ -152,9 +148,9 @@ public class TaskDefineController {
 
     @RequestMapping(value = "/argument/type", method = RequestMethod.GET)
     @ResponseBody
-    public String getArgType(HttpServletResponse response, HttpServletRequest request) {
+    public TaskArgumentEntity getArgType(HttpServletResponse response, HttpServletRequest request) {
         String argId = request.getParameter("arg_id");
-        return taskDefineService.getArgType(argId).toString();
+        return taskDefineService.getArgType(argId);
     }
 
     /*
@@ -181,33 +177,30 @@ public class TaskDefineController {
     @RequestMapping(value = "/argument/add", method = RequestMethod.POST)
     @ResponseBody
     public String addArg(HttpServletResponse response, HttpServletRequest request) {
-        JSONObject jsonObject = new JSONObject();
+        TaskArgumentEntity taskArgumentEntity = new TaskArgumentEntity();
         String taskId = request.getParameter("task_id");
         if (taskId == null || taskId.isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "任务参数为空,请联系管理员", JSONObject.NULL);
+            return Hret.error(421, "任务参数为空,请联系管理员", null);
         }
-        jsonObject.put("task_id", taskId);
+        taskArgumentEntity.setTaskId(taskId);
 
         String argId = request.getParameter("arg_id");
         if (argId == null || argId.isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "请选择参数", JSONObject.NULL);
+            return Hret.error(421, "请选择参数", null);
         }
-        jsonObject.put("arg_id", argId);
-
+        taskArgumentEntity.setArgId(argId);
         String sortId = request.getParameter("sort_id");
         if (sortId == null || sortId.isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "参数排序号不能为空", JSONObject.NULL);
+            return Hret.error(421, "参数排序号不能为空", null);
         }
-        jsonObject.put("sort_id", sortId);
+        taskArgumentEntity.setSortId(sortId);
+        taskArgumentEntity.setDomainId(request.getParameter("domain_id"));
+        taskArgumentEntity.setArgValue(request.getParameter("arg_value"));
 
-        jsonObject.put("domain_id", request.getParameter("domain_id"));
-
-        jsonObject.put("arg_value", request.getParameter("arg_value"));
-
-        RetMsg retMsg = taskDefineService.addArg(jsonObject);
+        RetMsg retMsg = taskDefineService.addArg(taskArgumentEntity);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);

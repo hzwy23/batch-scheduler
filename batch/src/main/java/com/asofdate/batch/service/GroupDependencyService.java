@@ -3,7 +3,6 @@ package com.asofdate.batch.service;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
 
 import java.util.List;
 import java.util.Set;
@@ -55,5 +54,5 @@ public interface GroupDependencyService {
     /**
      * 给任务组新增依赖
      */
-    RetMsg addGroupDependency(JSONArray jsonArray);
+    RetMsg addGroupDependency(List<GroupDependencyEntity> list);
 }

@@ -7,7 +7,6 @@ import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.entity.*;
 import com.asofdate.batch.service.ArgumentService;
 import com.asofdate.batch.service.GroupTaskService;
-import com.asofdate.batch.service.TaskDefineService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;

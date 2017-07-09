@@ -10,7 +10,6 @@ import com.asofdate.batch.utils.BatchStatus;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +53,13 @@ public class DispatchController {
         if (domainId == null || batchId == null) {
             response.setStatus(421);
             logger.info("batch id or domain id is null ,batch id is: {}, domain id is: {}", batchId, domainId);
-            return Hret.error(421, "domain_id is empty or batch_id is empty", JSONObject.NULL);
+            return Hret.error(421, "domain_id is empty or batch_id is empty", null);
         }
 
         if (BatchStatus.BATCH_STATUS_RUNNING == batchDefineService.getStatus(batchId)) {
             response.setStatus(421);
             logger.info("batch is running,batch_id is: {}", batchId);
-            return Hret.error(421, "批次正在运行中", JSONObject.NULL);
+            return Hret.error(421, "批次正在运行中", null);
         }
 
         RetMsg retMsg = batchDefineService.runBatchInit(batchId);
@@ -84,6 +83,6 @@ public class DispatchController {
         jobScheduler.start();
 
         logger.info("batch started, batch_id is:{},domain_id is:{}", batchId, domainId);
-        return Hret.success(200, "start batch successfully. batch id is :" + batchId, JSONObject.NULL);
+        return Hret.success(200, "start batch successfully. batch id is :" + batchId, null);
     }
 }

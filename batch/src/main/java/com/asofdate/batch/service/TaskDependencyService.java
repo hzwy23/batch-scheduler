@@ -3,7 +3,6 @@ package com.asofdate.batch.service;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
 
 import java.util.List;
 import java.util.Set;
@@ -42,9 +41,9 @@ public interface TaskDependencyService {
     /**
      * 给任务新增依赖
      *
-     * @param jsonArray
+     * @param list
      */
-    RetMsg addTaskDependency(JSONArray jsonArray);
+    RetMsg addTaskDependency(List<TaskDependencyEntity> list);
 
     /**
      * 删除任务依赖

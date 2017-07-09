@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,14 +26,10 @@ public class BatchHistoryDaoImpl implements BatchHistoryDao {
         return list;
     }
 
-    @Transactional
     @Override
     public int delete(List<BatchHistoryEntity> list) {
         for (BatchHistoryEntity m : list) {
-            int size = jdbcTemplate.update(SqlDefine.sys_rdbms_194, m.getUuid());
-            if (size != 1) {
-                return -1;
-            }
+            jdbcTemplate.update(SqlDefine.sys_rdbms_194, m.getUuid());
         }
         return 1;
     }

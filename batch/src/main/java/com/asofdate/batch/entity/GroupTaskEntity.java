@@ -13,6 +13,26 @@ public class GroupTaskEntity {
     public String code_number;
     public String up_id;
 
+    public String task_type;
+    public String task_type_desc;
+
+
+    public String getTaskType() {
+        return task_type;
+    }
+
+    public void setTaskType(String task_type) {
+        this.task_type = task_type;
+    }
+
+    public String getTaskTypeDesc() {
+        return task_type_desc;
+    }
+
+    public void setTaskTypeDesc(String task_type_desc) {
+        this.task_type_desc = task_type_desc;
+    }
+
     public String getCodeNumber() {
         return code_number;
     }
@@ -88,6 +108,8 @@ public class GroupTaskEntity {
                 ", id='" + id + '\'' +
                 ", code_number='" + code_number + '\'' +
                 ", up_id='" + up_id + '\'' +
+                ", task_type='" + task_type + '\'' +
+                ", task_type_desc='" + task_type_desc + '\'' +
                 '}';
     }
 }

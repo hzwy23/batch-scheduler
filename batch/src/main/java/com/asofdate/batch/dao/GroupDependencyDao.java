@@ -2,7 +2,6 @@ package com.asofdate.batch.dao;
 
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -18,5 +17,5 @@ public interface GroupDependencyDao {
 
     int deleteGroupDependency(String uuid);
 
-    int addGroupDependency(JSONArray jsonArray);
+    int addGroupDependency(List<GroupDependencyEntity> list);
 }

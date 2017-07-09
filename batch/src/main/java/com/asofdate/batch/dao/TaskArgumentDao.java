@@ -1,7 +1,6 @@
 package com.asofdate.batch.dao;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.asofdate.batch.entity.TaskArgumentEntity;
 
 import java.util.List;
 
@@ -11,15 +10,15 @@ import java.util.List;
 public interface TaskArgumentDao {
     List findAll(String domainId);
 
-    JSONArray getTaskArg(String taskId);
+    List<TaskArgumentEntity> getTaskArg(String taskId);
 
     int updateSort(String sortId, String uuid);
 
     int deleteArg(String uuid);
 
-    JSONObject getArgType(String argId);
+    TaskArgumentEntity getArgType(String argId);
 
-    int addArg(JSONObject jsonObject);
+    int addArg(TaskArgumentEntity taskArgumentEntity);
 
     int updateArgValue(String argValue, String uuid);
 }

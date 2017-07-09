@@ -1,7 +1,6 @@
 package com.asofdate.hauth.service;
 
 import com.asofdate.hauth.entity.ShareDomainEntity;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface ShareDomainService {
 
     int add(ShareDomainEntity shareDomainEntity);
 
-    int delete(JSONArray jsonArray);
+    int delete(List<ShareDomainEntity> list);
 
     int update(ShareDomainEntity shareDomainEntity);
 }

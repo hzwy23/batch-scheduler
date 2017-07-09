@@ -1,10 +1,9 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.dao.UserDao;
+import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.UserEntity;
 import com.asofdate.hauth.service.UserService;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int delete(JSONArray jsonArray) {
-        return userDao.delete(jsonArray);
+    public int delete(List<UserEntity> list) {
+        return userDao.delete(list);
     }
 
     @Override
@@ -44,8 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int changePassword(JSONObject jsonObject) {
-        return userDao.changePassword(jsonObject);
+    public int changePassword(UserDTO m) {
+        return userDao.changePassword(m);
     }
 
     @Override

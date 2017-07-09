@@ -5,8 +5,8 @@ import com.asofdate.batch.service.BatchHistoryService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,16 +36,10 @@ public class BatchHistoryController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteHistory(HttpServletResponse response, HttpServletRequest request) {
-        String JSON = request.getParameter("JSON");
-        JSONArray jsonArray = new JSONArray(JSON);
-        List<BatchHistoryDTO> list = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject js = (JSONObject) jsonArray.get(i);
-            BatchHistoryDTO dto = new BatchHistoryDTO();
-            dto.setUuid(js.getString("uuid"));
-            list.add(dto);
-        }
+        String json = request.getParameter("JSON");
+        List<BatchHistoryDTO> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<BatchHistoryDTO>>() {
+                }.getType());
 
         RetMsg retMsg = batchHistoryService.delete(list);
         if (retMsg.checkCode()) {

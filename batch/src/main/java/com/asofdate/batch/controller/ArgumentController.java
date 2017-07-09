@@ -6,8 +6,8 @@ import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,27 +48,27 @@ public class ArgumentController {
 
         if (argumentDefine.getArgId().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "参数编码必须由1-30位字母、数字组成", JSONObject.NULL);
+            return Hret.error(421, "参数编码必须由1-30位字母、数字组成", null);
         }
 
         if (argumentDefine.getArgDesc().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "请输入详细的参数描述信息", JSONObject.NULL);
+            return Hret.error(421, "请输入详细的参数描述信息", null);
         }
 
         if (argumentDefine.getArgType() == null) {
             response.setStatus(421);
-            return Hret.error(421, "请选择参数类型", JSONObject.NULL);
+            return Hret.error(421, "请选择参数类型", null);
         }
 
         if ("1".equals(argumentDefine.getArgType()) && argumentDefine.getArgValue().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "请填写固定参数，参数值", JSONObject.NULL);
+            return Hret.error(421, "请填写固定参数，参数值", null);
         }
 
         if ("4".equals(argumentDefine.getArgType()) && argumentDefine.getBindAsOfDate() == null) {
             response.setStatus(421);
-            return Hret.error(421, "批次类型参数，请选择是否与数据日期绑定", JSONObject.NULL);
+            return Hret.error(421, "批次类型参数，请选择是否与数据日期绑定", null);
         }
         RetMsg retMsg = argumentService.addArgument(argumentDefine);
         if (SysStatus.SUCCESS_CODE == retMsg.getCode()) {
@@ -82,16 +81,10 @@ public class ArgumentController {
     @RequestMapping(method = RequestMethod.POST, value = "/delete")
     @ResponseBody
     public String deleteArgumentDefine(HttpServletResponse response, HttpServletRequest request) {
-        List<ArgumentDefineEntity> args = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(request.getParameter("JSON"));
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            ArgumentDefineEntity argumentDefineEntity = new ArgumentDefineEntity();
-            argumentDefineEntity.setArgId(jsonObject.getString("arg_id"));
-            argumentDefineEntity.setDomainId(jsonObject.getString("domain_id"));
-            args.add(argumentDefineEntity);
-        }
-        RetMsg msg = argumentService.deleteArgument(args);
+        String json = request.getParameter("JSON");
+        List<ArgumentDefineEntity> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<ArgumentDefineEntity>>() {
+        }.getType());
+        RetMsg msg = argumentService.deleteArgument(list);
         if (SysStatus.SUCCESS_CODE == msg.getCode()) {
             return Hret.success(msg);
         }
@@ -109,27 +102,27 @@ public class ArgumentController {
 
         if (argumentDefine.getArgId().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "参数编码必须由1-30位字母、数字组成", JSONObject.NULL);
+            return Hret.error(421, "参数编码必须由1-30位字母、数字组成", null);
         }
 
         if (argumentDefine.getArgDesc().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "请输入详细的参数描述信息", JSONObject.NULL);
+            return Hret.error(421, "请输入详细的参数描述信息", null);
         }
 
         if (argumentDefine.getArgType() == null) {
             response.setStatus(421);
-            return Hret.error(421, "请选择参数类型", JSONObject.NULL);
+            return Hret.error(421, "请选择参数类型", null);
         }
 
         if ("1".equals(argumentDefine.getArgType()) && argumentDefine.getArgValue().isEmpty()) {
             response.setStatus(421);
-            return Hret.error(421, "请填写固定参数，参数值", JSONObject.NULL);
+            return Hret.error(421, "请填写固定参数，参数值", null);
         }
 
         if ("4".equals(argumentDefine.getArgType()) && argumentDefine.getBindAsOfDate() == null) {
             response.setStatus(421);
-            return Hret.error(421, "批次类型参数，请选择是否与数据日期绑定", JSONObject.NULL);
+            return Hret.error(421, "批次类型参数，请选择是否与数据日期绑定", null);
         }
         RetMsg retMsg = argumentService.updateArgument(argumentDefine);
         if (SysStatus.SUCCESS_CODE == retMsg.getCode()) {

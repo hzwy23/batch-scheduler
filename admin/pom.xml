@@ -20,11 +20,6 @@
     <dependencies>
         <dependency>
             <groupId>com.asofdate</groupId>
-            <artifactId>hauth</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.asofdate</groupId>
             <artifactId>batch</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

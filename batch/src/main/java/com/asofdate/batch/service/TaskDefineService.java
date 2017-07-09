@@ -1,9 +1,8 @@
 package com.asofdate.batch.service;
 
+import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.entity.TaskDefineEntity;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public interface TaskDefineService {
      */
     RetMsg update(TaskDefineEntity m);
 
-    JSONArray getTaskArg(String taskId);
+    List<TaskArgumentEntity> getTaskArg(String taskId);
 
     /**
      * 更新任务参数顺序
@@ -71,14 +70,14 @@ public interface TaskDefineService {
      *
      * @param argId
      */
-    JSONObject getArgType(String argId);
+    TaskArgumentEntity getArgType(String argId);
 
     /**
      * 给任务添加参数
      *
-     * @param jsonObject
+     * @param taskArgumentEntity
      */
-    RetMsg addArg(JSONObject jsonObject);
+    RetMsg addArg(TaskArgumentEntity taskArgumentEntity);
 
     /**
      * 更新任务参数值

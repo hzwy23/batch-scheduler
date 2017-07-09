@@ -1,8 +1,9 @@
 package com.asofdate.batch.service;
 
+import com.asofdate.batch.dto.GroupDefineDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
+import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.utils.RetMsg;
-import org.json.JSONArray;
 
 import java.util.List;
 import java.util.Set;
@@ -27,14 +28,14 @@ public interface GroupTaskService {
      *
      * @param groupId
      */
-    JSONArray getTask(String groupId);
+    List<GroupTaskEntity> getTask(String groupId);
 
     /**
      * 查询某一个任务组中，指定任务的参数
      *
      * @param id 指定任务组中，指定任务的编码
      */
-    JSONArray getTaskArg(String id);
+    List<TaskArgumentEntity> getTaskArg(String id);
 
     /**
      * 删除任务组中已经配置的任务
@@ -63,7 +64,7 @@ public interface GroupTaskService {
     /**
      * 给任务组类型的参数赋值
      *
-     * @param jsonArray
+     * @param list
      */
-    RetMsg addGroupArg(JSONArray jsonArray);
+    RetMsg addGroupArg(List<GroupDefineDto> list);
 }

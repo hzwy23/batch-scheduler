@@ -2,8 +2,6 @@ package com.asofdate.batch.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.spi.LoggerFactoryBinder;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -16,12 +14,12 @@ import java.io.InputStreamReader;
 /**
  * Created by hzwy23 on 2017/7/4.
  */
-public class ExecTasklet implements Tasklet{
+public class ExecTasklet implements Tasklet {
     private final Logger logger = LoggerFactory.getLogger(ExecTasklet.class);
 
     private String cmd = null;
 
-    public ExecTasklet(String cmd){
+    public ExecTasklet(String cmd) {
         this.cmd = cmd;
     }
 

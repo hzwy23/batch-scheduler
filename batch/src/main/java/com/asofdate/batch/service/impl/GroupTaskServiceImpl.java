@@ -3,15 +3,16 @@ package com.asofdate.batch.service.impl;
 import com.asofdate.batch.dao.GroupArgumentDao;
 import com.asofdate.batch.dao.GroupTaskDao;
 import com.asofdate.batch.dao.TaskArgumentDao;
+import com.asofdate.batch.dto.GroupDefineDto;
 import com.asofdate.batch.entity.BatchGroupEntity;
+import com.asofdate.batch.entity.GroupArgumentEntity;
 import com.asofdate.batch.entity.GroupTaskEntity;
+import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.batch.service.GroupTaskService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,55 +63,43 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     }
 
     @Override
-    public JSONArray getTask(String groupId) {
+    public List<GroupTaskEntity> getTask(String groupId) {
         return groupTaskDao.getTask(groupId);
     }
 
     @Override
-    public JSONArray getTaskArg(String id) {
-        JSONArray ret = new JSONArray();
-        String taskId = groupTaskDao.getTaskId(id);
-        logger.info("task id is :" + taskId);
-        JSONArray jsonArray = groupArgumentDao.getGroupArg(id);
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-            map.put(jsonObject.getString("arg_id"), jsonObject.getString("arg_value"));
-        }
-        logger.info("group arg is :" + jsonArray.toString());
-        JSONArray taskArgList = taskArgumentDao.getTaskArg(taskId);
-        logger.info("task arg  is :" + taskArgList.toString());
-        for (int i = 0; i < taskArgList.length(); i++) {
-            JSONObject one = (JSONObject) taskArgList.get(i);
+    public List<TaskArgumentEntity> getTaskArg(String id) {
 
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("uuid", one.getString("uuid"));
-            jsonObject.put("task_id", one.getString("task_id"));
-            jsonObject.put("arg_id", one.getString("arg_id"));
-            switch (one.getString("arg_type")) {
+        String taskId = groupTaskDao.getTaskId(id);
+
+        logger.debug("task id is :" + taskId);
+        List<GroupArgumentEntity> groupArg = groupArgumentDao.getGroupArg(id);
+
+        Map<String, String> map = new HashMap<>();
+        for (GroupArgumentEntity m : groupArg) {
+            map.put(m.getArgId(), m.getArgValue());
+        }
+
+        List<TaskArgumentEntity> taskArgList = taskArgumentDao.getTaskArg(taskId);
+        logger.debug("task arg  is :" + taskArgList.toString());
+
+        for (TaskArgumentEntity m : taskArgList) {
+
+            switch (m.getArgType()) {
                 case "1":
                 case "2":
-                    jsonObject.put("arg_value", one.getString("arg_value"));
                     break;
                 case "3":
-                    if (map.containsKey(one.getString("arg_id"))) {
-                        String argValue = map.get(one.getString("arg_id"));
-                        jsonObject.put("arg_value", argValue);
+                    if (map.containsKey(m.getArgId())) {
+                        String argValue = map.get(m.getArgId());
+                        m.setArgValue(argValue);
                         break;
                     }
                 default:
-                    jsonObject.put("arg_value", "-");
+                    m.setArgValue("-");
             }
-
-            jsonObject.put("sort_id", one.getString("sort_id"));
-            jsonObject.put("domain_id", one.getString("domain_id"));
-            jsonObject.put("arg_type", one.getString("arg_type"));
-            jsonObject.put("arg_type_desc", one.getString("arg_type_desc"));
-            jsonObject.put("arg_desc", one.getString("arg_desc"));
-            jsonObject.put("code_number", one.getString("code_number"));
-            ret.put(jsonObject);
         }
-        return ret;
+        return taskArgList;
     }
 
     @Override
@@ -140,9 +129,9 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     }
 
     @Override
-    public RetMsg addGroupArg(JSONArray jsonArray) {
+    public RetMsg addGroupArg(List<GroupDefineDto> list) {
         try {
-            int size = groupTaskDao.addArg(jsonArray);
+            int size = groupTaskDao.addArg(list);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
