@@ -169,6 +169,8 @@ public class BatchDefineController {
         batchDefineEntity.setBatchDesc(request.getParameter("batch_desc"));
         batchDefineEntity.setBatchStatus(request.getParameter("batch_status"));
         batchDefineEntity.setAsOfDate(request.getParameter("as_of_date"));
+        batchDefineEntity.setPaggingFreq(Integer.parseInt(request.getParameter("pagging_freq")));
+        batchDefineEntity.setPaggingFreqMult(request.getParameter("pagging_freq_mult"));
         return batchDefineEntity;
     }
 }

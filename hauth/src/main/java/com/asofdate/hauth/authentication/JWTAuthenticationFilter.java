@@ -1,5 +1,6 @@
 package com.asofdate.hauth.authentication;
 
+import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 
             filterChain.doFilter(request, response);
 
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | SignatureException e) {
             HttpServletResponse w = (HttpServletResponse) response;
             Cookie cookie = new Cookie("Authorization", "");
             cookie.setMaxAge(0);

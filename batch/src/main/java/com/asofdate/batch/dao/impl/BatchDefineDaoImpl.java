@@ -3,13 +3,22 @@ package com.asofdate.batch.dao.impl;
 import com.asofdate.batch.dao.BatchDefineDao;
 import com.asofdate.batch.entity.BatchDefineEntity;
 import com.asofdate.sql.SqlDefine;
+import com.asofdate.utils.TimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +54,9 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
                 m.getAsOfDate(),
                 m.getRetMsg(),
                 m.getCompleteDate(),
-                m.getDomainId());
+                m.getDomainId(),
+                m.getPaggingFreq(),
+                m.getPaggingFreqMult());
     }
 
     @Transactional
@@ -65,9 +76,10 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     public int update(BatchDefineEntity m) {
         return jdbcTemplate.update(SqlDefine.sys_rdbms_130,
                 m.getBatchDesc(),
-                m.getBatchStatus(),
                 m.getAsOfDate(),
                 m.getCompleteDate(),
+                m.getPaggingFreq(),
+                m.getPaggingFreqMult(),
                 m.getBatchId(),
                 m.getDomainId());
     }
@@ -79,7 +91,57 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
 
     @Override
     public int batchPagging(String batchId) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_176, batchId);
+        // 获取批次现在的状态信息
+        BatchDefineEntity bd = getBatchDetails(batchId);
+        if (!"2".equals(bd.getBatchStatus())) {
+            // 批次已经停止，无需翻页运行
+            return 4;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = sdf.parse(bd.getAsOfDate());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            String dateAddVal;
+            switch (bd.getPaggingFreqMult()) {
+                case "MI":
+                    calendar.add(Calendar.MINUTE,bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "H":
+                    calendar.add(Calendar.HOUR,bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "D":
+                    calendar.add(Calendar.DATE,bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "W":
+                    calendar.add(Calendar.DATE,7*bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "M":
+                    calendar.add(Calendar.MONTH,bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "Q":
+                    calendar.add(Calendar.MONDAY,3*bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                case "Y":
+                    calendar.add(Calendar.YEAR,bd.getPaggingFreq());
+                    dateAddVal = sdf.format(calendar.getTime());
+                    break;
+                default:
+                        return 6;
+            }
+            return jdbcTemplate.update(SqlDefine.sys_rdbms_176, dateAddVal, batchId, dateAddVal);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 5;
     }
 
     @Override
@@ -114,9 +176,36 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     @Override
     public String getBatchAsOfDate(String batchId) {
         try {
-            return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_102, String.class, batchId);
+            String asOfDate =  jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_102, String.class, batchId);
+            return TimeFormat.formatTime(asOfDate);
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private BatchDefineEntity getBatchDetails(String batchId){
+        BatchDefineEntity ret = new BatchDefineEntity();
+
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(SqlDefine.sys_rdbms_210,batchId);
+
+        jdbcTemplate.query(SqlDefine.sys_rdbms_210, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                String batchStatus = resultSet.getString("batch_status");
+                String asOfDate = resultSet.getString("as_of_date");
+                asOfDate = TimeFormat.formatTime(asOfDate);
+                String completeDate = resultSet.getString("complete_date");
+                int paggingFreq = resultSet.getInt("pagging_freq");
+                String paggingFreqMult = resultSet.getString("pagging_freq_mult");
+
+                ret.setAsOfDate(asOfDate);
+                ret.setBatchStatus(batchStatus);
+                ret.setCompleteDate(completeDate);
+                ret.setPaggingFreq(paggingFreq);
+                ret.setPaggingFreqMult(paggingFreqMult);
+            }
+        }, new Object[]{batchId});
+
+        return ret;
     }
 }

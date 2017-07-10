@@ -70,7 +70,7 @@
         },
         formatterGroup: function (value, row, index) {
             return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchGroupObj.getDependency(\'' + row.id + '\',\''+row.group_desc+'\')"><i class="icon-circle-arrow-up"> 查询依赖</i></span>'+
-                 '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchGroupObj.deleteGroup(\'' + row.id + '\')"><i class="icon-trash"> 删除</i></span>';
+                 '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteGroup(\'' + row.id + '\')"><i class="icon-trash"> 删除</i></span>';
         },
         addDependency:function (id,groupDesc) {
             var batchId = $("#h-batch-group-batch-id").html();

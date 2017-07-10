@@ -3,6 +3,7 @@ package com.asofdate.batch.dao.impl;
 import com.asofdate.batch.dao.BatchArgumentDao;
 import com.asofdate.batch.entity.BatchArgumentEntiry;
 import com.asofdate.sql.SqlDefine;
+import com.asofdate.utils.TimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,7 +44,8 @@ public class BatchArgumentDaoImpl implements BatchArgumentDao {
 
     @Override
     public String getAsOfDate(String batchId) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_157, String.class, batchId);
+        String asofdate = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_157, String.class, batchId);
+        return TimeFormat.formatTime(asofdate);
     }
 
 

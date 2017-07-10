@@ -50,11 +50,12 @@
                 <th data-sortable="true" data-align="center" data-field="code_number">批次编码</th>
                 <th data-sortable="true" data-field="batch_desc">批次描述</th>
                 <th data-sortable="true" data-align="center" data-field="as_of_date">批次日期</th>
+                <th data-align="center" data-formatter="DispatchBatchDefineObj.freqFormat">执行频率</th>
+                <th data-sortable="true" data-align="center" data-field="complete_date">终止日期</th>
+
                 <th data-sortable="true" data-align="center" data-field="batch_status_desc">批次状态</th>
                 <th data-sortable="true" data-align="center" data-field="start_date">启动时间</th>
                 <th data-sortable="true" data-align="center" data-field="end_date">完成时间</th>
-                <th data-sortable="true" data-align="center" data-field="ret_msg">消息</th>
-                <th data-sortable="true" data-align="center" data-field="complete_date">终止日期</th>
                 <th data-sortable="true" data-align="center" data-formatter="DispatchBatchDefineObj.formatter">操作</th>
             </tr>
             </thead>
@@ -65,6 +66,9 @@
 <script type="text/javascript">
     var DispatchBatchDefineObj = {
         $table: $('#h-dispatch-batch-manage-info-table-details'),
+        freqFormat:function (value, row, index) {
+            return row.pagging_freq+" "+row.pagging_freq_mult_desc;
+        },
         formatter: function (value, row, index) {
             return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchDefineObj.getGroups(\'' + row.batch_id + '\',\''+row.batch_desc+'\')">任务组</span>'+
                 '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchDefineObj.getBatchArg(\'' + row.batch_id + '\',\''+row.batch_desc+'\')"> 参数</span>';
@@ -263,6 +267,10 @@
                 preprocess: function () {
                     var domain_id = $("#h-dispatch-batch-domain-list").val();
 
+                    $("#h-dispatch-batch-define-form").find("select[name='pagging_freq_mult']").Hselect({
+                        height:"30px",
+                    });
+
                     $("#h-dispatch-batch-define-form").find("select[name='batch_status']").Hselect({
                         height: "30px",
                         checkbox: false,
@@ -272,6 +280,32 @@
                     });
                     $("#h-dispatch-batch-define-form").find("select[name='batch_status']").parent().hide();
                     $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id)
+
+                    var start = {
+                        elem: '#h-batch-define-asofdate',
+                        format: 'YYYY-MM-DD hh:mm:ss',
+                        max: laydate.now(),
+                        istime: true,
+                        istoday: false,
+                        choose: function(datas){
+                            end.min = datas;
+                        }
+                    };
+
+                    var end = {
+                        elem: '#h-batch-define-complete-date',
+                        format: 'YYYY-MM-DD hh:mm:ss',
+                        istime: true,
+                        istoday: false,
+                    };
+
+                    document.getElementById("h-batch-define-asofdate").onclick = function () {
+                        laydate(start);
+                    };
+
+                    document.getElementById("h-batch-define-complete-date").onclick = function () {
+                        laydate(end);
+                    };
                 }
             })
         },
@@ -313,17 +347,44 @@
                 preprocess: function () {
                     var domain_id = $("#h-dispatch-batch-domain-list").val();
                     // 初始化成本池
-                    $("#h-dispatch-batch-define-form").find("select[name='batch_status']").Hselect({
-                        height: "30px",
-                        checkbox: false,
-                        nodeSelect: false,
-                        value: row[0].batch_status,
-                    });
+                    $("#h-dispatch-batch-define-form").find("select[name='batch_status']").val(row[0].batch_status);
                     $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id);
                     $("#h-dispatch-batch-define-form").find("input[name='batch_id']").val(row[0].code_number).attr("readonly","readonly");
+                    $("#h-dispatch-batch-define-form").find("input[name='batch_desc']").val(row[0].batch_desc);
+
                     $("#h-dispatch-batch-define-form").find("input[name='as_of_date']").val(row[0].as_of_date);
                     $("#h-dispatch-batch-define-form").find("input[name='complete_date']").val(row[0].complete_date);
-                    $("#h-dispatch-batch-define-form").find("input[name='batch_desc']").val(row[0].batch_desc);
+                    $("#h-dispatch-batch-define-form").find("input[name='pagging_freq']").val(row[0].pagging_freq);
+                    $("#h-dispatch-batch-define-form").find("select[name='pagging_freq_mult']").Hselect({
+                        height:"30px",
+                        value:row[0].pagging_freq_mult,
+                    });
+
+                    var start = {
+                        elem: '#h-batch-define-asofdate',
+                        format: 'YYYY-MM-DD hh:mm:ss',
+                        max: laydate.now(),
+                        istime: true,
+                        istoday: false,
+                        choose: function(datas){
+                            end.min = datas;
+                        }
+                    };
+
+                    var end = {
+                        elem: '#h-batch-define-complete-date',
+                        format: 'YYYY-MM-DD hh:mm:ss',
+                        istime: true,
+                        istoday: false,
+                    };
+
+                    document.getElementById("h-batch-define-asofdate").onclick = function () {
+                        laydate(start);
+                    };
+
+                    document.getElementById("h-batch-define-complete-date").onclick = function () {
+                        laydate(end);
+                    };
                 }
             })
         },
@@ -406,6 +467,9 @@
                 }
             });
         });
+
+        laydate.skin("danlan");
+
     });
 </script>
 
@@ -422,15 +486,15 @@
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
             <span>批次日期</span>
-            <input name="as_of_date" onclick="laydate(this)" placeholder="批次运行日期" class="form-control"
+            <input id="h-batch-define-asofdate" name="as_of_date"  placeholder="批次运行日期" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
             <span>终止日期</span>
-            <input name="complete_date" onclick="laydate(this)" placeholder="批次运行终止日期" class="form-control"
+            <input id="h-batch-define-complete-date" name="complete_date" placeholder="批次运行终止日期" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;display: none;">
             <span>批次状态</span>
             <select name="batch_status" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
                 <option value="0">初始化</option>
@@ -438,6 +502,22 @@
                 <option value="2">已完成</option>
                 <option value="3">错误</option>
                 <option value="4">停止</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>执行频率：</span>
+            <input name="pagging_freq" placeholder="批次详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+            <span>执行披绿单位：</span>
+            <select name="pagging_freq_mult" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
+                <option value="MI">分钟</option>
+                <option value="H">小时</option>
+                <option value="D">日</option>
+                <option value="W">周</option>
+                <option value="M">月</option>
+                <option value="Q">季</option>
+                <option value="Y">年</option>
             </select>
         </div>
         <input name="domain_id" style="display: none;"/>

@@ -122,7 +122,15 @@ public class BatchDefineServiceImpl implements BatchDefineService {
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "批次日期已经大于终止日期，批次运行完成", null);
+            String msg = "批次日期已经大于终止日期，批次运行完成";
+            if (4 == size) {
+                msg = "批次状态已经处于非运行状态，无法继续运行";
+            } else if (5 == size){
+                msg = "日期转换失败，批次翻页运行失败";
+            } else if (6 == size) {
+                msg = "翻页频率不正确，请检查配置信息";
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, msg, null);
         } catch (Exception e) {
             logger.info(e.getMessage());
             return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), batchid);

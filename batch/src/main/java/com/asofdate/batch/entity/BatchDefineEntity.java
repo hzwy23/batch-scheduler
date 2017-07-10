@@ -1,5 +1,7 @@
 package com.asofdate.batch.entity;
 
+import com.asofdate.utils.TimeFormat;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
@@ -15,6 +17,34 @@ public class BatchDefineEntity {
     public String end_date;
     public String domain_id;
     public String batch_status_desc;
+
+    public Integer pagging_freq;
+    public String pagging_freq_mult;
+    public String pagging_freq_mult_desc;
+
+    public Integer getPaggingFreq() {
+        return pagging_freq;
+    }
+
+    public void setPaggingFreq(Integer pagging_freq) {
+        this.pagging_freq = pagging_freq;
+    }
+
+    public String getPaggingFreqMult() {
+        return pagging_freq_mult;
+    }
+
+    public void setPaggingFreqMult(String pagging_freq_mult) {
+        this.pagging_freq_mult = pagging_freq_mult;
+    }
+
+    public String getPaggingFreqMultDesc() {
+        return pagging_freq_mult_desc;
+    }
+
+    public void setPaggingFreqMultDesc(String pagging_freq_mult_desc) {
+        this.pagging_freq_mult_desc = pagging_freq_mult_desc;
+    }
 
     public String getBatchStatusDesc() {
         return batch_status_desc;
@@ -61,7 +91,7 @@ public class BatchDefineEntity {
     }
 
     public void setAsOfDate(String as_of_date) {
-        this.as_of_date = as_of_date;
+        this.as_of_date = TimeFormat.formatTime(as_of_date);
     }
 
     public String getStartDate() {
@@ -69,7 +99,7 @@ public class BatchDefineEntity {
     }
 
     public void setStartDate(String start_date) {
-        this.start_date = start_date;
+        this.start_date = TimeFormat.formatTime(start_date);
     }
 
     public String getRetMsg() {
@@ -85,7 +115,7 @@ public class BatchDefineEntity {
     }
 
     public void setCompleteDate(String complete_date) {
-        this.complete_date = complete_date;
+        this.complete_date = TimeFormat.formatTime(complete_date);
     }
 
     public String getEndDate() {
@@ -93,7 +123,7 @@ public class BatchDefineEntity {
     }
 
     public void setEndDate(String end_date) {
-        this.end_date = end_date;
+        this.end_date = TimeFormat.formatTime(end_date);
     }
 
     public String getDomainId() {
@@ -118,6 +148,9 @@ public class BatchDefineEntity {
                 ", end_date='" + end_date + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 ", batch_status_desc='" + batch_status_desc + '\'' +
+                ", pagging_freq='" + pagging_freq + '\'' +
+                ", pagging_freq_mult='" + pagging_freq_mult + '\'' +
+                ", pagging_freq_mult_desc='" + pagging_freq_mult_desc + '\'' +
                 '}';
     }
 }
