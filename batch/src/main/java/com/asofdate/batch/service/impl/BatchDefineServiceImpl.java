@@ -125,7 +125,7 @@ public class BatchDefineServiceImpl implements BatchDefineService {
             String msg = "批次日期已经大于终止日期，批次运行完成";
             if (4 == size) {
                 msg = "批次状态已经处于非运行状态，无法继续运行";
-            } else if (5 == size){
+            } else if (5 == size) {
                 msg = "日期转换失败，批次翻页运行失败";
             } else if (6 == size) {
                 msg = "翻页频率不正确，请检查配置信息";

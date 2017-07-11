@@ -18,15 +18,15 @@ public class BatchDefineEntity {
     public String domain_id;
     public String batch_status_desc;
 
-    public Integer pagging_freq;
+    public String pagging_freq;
     public String pagging_freq_mult;
     public String pagging_freq_mult_desc;
 
-    public Integer getPaggingFreq() {
+    public String getPaggingFreq() {
         return pagging_freq;
     }
 
-    public void setPaggingFreq(Integer pagging_freq) {
+    public void setPaggingFreq(String pagging_freq) {
         this.pagging_freq = pagging_freq;
     }
 

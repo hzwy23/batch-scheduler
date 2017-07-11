@@ -52,7 +52,6 @@
                 <th data-sortable="true" data-align="center" data-field="as_of_date">批次日期</th>
                 <th data-align="center" data-formatter="DispatchBatchDefineObj.freqFormat">执行频率</th>
                 <th data-sortable="true" data-align="center" data-field="complete_date">终止日期</th>
-
                 <th data-sortable="true" data-align="center" data-field="batch_status_desc">批次状态</th>
                 <th data-sortable="true" data-align="center" data-field="start_date">启动时间</th>
                 <th data-sortable="true" data-align="center" data-field="end_date">完成时间</th>
@@ -476,26 +475,26 @@
 <script id="h-dispatch-batch-define-src" type="text/html">
     <form id="h-dispatch-batch-define-form">
         <div class="col-sm-6 col-md-6 col-lg-6">
-            <span>批次编码</span>
+            <span>批次编码：</span>
             <input name="batch_id" placeholder="由1-30位字母,数字组成" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
-            <span>批次名称</span>
+            <span>批次名称：</span>
             <input name="batch_desc" placeholder="批次详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
-            <span>批次日期</span>
+            <span>批次日期：</span>
             <input id="h-batch-define-asofdate" name="as_of_date"  placeholder="批次运行日期" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
-            <span>终止日期</span>
+            <span>终止日期：</span>
             <input id="h-batch-define-complete-date" name="complete_date" placeholder="批次运行终止日期" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;display: none;">
-            <span>批次状态</span>
+            <span>批次状态：</span>
             <select name="batch_status" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
                 <option value="0">初始化</option>
                 <option value="1">运行中</option>
