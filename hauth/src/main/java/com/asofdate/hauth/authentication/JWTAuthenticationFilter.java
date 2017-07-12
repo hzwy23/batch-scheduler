@@ -16,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 /**
  * Created by hzwy23 on 2017/5/18.
@@ -40,11 +41,21 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 
         } catch (AuthenticationException | SignatureException e) {
             HttpServletResponse w = (HttpServletResponse) response;
-            Cookie cookie = new Cookie("Authorization", "");
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            w.addCookie(cookie);
-            logger.info(e.getMessage());
+            clearJWT(w);
+            logger.error(e.getMessage());
+        } catch (AccessDeniedException e) {
+            logger.error(e.getMessage());
+            HttpServletResponse w = (HttpServletResponse) response;
+            clearJWT(w);
+            w.sendRedirect("/");
         }
+    }
+
+    //清除客户端的jwt token
+    private void clearJWT(HttpServletResponse response) {
+        Cookie cookie = new Cookie("Authorization", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }
