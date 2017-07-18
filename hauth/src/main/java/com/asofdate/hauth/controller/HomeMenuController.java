@@ -22,7 +22,7 @@ public class HomeMenuController {
     @Autowired
     public HomeMenuService homeMenuService;
 
-    @RequestMapping(value = "/v1/auth/main/menu",method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/auth/main/menu", method = RequestMethod.GET)
     @ResponseBody
     public List<HomeMenuEntity> homeMenu(HttpServletRequest request) {
         String TypeId = request.getParameter("TypeId");

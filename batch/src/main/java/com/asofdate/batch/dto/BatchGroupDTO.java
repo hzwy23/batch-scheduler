@@ -4,17 +4,17 @@ package com.asofdate.batch.dto;
  * Created by hzwy23 on 2017/6/27.
  */
 public class BatchGroupDTO {
-    public String id;
+    public String suiteKey;
     public String domain_id;
     public String batch_id;
     public String group_id;
 
-    public String getId() {
-        return id;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSuiteKey(String id) {
+        this.suiteKey = id;
     }
 
     public String getDomainId() {
@@ -44,7 +44,7 @@ public class BatchGroupDTO {
     @Override
     public String toString() {
         return "BatchGroupDTO{" +
-                "id='" + id + '\'' +
+                "id='" + suiteKey + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 ", batch_id='" + batch_id + '\'' +
                 ", group_id='" + group_id + '\'' +

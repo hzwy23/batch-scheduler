@@ -17,17 +17,17 @@ public class BatchGroupRunningServiceImpl implements BatchGroupRunningService {
     private BatchGroupRunningDao batchGroupRunningDao;
 
     @Override
-    public List<BatchGroupStatusEntity> findAll(String batchId) {
-        return batchGroupRunningDao.findAll(batchId);
+    public List<BatchGroupStatusEntity> findAll(String batchId, String asOfDate) {
+        return batchGroupRunningDao.findAll(batchId,asOfDate);
     }
 
     @Override
-    public Integer getRatio(String batchId, String gid) {
-        return batchGroupRunningDao.getRatio(batchId, gid);
+    public Integer getRatio(String batchId, String gid, String asOfDate) {
+        return batchGroupRunningDao.getRatio(batchId, gid, asOfDate);
     }
 
     @Override
-    public BatchGroupStatusEntity getDetails(String batchId, String gid) {
-        return batchGroupRunningDao.getDetails(batchId, gid);
+    public BatchGroupStatusEntity getDetails(String batchId, String suiteKey, String asOfDate) {
+        return batchGroupRunningDao.getDetails(batchId, suiteKey, asOfDate);
     }
 }

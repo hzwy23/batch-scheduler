@@ -80,9 +80,9 @@
             })
         },
         formatterTask:function (value, row, index) {
-            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchGroupDefineObj.getTaskRelation(\'' + row.id + '\',\''+row.task_desc +'\',\''+row.group_id+'\')" title="上级任务"><i class="icon-circle-arrow-up"> 上级任务</i></span>'+
-                '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchGroupDefineObj.getTaskArg(\'' + row.id + '\',\''+row.task_desc +'\')" title="任务参数信息"><i class="icon-question-sign"> 参数</i></span>' +
-                '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DispatchGroupDefineObj.deleteTask(\'' + row.id + '\')" title="从任务组中删除任务"><i class="icon-trash"> 删除</i></span>';
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchGroupDefineObj.getTaskRelation(\'' + row.jobKey + '\',\''+row.task_desc +'\',\''+row.group_id+'\')" title="上级任务"><i class="icon-circle-arrow-up"> 上级任务</i></span>'+
+                '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchGroupDefineObj.getTaskArg(\'' + row.jobKey + '\',\''+row.task_desc +'\')" title="任务参数信息"><i class="icon-question-sign"> 参数</i></span>' +
+                '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DispatchGroupDefineObj.deleteTask(\'' + row.jobKey + '\')" title="从任务组中删除任务"><i class="icon-trash"> 删除</i></span>';
         },
         deleteTask:function (id) {
             $.HAjaxRequest({
@@ -96,7 +96,7 @@
         },
         getTaskArg:function (id,taskDesc) {
             $.Hmodal({
-                header:"["+taskDesc + "]参数列表",
+                header:"任务【"+taskDesc + "】参数列表",
                 height: "430px",
                 body:$("#h-dispatch-group-task-argument-relation-src").html(),
                 submitBtn:false,
@@ -150,7 +150,7 @@
         },
         getTaskRelation:function (id, taskDesc,groupId) {
             $.Hmodal({
-                header:taskDesc+" 依赖任务,ID: ["+id+"]",
+                header:"JobKey【"+id+"】- 任务名【"+taskDesc+"】依赖任务管理",
                 height:"430px",
                 submitIcon:"icon-plus",
                 submitDesc:"新增依赖",
@@ -191,9 +191,9 @@
                     var args = new Array();
                     $(rows).each(function (index, element) {
                         var e = {};
-                        e.domain_id = domain_id;
-                        e.id = id;
-                        e.up_id = element.id;
+                        e.domainId = domain_id;
+                        e.jobKey = id;
+                        e.upJobKey = element.jobKey;
                         args.push(e)
                     });
 
@@ -417,22 +417,6 @@
                 }
             })
         },
-//        download: function () {
-//            var domain_id = $("#h-dispatch-group-define-domain-list").val();
-//            $.Hdownload({
-//                url: "/v1/ca/driver/manage/download?domain_id=" + domain_id,
-//                name: "动因值详细信息",
-//            })
-//        },
-//        upload: function () {
-//            $.Hupload({
-//                url: "/v1/ca/driver/manage/upload",
-//                header: "动因值上传",
-//                callback: function () {
-//                    DispatchGroupDefineObj.$table.bootstrapTable("refresh");
-//                }
-//            })
-//        },
     };
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
@@ -548,8 +532,8 @@
         <thead>
         <tr>
             <th data-field="state" data-checkbox="true"></th>
-            <th data-align="center" data-formatter="DispatchGroupDefineObj.formatterindex">序号</th>
-            <th data-align="center" data-field="id">任务配置唯一ID号</th>
+            <th data-align="center" data-width="46px" data-formatter="DispatchGroupDefineObj.formatterindex">序号</th>
+            <th data-align="center" data-width="320px" data-field="jobKey">上级JobKey</th>
             <th data-align="center" data-field="task_id" data-formatter="DispatchGroupDefineObj.formatterTaskId">任务编码</th>
             <th data-align="left" data-field="task_desc">任务名称</th>
         </tr>

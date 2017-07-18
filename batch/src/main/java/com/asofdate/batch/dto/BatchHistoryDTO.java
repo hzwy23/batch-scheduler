@@ -4,20 +4,20 @@ package com.asofdate.batch.dto;
  * Created by hzwy23 on 2017/6/27.
  */
 public class BatchHistoryDTO {
-    public String uuid;
+    public String sid;
 
-    public String getUuid() {
-        return uuid;
+    public String getSid() {
+        return sid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setSid(String uuid) {
+        this.sid = uuid;
     }
 
     @Override
     public String toString() {
         return "BatchHistoryDTO{" +
-                "uuid='" + uuid + '\'' +
+                "sid='" + sid + '\'' +
                 '}';
     }
 }

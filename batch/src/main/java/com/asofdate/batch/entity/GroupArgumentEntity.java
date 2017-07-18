@@ -5,7 +5,7 @@ package com.asofdate.batch.entity;
  */
 public class GroupArgumentEntity {
     public String uuid;
-    public String id;
+    public String jobKey;
     public String arg_id;
     public String arg_value;
     public String domain_id;
@@ -36,12 +36,12 @@ public class GroupArgumentEntity {
         this.uuid = uuid;
     }
 
-    public String getId() {
-        return id;
+    public String getJobKey() {
+        return jobKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setJobKey(String id) {
+        this.jobKey = id;
     }
 
     public String getArgId() {
@@ -72,7 +72,7 @@ public class GroupArgumentEntity {
     public String toString() {
         return "GroupArgumentEntity{" +
                 "uuid='" + uuid + '\'' +
-                ", id='" + id + '\'' +
+                ", jobKey='" + jobKey + '\'' +
                 ", arg_id='" + arg_id + '\'' +
                 ", arg_value='" + arg_value + '\'' +
                 ", domain_id='" + domain_id + '\'' +

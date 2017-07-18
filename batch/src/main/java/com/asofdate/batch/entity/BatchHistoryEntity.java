@@ -4,7 +4,7 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/16.
  */
 public class BatchHistoryEntity {
-    public String uuid;
+    public String sid;
     public String batchId;
     public String batchDesc;
     public String batchStatus;
@@ -16,20 +16,29 @@ public class BatchHistoryEntity {
     public String domainId;
     public String codeNumber;
 
-    public String getCodeNumber() {
-        return codeNumber;
+    @Override
+    public String toString() {
+        return "BatchHistoryEntity{" +
+                "sid='" + sid + '\'' +
+                ", batchId='" + batchId + '\'' +
+                ", batchDesc='" + batchDesc + '\'' +
+                ", batchStatus='" + batchStatus + '\'' +
+                ", batchStatusDesc='" + batchStatusDesc + '\'' +
+                ", asOfDate='" + asOfDate + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", retMsg='" + retMsg + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", codeNumber='" + codeNumber + '\'' +
+                '}';
     }
 
-    public void setCodeNumber(String codeNumber) {
-        this.codeNumber = codeNumber;
+    public String getSid() {
+        return sid;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
     public String getBatchId() {
@@ -104,20 +113,11 @@ public class BatchHistoryEntity {
         this.domainId = domainId;
     }
 
-    @Override
-    public String toString() {
-        return "BatchHistoryEntity{" +
-                "uuid='" + uuid + '\'' +
-                ", batchId='" + batchId + '\'' +
-                ", batchDesc='" + batchDesc + '\'' +
-                ", batchStatus='" + batchStatus + '\'' +
-                ", batchStatusDesc='" + batchStatusDesc + '\'' +
-                ", asOfDate='" + asOfDate + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", retMsg='" + retMsg + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", codeNumber='" + codeNumber + '\'' +
-                '}';
+    public String getCodeNumber() {
+        return codeNumber;
+    }
+
+    public void setCodeNumber(String codeNumber) {
+        this.codeNumber = codeNumber;
     }
 }

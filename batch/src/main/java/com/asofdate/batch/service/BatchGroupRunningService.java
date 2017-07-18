@@ -16,7 +16,7 @@ public interface BatchGroupRunningService {
      * @param batchId
      * @return List 批次中任务组的运行信息列表
      */
-    List<BatchGroupStatusEntity> findAll(String batchId);
+    List<BatchGroupStatusEntity> findAll(String batchId, String asOfDate);
 
     /**
      * 查询批次中任务组的运行进度
@@ -25,15 +25,16 @@ public interface BatchGroupRunningService {
      * @param gid
      * @return Integer 任务组中任务的完成比例
      */
-    Integer getRatio(String batchId, String gid);
+    Integer getRatio(String batchId, String gid, String asOfDate);
 
 
     /**
      * 查询批次中任务组的详细信息
      *
      * @param batchId
-     * @param gid
+     * @param suiteKey
+     * @param asOfDate
      * @return 任务组的详细信息
      */
-    BatchGroupStatusEntity getDetails(String batchId, String gid);
+    BatchGroupStatusEntity getDetails(String batchId, String suiteKey, String asOfDate);
 }

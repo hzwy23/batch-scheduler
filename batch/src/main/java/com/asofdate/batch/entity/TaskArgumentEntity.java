@@ -10,7 +10,6 @@ public class TaskArgumentEntity {
     public String arg_value;
     public String domain_id;
     public String sort_id;
-
     public String arg_type;
     public String arg_type_desc;
     public String code_number;

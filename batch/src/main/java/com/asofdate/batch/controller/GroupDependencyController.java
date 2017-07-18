@@ -3,11 +3,13 @@ package com.asofdate.batch.controller;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.batch.service.BatchGroupService;
-import com.asofdate.batch.service.GroupDependencyService;
+import com.asofdate.batch.service.SuiteKeyDependenceService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +25,9 @@ import java.util.List;
  */
 @RestController
 public class GroupDependencyController {
+    private final Logger logger = LoggerFactory.getLogger(GroupDependencyController.class);
     @Autowired
-    private GroupDependencyService groupDependencyService;
+    private SuiteKeyDependenceService suiteKeyDependenceService;
     @Autowired
     private BatchGroupService batchGroupService;
 
@@ -36,8 +39,8 @@ public class GroupDependencyController {
     @RequestMapping(value = "/v1/dispatch/batch/define/group/dependency", method = RequestMethod.GET)
     @ResponseBody
     public List<BatchGroupEntity> getDependency(HttpServletRequest request) {
-        String id = request.getParameter("id");
-        return groupDependencyService.getUp(id);
+        String id = request.getParameter("suiteKey");
+        return batchGroupService.getDependencySuite(id);
     }
 
     @RequestMapping(value = "/v1/dispatch/batch/define/group/dependency/add", method = RequestMethod.GET)
@@ -45,7 +48,8 @@ public class GroupDependencyController {
     public List<BatchGroupEntity> canAddDependency(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
         String id = request.getParameter("id");
-        return batchGroupService.getDependency(batchId, id);
+        logger.info("batch id is:{}, suite key is:{}", batchId, id);
+        return batchGroupService.getAvaiableDependencySuite(batchId, id);
     }
 
     @RequestMapping(value = "/v1/dispatch/batch/define/group/dependency", method = RequestMethod.POST)
@@ -57,7 +61,7 @@ public class GroupDependencyController {
         List<GroupDependencyEntity> list = new GsonBuilder().create().fromJson(json,
                 new TypeToken<List<GroupDependencyEntity>>() {
                 }.getType());
-        RetMsg retMsg = groupDependencyService.addGroupDependency(list);
+        RetMsg retMsg = batchGroupService.addGroupDependency(list);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.success(retMsg);
@@ -69,7 +73,7 @@ public class GroupDependencyController {
     @ResponseBody
     public String deleteGroupDependency(HttpServletResponse response, HttpServletRequest request) {
         String uuid = request.getParameter("uuid");
-        RetMsg retMsg = groupDependencyService.deleteGroupDependency(uuid);
+        RetMsg retMsg = batchGroupService.deleteGroupDependency(uuid);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);

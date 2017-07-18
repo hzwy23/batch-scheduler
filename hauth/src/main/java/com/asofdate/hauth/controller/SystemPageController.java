@@ -1,7 +1,7 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class SystemPageController {
         return url;
     }
 
-    @RequestMapping(value = "/v1/auth/index/entry",method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/auth/index/entry", method = RequestMethod.GET)
     public String subSystemPage(HttpServletRequest request) {
         Authentication authentication = JwtService
                 .getAuthentication((HttpServletRequest) request);

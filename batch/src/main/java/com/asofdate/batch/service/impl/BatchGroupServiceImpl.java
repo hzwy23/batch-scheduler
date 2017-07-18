@@ -3,6 +3,7 @@ package com.asofdate.batch.service.impl;
 import com.asofdate.batch.dao.BatchGroupDao;
 import com.asofdate.batch.dto.BatchGroupDTO;
 import com.asofdate.batch.entity.BatchGroupEntity;
+import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
@@ -26,14 +27,7 @@ public class BatchGroupServiceImpl implements BatchGroupService {
 
     @Override
     public List<BatchGroupEntity> findByBatchId(String domainId, String batchId) {
-        List<BatchGroupEntity> list = batchGroupDao.findAll(domainId);
-        for (int i = 0; i < list.size(); i++) {
-            if (!batchId.equals(list.get(i).getBatchId())) {
-                list.remove(i);
-                i--;
-            }
-        }
-        return list;
+        return batchGroupDao.findAll(domainId, batchId);
     }
 
     @Override
@@ -75,9 +69,9 @@ public class BatchGroupServiceImpl implements BatchGroupService {
     public RetMsg deleteGroup(List<BatchGroupDTO> list) {
         List<BatchGroupEntity> args = new ArrayList<>();
         for (BatchGroupDTO m : list) {
-            String id = m.getId();
+            String id = m.getSuiteKey();
             BatchGroupEntity entity = new BatchGroupEntity();
-            entity.setId(id);
+            entity.setSuiteKey(id);
             args.add(entity);
         }
         try {
@@ -92,7 +86,40 @@ public class BatchGroupServiceImpl implements BatchGroupService {
     }
 
     @Override
-    public List<BatchGroupEntity> getDependency(String batchid, String id) {
+    public List<BatchGroupEntity> getAvaiableDependencySuite(String batchid, String id) {
         return batchGroupDao.getDependency(batchid, id);
+    }
+
+
+    @Override
+    public List<BatchGroupEntity> getDependencySuite(String suiteKey) {
+        return batchGroupDao.getGroupDependency(suiteKey);
+    }
+
+
+    @Override
+    public RetMsg deleteGroupDependency(String uuid) {
+        try {
+            int size = batchGroupDao.deleteGroupDependency(uuid);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "删除任务组依赖关系失败，请联系管理员", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), uuid);
+        }
+    }
+
+    @Override
+    public RetMsg addGroupDependency(List<GroupDependencyEntity> list) {
+        try {
+            int size = batchGroupDao.addGroupDependency(list);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "给任务组添加依赖失败，请联系管理员", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), null);
+        }
     }
 }

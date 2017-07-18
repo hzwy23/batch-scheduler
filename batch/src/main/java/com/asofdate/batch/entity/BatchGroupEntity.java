@@ -4,29 +4,28 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/5/24.
  */
 public class BatchGroupEntity {
-    public String uuid;
     public String batch_id;
     public String group_id;
-    public String id;
-    public String up_id;
+    public String suiteKey;
+    public String upSuiteKey;
     public String group_desc;
     public String code_number;
     public String domain_id;
 
-    public String getUpId() {
-        return up_id;
+    public String getUpSuiteKey() {
+        return upSuiteKey;
     }
 
-    public void setUpId(String up_id) {
-        this.up_id = up_id;
+    public void setUpSuiteKey(String up_id) {
+        this.upSuiteKey = up_id;
     }
 
-    public String getId() {
-        return id;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSuiteKey(String id) {
+        this.suiteKey = id;
     }
 
     public String getGroupDesc() {
@@ -43,14 +42,6 @@ public class BatchGroupEntity {
 
     public void setCodeNumber(String code_number) {
         this.code_number = code_number;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getBatchId() {
@@ -80,11 +71,10 @@ public class BatchGroupEntity {
     @Override
     public String toString() {
         return "BatchGroupEntity{" +
-                "uuid='" + uuid + '\'' +
                 ", batch_id='" + batch_id + '\'' +
                 ", group_id='" + group_id + '\'' +
-                ", id='" + id + '\'' +
-                ", up_id='" + up_id + '\'' +
+                ", id='" + suiteKey + '\'' +
+                ", up_id='" + upSuiteKey + '\'' +
                 ", group_desc='" + group_desc + '\'' +
                 ", code_number='" + code_number + '\'' +
                 ", domain_id='" + domain_id + '\'' +

@@ -4,10 +4,7 @@ import com.asofdate.batch.dao.GroupArgumentDao;
 import com.asofdate.batch.dao.GroupTaskDao;
 import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.dto.GroupDefineDto;
-import com.asofdate.batch.entity.BatchGroupEntity;
-import com.asofdate.batch.entity.GroupArgumentEntity;
-import com.asofdate.batch.entity.GroupTaskEntity;
-import com.asofdate.batch.entity.TaskArgumentEntity;
+import com.asofdate.batch.entity.*;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.batch.service.GroupTaskService;
 import com.asofdate.utils.RetMsg;
@@ -18,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by hzwy23 on 2017/5/25.
@@ -31,30 +25,30 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     private final Logger logger = LoggerFactory.getLogger(GroupTaskServiceImpl.class);
     @Autowired
     private GroupTaskDao groupTaskDao;
-
     @Autowired
     private BatchGroupService batchGroupService;
-
     @Autowired
     private TaskArgumentDao taskArgumentDao;
-
     @Autowired
     private GroupArgumentDao groupArgumentDao;
+
 
     @Override
     public List<GroupTaskEntity> findByBatchId(String domainId, String batchId) {
         List<GroupTaskEntity> list = groupTaskDao.findAll(domainId);
 
-        List<BatchGroupEntity> batchGroupEntityList = batchGroupService.findByBatchId(domainId, batchId);
-        Map<String, BatchGroupEntity> map = new HashMap<String, BatchGroupEntity>();
-        for (BatchGroupEntity m : batchGroupEntityList) {
-            if (!map.containsKey(m.getGroupId())) {
-                map.put(m.getGroupId(), m);
-            }
+        // 查询批次中所有的任务组
+        List<BatchGroupEntity> grouList = batchGroupService.findByBatchId(domainId, batchId);
+
+        Set<String> set = new HashSet<>();
+
+        for (BatchGroupEntity m : grouList) {
+            set.add(m.getGroupId());
         }
 
         for (int i = 0; i < list.size(); i++) {
-            if (!map.containsKey(list.get(i).getGroupId())) {
+            String groupId = list.get(i).getGroupId();
+            if (!set.contains(groupId)) {
                 list.remove(i);
                 i--;
             }
@@ -64,13 +58,13 @@ public class GroupTaskServiceImpl implements GroupTaskService {
 
     @Override
     public List<GroupTaskEntity> getTask(String groupId) {
-        return groupTaskDao.getTask(groupId);
+        return groupTaskDao.getJobList(groupId);
     }
 
     @Override
     public List<TaskArgumentEntity> getTaskArg(String id) {
 
-        String taskId = groupTaskDao.getTaskId(id);
+        String taskId = groupTaskDao.getTaskIdByJobKey(id);
 
         logger.debug("task id is :" + taskId);
         List<GroupArgumentEntity> groupArg = groupArgumentDao.getGroupArg(id);
@@ -105,7 +99,7 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     @Override
     public RetMsg deleteTask(String id) {
         try {
-            int size = groupTaskDao.deleteTask(id);
+            int size = groupTaskDao.deleteJob(id);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -118,7 +112,7 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     @Override
     public RetMsg addTask(String id, String groupId, String taskId, String domainId) {
         try {
-            int size = groupTaskDao.addTask(id, groupId, taskId, domainId);
+            int size = groupTaskDao.addJob(id, groupId, taskId, domainId);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -131,7 +125,7 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     @Override
     public RetMsg addGroupArg(List<GroupDefineDto> list) {
         try {
-            int size = groupTaskDao.addArg(list);
+            int size = groupTaskDao.addJobArguments(list);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -144,7 +138,7 @@ public class GroupTaskServiceImpl implements GroupTaskService {
     @Override
     public RetMsg deleteTask(Set<String> args) {
         try {
-            int size = groupTaskDao.deleteTask(args);
+            int size = groupTaskDao.deleteJob(args);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -153,4 +147,43 @@ public class GroupTaskServiceImpl implements GroupTaskService {
             return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), null);
         }
     }
+
+    @Override
+    public List<GroupTaskEntity> getGroupTask(String groupId, String jobKey) {
+        return groupTaskDao.getJobList(groupId, jobKey);
+    }
+
+
+    @Override
+    public List<GroupTaskEntity> getJobKeyDep(String id) {
+        return groupTaskDao.getTaskDependency(id);
+    }
+
+
+    @Override
+    public RetMsg addTaskDependency(List<TaskDependencyEntity> list) {
+        try {
+            int size = groupTaskDao.addTaskDependency(list);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "添加任务失败，请联系管理员", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), null);
+        }
+    }
+
+    @Override
+    public RetMsg deleteTaskDependency(String uuid) {
+        try {
+            int size = groupTaskDao.deleteTaskDependency(uuid);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "删除任务依赖失败，请联系管理员", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), null);
+        }
+    }
+
 }

@@ -4,8 +4,8 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/17.
  */
 public class BatchGroupHistoryEntity {
-    public String uuid;
-    public String gid;
+    public String sid;
+    public String suiteKey;
     public String status;
     public String statusDesc;
     public String startTime;
@@ -14,44 +14,20 @@ public class BatchGroupHistoryEntity {
     public Integer totalJobsCnt;
     public Integer completeJobsCnt;
 
-    public Integer getTotalJobsCnt() {
-        return totalJobsCnt;
+    public String getSid() {
+        return sid;
     }
 
-    public void setTotalJobsCnt(Integer totalJobsCnt) {
-        this.totalJobsCnt = totalJobsCnt;
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
-    public Integer getCompleteJobsCnt() {
-        return completeJobsCnt;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setCompleteJobsCnt(Integer completeJobsCnt) {
-        this.completeJobsCnt = completeJobsCnt;
-    }
-
-    public String getGroupDesc() {
-        return groupDesc;
-    }
-
-    public void setGroupDesc(String groupDesc) {
-        this.groupDesc = groupDesc;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getGid() {
-        return gid;
-    }
-
-    public void setGid(String gid) {
-        this.gid = gid;
+    public void setSuiteKey(String suiteKey) {
+        this.suiteKey = suiteKey;
     }
 
     public String getStatus() {
@@ -86,11 +62,35 @@ public class BatchGroupHistoryEntity {
         this.endTime = endTime;
     }
 
+    public String getGroupDesc() {
+        return groupDesc;
+    }
+
+    public void setGroupDesc(String groupDesc) {
+        this.groupDesc = groupDesc;
+    }
+
+    public Integer getTotalJobsCnt() {
+        return totalJobsCnt;
+    }
+
+    public void setTotalJobsCnt(Integer totalJobsCnt) {
+        this.totalJobsCnt = totalJobsCnt;
+    }
+
+    public Integer getCompleteJobsCnt() {
+        return completeJobsCnt;
+    }
+
+    public void setCompleteJobsCnt(Integer completeJobsCnt) {
+        this.completeJobsCnt = completeJobsCnt;
+    }
+
     @Override
     public String toString() {
         return "BatchGroupHistoryEntity{" +
-                "uuid='" + uuid + '\'' +
-                ", gid='" + gid + '\'' +
+                "sid='" + sid + '\'' +
+                ", suiteKey='" + suiteKey + '\'' +
                 ", status='" + status + '\'' +
                 ", statusDesc='" + statusDesc + '\'' +
                 ", startTime='" + startTime + '\'' +

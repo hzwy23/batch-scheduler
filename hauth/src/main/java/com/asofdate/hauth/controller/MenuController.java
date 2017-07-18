@@ -34,9 +34,9 @@ public class MenuController {
     public String update(HttpServletResponse response, HttpServletRequest request) {
         String resId = request.getParameter("res_id");
         String resDesc = request.getParameter("res_name");
-        String resUpId = request.getParameter("res_up_id");
+        //String resUpId = request.getParameter("res_up_id");
 
-        RetMsg msg = menuService.update(resId, resDesc, resUpId);
+        RetMsg msg = menuService.update(resId, resDesc);
         if (msg.checkCode()) {
             return Hret.success(msg);
         }

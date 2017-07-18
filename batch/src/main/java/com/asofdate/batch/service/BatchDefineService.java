@@ -2,6 +2,7 @@ package com.asofdate.batch.service;
 
 import com.asofdate.batch.dto.BatchArgumentDTO;
 import com.asofdate.batch.dto.BatchMonitoringDTO;
+import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
 import com.asofdate.utils.RetMsg;
 
@@ -81,9 +82,9 @@ public interface BatchDefineService {
     /**
      * 批次翻页，检查批次是否满足翻页条件
      *
-     * @param batchid 批次编号
+     * @param conf 批次编号
      */
-    RetMsg batchPagging(String batchid);
+    RetMsg batchPagging(BatchRunConfDto conf);
 
     /**
      * 更新批次日期
@@ -135,4 +136,15 @@ public interface BatchDefineService {
      * @param batchId 批次编号
      */
     void saveHistory(String batchId);
+
+    /**
+     * 查询批次日期
+     *
+     * @param batchId 批次编码
+     */
+    String getBatchAsOfDate(String batchId);
+
+
+    BatchRunConfDto initConf(String batchId, String domainId);
+
 }

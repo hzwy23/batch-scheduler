@@ -22,15 +22,17 @@ public class BatchJobRunningController {
     @RequestMapping(method = RequestMethod.GET)
     public List getJob(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
-        String gid = request.getParameter("gid");
-        return batchJobRunningService.findAll(batchId, gid);
+        String suiteKey = request.getParameter("suiteKey");
+        String asOfDate = request.getParameter("as_of_date");
+
+        return batchJobRunningService.findAll(batchId, suiteKey, asOfDate);
     }
 
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     public BatchJobStatusEntity getDetails(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
-        String gid = request.getParameter("gid");
-        String tid = request.getParameter("tid");
-        return batchJobRunningService.getDetails(batchId, gid, tid);
+        String suiteKey = request.getParameter("suiteKey");
+        String jobKey = request.getParameter("jobKey");
+        return batchJobRunningService.getDetails(batchId, suiteKey, jobKey);
     }
 }

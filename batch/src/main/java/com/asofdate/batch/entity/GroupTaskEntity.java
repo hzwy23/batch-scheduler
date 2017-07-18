@@ -4,15 +4,13 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/5/24.
  */
 public class GroupTaskEntity {
-    public String uuid;
     public String group_id;
     public String task_id;
     public String domain_id;
     public String task_desc;
-    public String id;
+    public String jobKey;
     public String code_number;
-    public String up_id;
-
+    public String upJobKey;
     public String task_type;
     public String task_type_desc;
 
@@ -41,12 +39,12 @@ public class GroupTaskEntity {
         this.code_number = code_number;
     }
 
-    public String getUpId() {
-        return up_id;
+    public String getUpJobKey() {
+        return upJobKey;
     }
 
-    public void setUpId(String up_id) {
-        this.up_id = up_id;
+    public void setUpJobKey(String up_id) {
+        this.upJobKey = up_id;
     }
 
     public String getTaskDesc() {
@@ -57,20 +55,12 @@ public class GroupTaskEntity {
         this.task_desc = task_desc;
     }
 
-    public String getId() {
-        return id;
+    public String getJobKey() {
+        return jobKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setJobKey(String id) {
+        this.jobKey = id;
     }
 
     public String getGroupId() {
@@ -100,14 +90,13 @@ public class GroupTaskEntity {
     @Override
     public String toString() {
         return "GroupTaskEntity{" +
-                "uuid='" + uuid + '\'' +
                 ", group_id='" + group_id + '\'' +
                 ", task_id='" + task_id + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 ", task_desc='" + task_desc + '\'' +
-                ", id='" + id + '\'' +
+                ", jobKey='" + jobKey + '\'' +
                 ", code_number='" + code_number + '\'' +
-                ", up_id='" + up_id + '\'' +
+                ", upJobKey='" + upJobKey + '\'' +
                 ", task_type='" + task_type + '\'' +
                 ", task_type_desc='" + task_type_desc + '\'' +
                 '}';

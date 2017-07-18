@@ -1,5 +1,6 @@
 package com.asofdate.batch.dao;
 
+import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface BatchDefineDao {
 
     int getStatus(String batchId);
 
-    int batchPagging(String batchId);
+    int batchPagging(String batchId, String asOfDate);
 
     int setStatus(String batchId, int status);
 
@@ -33,4 +34,6 @@ public interface BatchDefineDao {
     int saveHistory(String batchId);
 
     String getBatchAsOfDate(String batchId);
+
+    BatchDefineEntity findDetailsByBatchId(String batchId);
 }

@@ -31,7 +31,7 @@ public class BatchHistoryServiceImpl implements BatchHistoryService {
         List<BatchHistoryEntity> args = new ArrayList<>();
         for (BatchHistoryDTO m : list) {
             BatchHistoryEntity entity = new BatchHistoryEntity();
-            entity.setUuid(m.getUuid());
+            entity.setSid(m.getSid());
             args.add(entity);
         }
         try {

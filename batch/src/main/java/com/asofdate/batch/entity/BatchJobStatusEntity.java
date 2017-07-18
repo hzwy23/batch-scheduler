@@ -9,9 +9,9 @@ public class BatchJobStatusEntity {
     public String status;
     public String startTime;
     public String endTime;
-    public String gid;
+    public String suiteKey;
     public String statusDesc;
-    public String tid;
+    public String jobKey;
     public String taskId;
     public String taskDesc;
     public String taskType;
@@ -33,12 +33,12 @@ public class BatchJobStatusEntity {
         this.endTime = endTime;
     }
 
-    public String getGid() {
-        return gid;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setGid(String gid) {
-        this.gid = gid;
+    public void setSuiteKey(String gid) {
+        this.suiteKey = gid;
     }
 
     public String getStatusDesc() {
@@ -49,12 +49,12 @@ public class BatchJobStatusEntity {
         this.statusDesc = statusDesc;
     }
 
-    public String getTid() {
-        return tid;
+    public String getJobKey() {
+        return jobKey;
     }
 
-    public void setTid(String tid) {
-        this.tid = tid;
+    public void setJobKey(String tid) {
+        this.jobKey = tid;
     }
 
     public String getTaskId() {
@@ -121,9 +121,9 @@ public class BatchJobStatusEntity {
                 ", status='" + status + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
-                ", gid='" + gid + '\'' +
+                ", suiteKey='" + suiteKey + '\'' +
                 ", statusDesc='" + statusDesc + '\'' +
-                ", tid='" + tid + '\'' +
+                ", jobKey='" + jobKey + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", taskDesc='" + taskDesc + '\'' +
                 ", taskType='" + taskType + '\'' +

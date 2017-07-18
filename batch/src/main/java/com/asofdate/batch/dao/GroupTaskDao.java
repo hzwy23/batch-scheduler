@@ -2,6 +2,7 @@ package com.asofdate.batch.dao;
 
 import com.asofdate.batch.dto.GroupDefineDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
+import com.asofdate.batch.entity.TaskDependencyEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -12,15 +13,24 @@ import java.util.Set;
 public interface GroupTaskDao {
     List findAll(String domainId);
 
-    List<GroupTaskEntity> getTask(String groupId);
+    List<GroupTaskEntity> getJobList(String groupId);
 
-    String getTaskId(String id);
+    List<GroupTaskEntity> getJobList(String groupId, String jobKey);
 
-    int deleteTask(String id);
+    String getTaskIdByJobKey(String jobKey);
 
-    int deleteTask(Set<String> args);
+    int deleteJob(String id);
 
-    int addTask(String id, String groupId, String taskId, String domainId);
+    int deleteJob(Set<String> args);
 
-    int addArg(List<GroupDefineDto> list);
+    int addJob(String id, String groupId, String taskId, String domainId);
+
+    int addJobArguments(List<GroupDefineDto> list);
+
+
+    List<GroupTaskEntity> getTaskDependency(String id);
+
+    int addTaskDependency(List<TaskDependencyEntity> list);
+
+    int deleteTaskDependency(String uuid);
 }

@@ -5,7 +5,7 @@ import com.asofdate.hauth.dao.UserDao;
 import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.OrgEntity;
 import com.asofdate.hauth.entity.UserEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.asofdate.utils.CryptoAES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

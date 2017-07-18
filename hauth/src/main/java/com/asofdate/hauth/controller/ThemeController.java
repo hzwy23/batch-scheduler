@@ -3,7 +3,7 @@ package com.asofdate.hauth.controller;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.service.UserDetailsService;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.asofdate.utils.CryptoAES;
 import com.asofdate.utils.Hret;
 import io.swagger.annotations.Api;

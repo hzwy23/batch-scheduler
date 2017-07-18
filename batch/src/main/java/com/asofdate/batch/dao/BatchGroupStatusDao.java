@@ -1,22 +1,24 @@
 package com.asofdate.batch.dao;
 
+import com.asofdate.batch.dto.BatchRunConfDto;
+
 import java.util.Map;
 
 /**
  * Created by hzwy23 on 2017/6/15.
  */
 public interface BatchGroupStatusDao {
-    int init(String batchId, Map<String, Integer> map);
+    int init(BatchRunConfDto conf, Map<String, Integer> map);
 
-    int setGidStatus(String batchId, String gid, int status);
+    int setSuiteKeyStatus(BatchRunConfDto conf, String suiteKey, int status);
 
-    int getGidStatus(String batchId, String gid);
+    int getSuiteKeyStatus(BatchRunConfDto conf, String suiteKey);
 
-    int getCompletedCnt(String batchId);
+    int getCompletedCnt(BatchRunConfDto conf);
 
-    int getTotalCnt(String batchId);
+    int getTotalCnt(BatchRunConfDto conf);
 
-    int setGroupRunning(String batchId, String gid, int status);
+    int setGroupRunning(BatchRunConfDto conf, String suiteKey, int status);
 
-    int setGroupEnd(String batchId, String gid, int status);
+    int setGroupEnd(BatchRunConfDto conf, String suiteKey, int status);
 }

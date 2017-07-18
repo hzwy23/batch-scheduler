@@ -14,7 +14,7 @@ public interface MenuService {
 
     MenuEntity getDetails(String resId);
 
-    RetMsg update(String resId, String resDesc, String resUpId);
+    RetMsg update(String resId, String resDesc);
 
     ThemeValueEntity getThemeDetails(String themeId, String resId);
 

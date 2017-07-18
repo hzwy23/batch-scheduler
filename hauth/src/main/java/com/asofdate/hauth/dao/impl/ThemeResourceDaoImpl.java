@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.ThemeResourceDao;
 import com.asofdate.hauth.entity.ThemeResourceEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -2,7 +2,7 @@ package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.GroupArgumentDao;
 import com.asofdate.batch.entity.GroupArgumentEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

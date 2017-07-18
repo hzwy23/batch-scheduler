@@ -1,0 +1,61 @@
+package com.asofdate.batch.service.impl;
+
+import com.asofdate.batch.dao.ExecDao;
+import com.asofdate.batch.dto.BatchRunConfDto;
+import com.asofdate.batch.entity.ExecLogEntity;
+import com.asofdate.batch.service.ExecService;
+import com.asofdate.utils.RetMsg;
+import com.asofdate.utils.SysStatus;
+import com.asofdate.utils.factory.RetMsgFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Created by hzwy23 on 2017/7/13.
+ */
+@Service
+public class ExecServiceImpl implements ExecService {
+    private final Logger logger = LoggerFactory.getLogger(ExecServiceImpl.class);
+    @Autowired
+    private ExecDao execDao;
+
+    @Override
+    public RetMsg echo(ExecLogEntity row) {
+        try {
+            int size = execDao.insert(row);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "写入执行信息失败", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), row.toString());
+        }
+    }
+
+    @Override
+    public List<ExecLogEntity> query(String id, String jobId) {
+        try {
+            return execDao.query(id, jobId);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public RetMsg init(BatchRunConfDto confDto) {
+        try {
+            int size = execDao.init(confDto);
+            if (1 == size) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "初始化执行记录表失败，请联系管理员", null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), confDto.batchId);
+        }
+    }
+}

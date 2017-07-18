@@ -5,7 +5,7 @@ import com.asofdate.hauth.dao.ResourceDao;
 import com.asofdate.hauth.entity.MenuEntity;
 import com.asofdate.hauth.entity.ResourceEntity;
 import com.asofdate.hauth.entity.ThemeValueEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,14 +93,8 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
-    public String update(String resId, String resDesc, String resUpId) {
-        List<ResourceEntity> list = resourceDao.findSubByUpId(resId);
-        for (ResourceEntity m : list) {
-            if (resUpId.equals(m.getRes_id())) {
-                return "不能将菜单的上级编码设置成自己的下级菜单";
-            }
-        }
-        jdbcTemplate.update(SqlDefine.sys_rdbms_005, resDesc, resUpId, resId);
+    public String update(String resId, String resDesc) {
+        jdbcTemplate.update(SqlDefine.sys_rdbms_005, resDesc, resId);
         return "success";
     }
 

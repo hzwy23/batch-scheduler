@@ -38,12 +38,14 @@
             }
         },
         details:function (batchId,batchDesc) {
+            var asOfDate = $("#"+batchId+"as_of_date").html();
             Hutils.openTab({
                 url:"/v1/dispatch/batch/group/running/monitoring/page",
                 title: batchDesc + " 批次运行监控",
                 id:"hzwy23#runninggroup",
                 data:{
                     batch_id:batchId,
+                    as_of_date:asOfDate,
                     batch_desc:batchDesc
                 },
             })
@@ -71,7 +73,7 @@
             var div = document.createElement("div");
             div.style.border = "#fcfcfc solid 1px";
             div.className = "thumbnail";
-            div.style.height = "460px";
+            div.style.height = "430px";
             div.id = element.batch_id;
             var divchart = document.createElement("div");
             divchart.style.height = "280px";
@@ -79,13 +81,16 @@
             div.appendChild(divchart);
 
             var thumbnailDiv = document.createElement("div");
-            thumbnailDiv.className = "col-sm-6 col-md-4 col-lg-3 ";
+            thumbnailDiv.style.width = "300px";
+            thumbnailDiv.style.float = "left";
+            thumbnailDiv.style.marginLeft = "15px";
+            thumbnailDiv.style.marginRight = "15px";
             thumbnailDiv.appendChild(div);
             $("#h-dispatch-batch-monitoring-content").append(thumbnailDiv);
 
-            var div1 = BatchMonitoringObj.addSpan("批次编码:",element.code_number);
-            var div2 = BatchMonitoringObj.addSpan("批次名称:",element.batch_desc);
-            var div3 = BatchMonitoringObj.addSpan("批次日期:",element.as_of_date);
+            var div1 = BatchMonitoringObj.addSpan(element.batch_id, "批次编码:&nbsp;",element.code_number,false);
+            var div2 = BatchMonitoringObj.addSpan(element.batch_id, "批次名称:&nbsp;",element.batch_desc,false);
+            var div3 = BatchMonitoringObj.addSpan(element.batch_id, "批次日期:&nbsp;",element.as_of_date,true);
 
             BatchMonitoringObj.initChart(divchart,element.batch_id,element.batch_desc,div3);
 
@@ -148,21 +153,21 @@
                 }
             },1000);
         },
-        addSpan:function (label,value) {
+        addSpan:function (batchId,label,value,flag) {
             var div = document.createElement("div");
             div.className += "col-sm-12 col-md-12 col-lg-12";
+            div.style.fontSize = "14px";
 
             var key = document.createElement("label");
-            key.className += " col-sm-5 col-md-5 col-lg-5";
-            key.style.textAlign = "right";
             key.innerHTML = label;
 
             var span = document.createElement("span");
-            span.className += " col-sm-7 col-md-7 col-lg-7";
             span.style.fontWeight = 600;
             span.style.paddingLeft = "2px";
-            span.style.textAlign = "left";
             span.innerHTML = value;
+            if(flag){
+                span.id = batchId + "as_of_date";
+            }
             div.appendChild(key);
             div.appendChild(span);
             return div;
@@ -173,7 +178,9 @@
             var myChart = echarts.init(dom);
 //            myChart.showLoading();
             // 指定图表的配置项和数据
-            $.getJSON("/v1/dispatch/monitoring/radio",{batch_id:batchId}).done(function (data) {
+            $.getJSON("/v1/dispatch/monitoring/radio",{
+                batch_id:batchId
+            }).done(function (data) {
                 if (!$("[data-id='0503020000']").hasClass("active")){
                     return false;
                 }
@@ -182,8 +189,12 @@
                     myChart.setOption({
                         series: [{
                             type: 'liquidFill',
-                            data: [data.ratio],
+                            data: [data.ratio, data.ratio*0.8, data.ratio*0.6, data.ratio*0.4],
                             name:"运行中的批次...",
+                            radius: '80%',
+                            outline: {
+                                show: false
+                            }
                         }],
                         tooltip: {
                             show: true
@@ -191,11 +202,17 @@
                 }
             });
             var timer = setInterval(function () {
-                $.getJSON("/v1/dispatch/monitoring/radio",{batch_id:batchId},function (data) {
-                    if (!$("[data-id='0503020000']").hasClass("active")){
-                        return false;
-                    }
+                if (!$("[data-id='0503020000']").hasClass("active")){
+                    // 如果监控界面不在运行现实状态，则不刷新运行信息
+                    return false;
+                }
+
+                $.getJSON("/v1/dispatch/monitoring/radio",{
+                    batch_id:batchId
+                },function (data) {
+
                     $(obj).find("span").html(data.as_of_date);
+
                     var batchIdExists = document.getElementById(batchId);
                     if (batchIdExists == null){
                         clearInterval(timer)
@@ -203,24 +220,19 @@
                         myChart.setOption({
                             series: [{
                                 type: 'liquidFill',
-                                data: [data.ratio],
+                                data: [data.ratio, data.ratio*0.8,data.ratio*0.6, data.ratio*0.4],
                                 name:batchDesc+" 运行中...",
+                                radius: '80%',
+                                outline: {
+                                    show: false
+                                }
                             }],
                             tooltip: {
                                 show: true
                             }});
                     }
-//                    console.log(data.as_of_date,data==1)
-                    if (data.as_of_date == null){
-                        clearInterval(timer);
-                        $.Notify({
-                            message:batchDesc+" 运行完成",
-                            type:"success",
-                        });
-                        $("#"+batchId).remove();
-                    }
                 });
-            },3000);
+            },6000);
             /*]]>*/
         },
     }

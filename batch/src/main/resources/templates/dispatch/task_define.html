@@ -84,7 +84,7 @@
         },
         addArgument:function (taskId,taskDesc) {
             $.Hmodal({
-                header:"["+taskDesc + "]添加参数",
+                header:"任务【"+taskDesc + "】参数管理",
                 height: "430px",
                 body:$("#h-dispatch-task-argument-add-src").html(),
                 preprocess:function () {
@@ -161,7 +161,7 @@
         },
         getArgs: function (taskId,taskDesc) {
             $.Hmodal({
-                header:"["+taskDesc + "]参数列表",
+                header:"任务【"+taskDesc + "】参数管理",
                 height: "430px",
                 body:$("#h-dispatch-task-argument-relation-src").html(),
                 cancelBtn:false,
@@ -257,6 +257,30 @@
                     });
 
                     $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id)
+                    setTimeout(function () {
+                        $.getJSON("/v1/dispatch/config/scripts",{
+                            domain_id:$("#h-dispatch-task-define-domain-list").val(),
+                        },function (data) {
+                            var arr = new Array();
+                            $(data).each(function (index, element) {
+                                var e = {};
+                                e.id = element.relativePath;
+                                e.text = element.scriptName;
+                                e.upId = element.parentPath;
+                                e.attr = element.scriptType;
+                                arr.push(e)
+                            });
+                            $("#h-dispatch-task-define-form")
+                                .find("select[name='scriptFile']")
+                                .Hselect({
+                                    height:"30px",
+                                    checkbox:false,
+                                    nodeSelect:false,
+                                    autoAttr:false,
+                                    data:arr,
+                                })
+                        });
+                    },230);
                 }
             })
         },
@@ -305,7 +329,33 @@
                         value:row[0].taskType,
                         height:"30px",
                     });
-                    $("#h-dispatch-task-define-form").find("input[name='scriptFile']").val(row[0].scriptFile);
+
+                    setTimeout(function () {
+                        $.getJSON("/v1/dispatch/config/scripts",{
+                            domain_id:$("#h-dispatch-task-define-domain-list").val(),
+                        },function (data) {
+                            var arr = new Array();
+                            $(data).each(function (index, element) {
+                                var e = {};
+                                e.id = element.relativePath;
+                                e.text = element.scriptName;
+                                e.upId = element.parentPath;
+                                e.attr = element.scriptType;
+                                arr.push(e)
+                            });
+
+                            $("#h-dispatch-task-define-form")
+                                .find("select[name='scriptFile']")
+                                .Hselect({
+                                    height:"30px",
+                                    checkbox:false,
+                                    nodeSelect:false,
+                                    autoAttr:false,
+                                    data:arr,
+                                    value:row[0].scriptFile,
+                                })
+                        });
+                    },230);
                 }
             })
         },
@@ -375,31 +425,34 @@
 
 <script id="h-dispatch-task-define-src" type="text/html">
     <form id="h-dispatch-task-define-form">
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <span>任务编码:</span>
-            <input name="taskId" placeholder="由1-30位字母,数字组成" class="form-control"
-                   style="height: 30px; line-height: 30px; width: 100%;"/>
+        <div class="hzwy23-page">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <span>任务编码:</span>
+                <input name="taskId" placeholder="由1-30位字母,数字组成" class="form-control"
+                       style="height: 30px; line-height: 30px; width: 100%;"/>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <span>任务描述:</span>
+                <input name="taskDesc" placeholder="任务详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+                <span>任务类型:</span>
+                <select name="taskType" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
+                    <option value="1">shell 脚本</option>
+                    <option value="2">存储过程</option>
+                    <option value="3">CMD 脚本</option>
+                    <option value="4">Jar 包</option>
+                    <option value="5">二进制程序</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+                <span>任务路径与名称:</span>
+                <select name="scriptFile" placeholder="脚本文件地址与名称" class="form-control"
+                        style="height: 30px; line-height: 30px; width: 100%;">
+                </select>
+            </div>
+            <input name="domainId" style="display: none;"/>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <span>任务描述:</span>
-            <input name="taskDesc" placeholder="任务详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
-            <span>任务类型:</span>
-            <select name="taskType" class="form-control" style="height: 30px; line-height: 30px; width: 100%;">
-                <option value="1">shell 脚本</option>
-                <option value="2">存储过程</option>
-                <option value="3">CMD 脚本</option>
-                <option value="4">Jar 包</option>
-                <option value="5">二进制程序</option>
-            </select>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
-            <span>脚本名称:</span>
-            <input name="scriptFile" placeholder="脚本文件地址与名称" class="form-control"
-                   style="height: 30px; line-height: 30px; width: 100%;"/>
-        </div>
-        <input name="domainId" style="display: none;"/>
     </form>
 </script>
 

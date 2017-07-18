@@ -17,12 +17,12 @@ public class BatchJobRunningServiceImpl implements BatchJobRunningService {
     private BatchJobRunningDao batchJobRunningDao;
 
     @Override
-    public List<BatchJobStatusEntity> findAll(String batchId, String gid) {
-        return batchJobRunningDao.findAll(batchId, gid);
+    public List<BatchJobStatusEntity> findAll(String batchId, String suiteKey, String asOfDate) {
+        return batchJobRunningDao.findAll(batchId, suiteKey, asOfDate);
     }
 
     @Override
-    public BatchJobStatusEntity getDetails(String batchId, String gid, String tid) {
-        return batchJobRunningDao.getDetails(batchId, gid, tid);
+    public BatchJobStatusEntity getDetails(String batchId, String suiteKey, String jobKey) {
+        return batchJobRunningDao.getDetails(batchId, suiteKey, jobKey);
     }
 }

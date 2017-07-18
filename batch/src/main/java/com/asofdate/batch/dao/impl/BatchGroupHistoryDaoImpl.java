@@ -2,7 +2,7 @@ package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchGroupHistoryDao;
 import com.asofdate.batch.entity.BatchGroupHistoryEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,7 +24,7 @@ public class BatchGroupHistoryDaoImpl implements BatchGroupHistoryDao {
         RowMapper<BatchGroupHistoryEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupHistoryEntity.class);
         List<BatchGroupHistoryEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_197, rowMapper, uuid);
         for (BatchGroupHistoryEntity bh : list) {
-            String gid = bh.getGid();
+            String gid = bh.getSuiteKey();
             Integer totalCnt = getTotalJobs(uuid, gid);
             Integer completeCnt = getCompleteJobs(uuid, gid);
             bh.setTotalJobsCnt(totalCnt);

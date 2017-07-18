@@ -1,6 +1,6 @@
 package com.asofdate.utils;
 
-import com.asofdate.sql.OracleDefine;
+import com.asofdate.hauth.sql.OracleDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

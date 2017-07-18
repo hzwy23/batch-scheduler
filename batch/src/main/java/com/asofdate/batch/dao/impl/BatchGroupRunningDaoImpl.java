@@ -1,8 +1,10 @@
 package com.asofdate.batch.dao.impl;
 
+import com.asofdate.batch.dao.BatchDefineDao;
 import com.asofdate.batch.dao.BatchGroupRunningDao;
 import com.asofdate.batch.entity.BatchGroupStatusEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
+import com.asofdate.utils.TimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,15 +21,18 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private BatchDefineDao batchDefineDao;
+
     @Override
-    public List<BatchGroupStatusEntity> findAll(String uuid) {
+    public List<BatchGroupStatusEntity> findAll(String batchId, String asOfDate) {
         RowMapper<BatchGroupStatusEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupStatusEntity.class);
-        List<BatchGroupStatusEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_201, rowMapper, uuid);
+        List<BatchGroupStatusEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_201, rowMapper, batchId, asOfDate);
         for (BatchGroupStatusEntity bh : list) {
 
-            Integer totalCnt = getTotalJobs(uuid, bh.getGid());
+            Integer totalCnt = getTotalJobs(batchId, bh.getSuiteKey(),asOfDate);
 
-            Integer completeCnt = getCompleteJobs(uuid, bh.getGid());
+            Integer completeCnt = getCompleteJobs(batchId, bh.getSuiteKey(),asOfDate);
 
             bh.setTotalJobsCnt(totalCnt);
 
@@ -37,13 +42,14 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     }
 
     @Override
-    public BatchGroupStatusEntity getDetails(String batchId, String gid) {
+    public BatchGroupStatusEntity getDetails(String batchId, String suiteKey, String asOfDate) {
+
         RowMapper<BatchGroupStatusEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupStatusEntity.class);
-        BatchGroupStatusEntity batchGroupStatusEntity = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_205, rowMapper, batchId, gid);
+        BatchGroupStatusEntity batchGroupStatusEntity = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_205, rowMapper, batchId, suiteKey,asOfDate);
 
-        Integer totalCnt = getTotalJobs(batchId, gid);
+        Integer totalCnt = getTotalJobs(batchId, suiteKey, asOfDate);
 
-        Integer completeCnt = getCompleteJobs(batchId, gid);
+        Integer completeCnt = getCompleteJobs(batchId, suiteKey, asOfDate);
 
         Integer ratio = 100;
 
@@ -66,9 +72,9 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     }
 
     @Override
-    public Integer getRatio(String batchId, String gid) {
-        Integer totalJobs = getTotalJobs(batchId, gid);
-        Integer completeJobs = getCompleteJobs(batchId, gid);
+    public Integer getRatio(String batchId, String gid, String asOfDate) {
+        Integer totalJobs = getTotalJobs(batchId, gid, asOfDate);
+        Integer completeJobs = getCompleteJobs(batchId, gid, asOfDate);
         if (totalJobs == 0) {
             return 100;
         }
@@ -81,8 +87,8 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     * @param gid  批次配置中,任务组的id
     * @return 返回这个任务组中任务总量
     * */
-    private Integer getTotalJobs(String batchId, String gid) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_202, Integer.class, batchId, gid);
+    private Integer getTotalJobs(String batchId, String gid, String asOfDate) {
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_202, Integer.class, batchId, gid, asOfDate);
     }
 
     /*
@@ -91,7 +97,7 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     * @param gid  批次配置中,任务组的id
     * @return 返回这个任务组中已经完成的任务量
     * */
-    private Integer getCompleteJobs(String uuid, String gid) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_203, Integer.class, uuid, gid);
+    private Integer getCompleteJobs(String uuid, String gid, String asOfDate) {
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_203, Integer.class, uuid, gid, asOfDate);
     }
 }

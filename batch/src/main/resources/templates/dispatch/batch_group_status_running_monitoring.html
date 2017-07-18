@@ -9,6 +9,7 @@
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
               class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-running-batch-desc" th:text="${batchDesc}"></span></span>
         <span id="h-dispatch-batch-running-uuid" style="display: none;" th:text="${batchId}"></span>
+        <span id="h-dispatch-batch-running-asofdate" style="display: none;" th:text="${asOfDate}"></span>
     </div>
 </div>
 <div class="row" id="h-dispatch-batch-group-running-monitoring-content" style="padding-top: 6px;overflow-y: auto;">
@@ -21,24 +22,28 @@
 </div>
 <script type="text/javascript">
     var BatchGroupRunningObj = {
-        getJobHistory:function (gid,group_desc) {
-            var uuid = $("#h-dispatch-batch-running-uuid").html();
+        getJobRunning:function (suiteKey,group_desc) {
+            var batch_id = $("#h-dispatch-batch-running-uuid").html();
             var batch_desc = $("#h-dispatch-batch-group-running-batch-desc").html();
+            var as_of_date = $("#h-dispatch-batch-running-asofdate").html();
             Hutils.openTab({
                 url:"/v1/dispatch/batch/job/running/monitoring/page",
                 id:"hzwy23##jobhistory",
                 title:group_desc+" 任务运行监控",
                 data:{
-                    gid:gid,
-                    batch_id:uuid,
+                    suiteKey:suiteKey,
+                    batch_id:batch_id,
                     batch_desc:batch_desc,
-                    group_desc:group_desc
+                    group_desc:group_desc,
+                    as_of_date:as_of_date,
                 }
             })
         },
-        init:function (uuid) {
-            $.getJSON("/v1/dispatch/batch/group/running",{batch_id:uuid},function (data) {
+        init:function (batchId) {
+            var as_of_date = $("#h-dispatch-batch-running-asofdate").html();
+            $.getJSON("/v1/dispatch/batch/group/running",{batch_id:batchId, as_of_date:as_of_date},function (data) {
                 $(data).each(function (index, element) {
+
                     var pdiv = document.createElement("div");
                     pdiv.className = "col-sm-6 col-md-3";
 
@@ -75,7 +80,7 @@
                     pbtn.className = "btn btn-info";
                     pbtn.setAttribute("role","button");
                     pbtn.innerHTML = "任务详情";
-                    pbtn.setAttribute("onclick","BatchGroupRunningObj.getJobHistory('"+element.gid+"','"+element.groupDesc+"')");
+                    pbtn.setAttribute("onclick","BatchGroupRunningObj.getJobRunning('"+element.suiteKey+"','"+element.groupDesc+"')");
 
                     var pbatchDesc = document.createElement("h3");
                     pbatchDesc.innerHTML = element.groupDesc;
@@ -83,9 +88,9 @@
 
                     var pgid = document.createElement("div");
                     var pgidlabel = document.createElement("label");
-                    pgidlabel.innerHTML = "id:&nbsp;";
+                    pgidlabel.innerHTML = "SuiteKey:&nbsp;";
                     var pgidvalue = document.createElement("span");
-                    pgidvalue.innerHTML = element.gid;
+                    pgidvalue.innerHTML = element.suiteKey;
                     pgid.appendChild(pgidlabel);
                     pgid.appendChild(pgidvalue);
 
@@ -135,15 +140,15 @@
                     });
 
                     var timer = setInterval(function () {
-                        $.getJSON("/v1/dispatch/batch/group/running/details",{batch_id:uuid,gid:element.gid}).done(function (data) {
-
-                            ppvalue.innerHTML = data.startTime;
-                            pvalvalue.innerHTML = data.endTime;
-                            ph3.innerHTML = data.statusDesc;
+                        $.getJSON("/v1/dispatch/batch/group/running/details",{batch_id:batchId,suiteKey:element.suiteKey,as_of_date:as_of_date}).done(function (data) {
 
                             if (data.status != "0" && data.status != "1"){
                                 clearInterval(timer);
                             }
+                            ppvalue.innerHTML = data.startTime;
+                            pvalvalue.innerHTML = data.endTime;
+                            ph3.innerHTML = data.statusDesc;
+
 
                             if (document.getElementById("h-dispatch-batch-group-running-monitoring-content") == null){
                                 clearInterval(timer);

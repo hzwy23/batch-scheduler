@@ -4,7 +4,7 @@ import com.asofdate.hauth.dao.ResourceDao;
 import com.asofdate.hauth.dao.RoleResourceDao;
 import com.asofdate.hauth.entity.ResourceEntity;
 import com.asofdate.hauth.entity.RoleResourceEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.asofdate.utils.JoinCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

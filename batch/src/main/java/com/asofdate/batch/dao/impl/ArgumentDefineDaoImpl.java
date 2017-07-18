@@ -2,7 +2,7 @@ package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.ArgumentDefineDao;
 import com.asofdate.batch.entity.ArgumentDefineEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import com.asofdate.utils.JoinCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.asofdate.sql;
+package com.asofdate.hauth.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

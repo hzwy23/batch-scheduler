@@ -2,7 +2,7 @@ package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.GroupDefineDao;
 import com.asofdate.batch.entity.GroupDefineEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,8 +22,7 @@ public class GroupDefineDaoImpl implements GroupDefineDao {
     @Override
     public List findAll(String domainId) {
         RowMapper<GroupDefineEntity> rowMapper = new BeanPropertyRowMapper<GroupDefineEntity>(GroupDefineEntity.class);
-        List list = jdbcTemplate.query(SqlDefine.sys_rdbms_108, rowMapper, domainId);
-        return list;
+        return jdbcTemplate.query(SqlDefine.sys_rdbms_108, rowMapper, domainId);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.asofdate.batch.dao;
 
-import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 
 import java.util.List;
@@ -13,9 +12,4 @@ public interface GroupDependencyDao {
 
     List<GroupDependencyEntity> findById(String domainId, String batchId);
 
-    List<BatchGroupEntity> getGroupDependency(String id);
-
-    int deleteGroupDependency(String uuid);
-
-    int addGroupDependency(List<GroupDependencyEntity> list);
 }

@@ -9,6 +9,9 @@ import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/task/define")
+@Api("批次任务定义")
 public class TaskDefineController {
     private final Logger logger = LoggerFactory.getLogger(TaskDefineController.class);
     @Autowired
@@ -39,8 +43,10 @@ public class TaskDefineController {
     * 查询指定域中的所有任务定义信息
     * 如果指定域为空,则返回请求用户所属域的任务定义信息
     * */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "查询指定域中的所有已经定义的任务信息", notes = "如果请求查询的参数为空，则返回用户所在域中定义的任务信息")
+    @ApiImplicitParam(required = true, name = "domain_id", value = "域编码")
     public List<TaskDefineEntity> getAll(HttpServletRequest request) {
         String domainId = request.getParameter("domain_id");
         if (domainId == null || domainId.isEmpty()) {
@@ -54,7 +60,9 @@ public class TaskDefineController {
     * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "新增任务信息", notes = "向系统中添加新的任务，任务必须是存储过程，shell脚本，cmd脚本，可执行jar包，二进制文件中的一种")
     public String add(@Validated TaskDefineEntity taskDefineEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+        // 校验参数信息
         if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
@@ -63,11 +71,12 @@ public class TaskDefineController {
         }
 
         RetMsg retMsg = taskDefineService.add(parse(request));
-        if (!retMsg.checkCode()) {
-            response.setStatus(retMsg.getCode());
-            return Hret.error(retMsg);
+        if (retMsg.checkCode()) {
+            return Hret.success(retMsg);
+
         }
-        return Hret.success(retMsg);
+        response.setStatus(retMsg.getCode());
+        return Hret.error(retMsg);
     }
 
     /*

@@ -13,9 +13,9 @@ import com.asofdate.utils.factory.RetMsgFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by hzwy23 on 2017/5/24.
@@ -35,16 +35,16 @@ public class TaskDefineServiceImpl implements TaskDefineService {
     public List<TaskDefineEntity> findAll(String domainId, String batchId) {
         List<TaskDefineEntity> list = dispatchTaskDefineDao.findAll(domainId);
         List<GroupTaskEntity> groupTaskEntityList = groupTaskService.findByBatchId(domainId, batchId);
-        Map<String, GroupTaskEntity> map = new HashMap<String, GroupTaskEntity>();
+
+        Set<String> set = new HashSet<String>();
 
         for (GroupTaskEntity m : groupTaskEntityList) {
-            if (!map.containsKey(m.getTaskId())) {
-                map.put(m.getTaskId(), m);
-            }
+            set.add(m.getTaskId());
         }
 
         for (int i = 0; i < list.size(); i++) {
-            if (!map.containsKey(list.get(i).getTaskId())) {
+            String taskId = list.get(i).getTaskId();
+            if (!set.contains(taskId)) {
                 list.remove(i);
                 i--;
             }

@@ -7,6 +7,10 @@ import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,19 +26,24 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/27.
  */
 @RestController
+@Api("批次任务组配置管理")
 public class BatchGroupRelController {
+    private final Logger logger = LoggerFactory.getLogger(BatchGroupRelController.class);
     @Autowired
     private BatchGroupService batchGroupService;
 
     @RequestMapping(value = "/v1/dispatch/batch/define/group", method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "查询批次内任务组")
     public List<BatchGroupEntity> getGroup(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
+        logger.debug("batch id is:{}", batchId);
         return batchGroupService.getGroup(batchId);
     }
 
     @RequestMapping(value = "/v1/dispatch/batch/define/group", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "在批次中添加任务组")
     public String addGroup(HttpServletResponse response, HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
         String domainId = request.getParameter("domain_id");
@@ -58,6 +67,7 @@ public class BatchGroupRelController {
 
     @RequestMapping(value = "/v1/dispatch/batch/define/group/list/delete", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "删除批次中配置的任务组信息")
     public String deleteGroupList(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
         List<BatchGroupDTO> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDTO>>() {
@@ -75,9 +85,11 @@ public class BatchGroupRelController {
     @ResponseBody
     public String deleteGroup(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
+        logger.debug("suiteKey is:{}", id);
+
         List<BatchGroupDTO> list = new ArrayList<>();
         BatchGroupDTO dto = new BatchGroupDTO();
-        dto.setId(id);
+        dto.setSuiteKey(id);
         list.add(dto);
 
         RetMsg retMsg = batchGroupService.deleteGroup(list);

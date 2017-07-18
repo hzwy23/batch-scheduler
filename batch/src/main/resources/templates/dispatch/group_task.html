@@ -2,7 +2,7 @@
 <div class="row subsystem-header">
     <div class="pull-left">
         <span>任务配置管理</span>
-        <i id="h-group-task-group-id" style="display: none;" th:text="${groupId}"></i>
+        <i id="h-group-task-group-jobKey" style="display: none;" th:text="${groupId}"></i>
     </div>
 </div>
 <div class="row subsystem-toolbar">
@@ -16,12 +16,13 @@
             <span class="icon-plus"> 添加任务</span>
         </button>
         <button onclick="DispatchGroupTaskObj.delete()" class="btn btn-danger btn-sm" title="删除配置任务">
-            <span class="icon-plus"> 删除</span>
+            <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
 <div class="row" style="margin-top:6px;">
-    <div id="h-dispatch-group-task-table-info" class="col-sm-12 col-md-12 col-lg-12">
+    <div id="h-dispatch-group-task-table-info"
+         class="col-sm-12 col-md-12 col-lg-12">
         <table id="h-dispatch-group-task-relation-table"
                data-toggle="table"
                data-striped="true"
@@ -33,8 +34,8 @@
             <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-align="center" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
-                <th data-field="id">任务组内唯一任务ID号</th>
+                <th data-align="center" data-width="46px" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
+                <th data-field="jobKey" data-align="center" data-width="280px">JobKey</th>
                 <th data-align="center" data-field="code_number">任务编码</th>
                 <th data-align="left" data-field="task_desc">任务名称</th>
                 <th data-align="center" data-field="task_type_desc">任务类型</th>
@@ -48,16 +49,13 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
-        var groupId = $("#h-group-task-group-id").html();
+        var groupId = $("#h-group-task-group-jobKey").html();
         $("#h-dispatch-group-task-relation-table").bootstrapTable({
-            height:hwindow-110,
+            height:hwindow-130,
             queryParams:function (params) {
                 params.group_id = groupId;
                 return params;
             }
-        });
-        $("#h-dispatch-group-task-dependency-table").bootstrapTable({
-            height:hwindow-110,
         });
 
         $("#h-dispatch-group-task-button-list").height(hwindow - 130);
@@ -69,7 +67,7 @@
             return index+1;
         },
         addTask:function () {
-            var groupId = $("#h-group-task-group-id").html();
+            var groupId = $("#h-group-task-group-jobKey").html();
             DispatchGroupDefineObj.addTask(groupId);
         },
         refresh:function () {
@@ -80,9 +78,10 @@
             var arr = new Array();
             $(rows).each(function (index, element) {
                 var e = {};
-                e.id = element.id;
+                e.jobKey = element.jobKey;
                 arr.push(e);
-            })
+            });
+
             $.HAjaxRequest({
                 url:"/v1/dispatch/group/define/task/list/delete",
                 type:"POST",
@@ -110,8 +109,8 @@
            data-search="false">
         <thead>
         <tr>
-            <th data-align="center" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
-            <th data-align="center" data-field="up_id">任务组内上级唯一任务ID号</th>
+            <th data-align="center" data-width="46px" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
+            <th data-align="center" data-width="280px" data-field="upJobKey">上级JobKey</th>
             <th data-align="center" data-field="code_number">任务编码</th>
             <th data-align="left" data-field="task_desc">任务名称</th>
             <th data-align="center" data-formatter="DispatchGroupDefineObj.formatterDependency">操作</th>

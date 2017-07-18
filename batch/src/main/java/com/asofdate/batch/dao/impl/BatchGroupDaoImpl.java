@@ -3,7 +3,7 @@ package com.asofdate.batch.dao.impl;
 import com.asofdate.batch.dao.BatchGroupDao;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,10 +25,9 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List findAll(String domainId) {
+    public List findAll(String domainId, String batchId) {
         RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
-        List<BatchGroupEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_106, rowMapper, domainId);
-        return list;
+        return jdbcTemplate.query(SqlDefine.sys_rdbms_106, rowMapper, domainId, batchId);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
     @Override
     public int deleteGroup(List<BatchGroupEntity> list) {
         for (BatchGroupEntity m : list) {
-            String id = m.getId();
+            String id = m.getSuiteKey();
             if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_155, id)) {
                 return -1;
             }
@@ -73,7 +72,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
         Set<String> set = getChildren(batchid, id);
 
         for (int i = 0; i < list.size(); i++) {
-            String sub = list.get(i).getId();
+            String sub = list.get(i).getSuiteKey();
             if (set.contains(sub)) {
                 list.remove(i);
                 i--;
@@ -91,7 +90,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
         set.add(id);
 
         for (BatchGroupEntity m : getOwner(id)) {
-            set.add(m.getUpId());
+            set.add(m.getUpSuiteKey());
         }
         return set;
     }
@@ -103,14 +102,41 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
 
     private void children(List<GroupDependencyEntity> all, String id, Set<String> set) {
         for (GroupDependencyEntity m : all) {
-            String upId = m.getUpId();
-            if (upId == null || set.contains(m.getId())) {
+            String upId = m.getUpSuiteKey();
+            if (upId == null || set.contains(m.getSuiteKey())) {
                 continue;
             }
             if (id.equals(upId)) {
-                set.add(m.getId());
-                children(all, m.getId(), set);
+                set.add(m.getSuiteKey());
+                children(all, m.getSuiteKey(), set);
             }
         }
     }
+
+    @Override
+    public List<BatchGroupEntity> getGroupDependency(String suiteKey) {
+        RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
+        return jdbcTemplate.query(SqlDefine.sys_rdbms_138, rowMapper, suiteKey);
+    }
+
+    @Override
+    public int deleteGroupDependency(String uuid) {
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_153, uuid);
+    }
+
+    @Transactional
+    @Override
+    public int addGroupDependency(List<GroupDependencyEntity> list) {
+        for (GroupDependencyEntity m : list) {
+
+            String domainId = m.getDomainId();
+            String id = m.getSuiteKey();
+            String upId = m.getUpSuiteKey();
+            if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_156, id, upId, domainId)) {
+                return -1;
+            }
+        }
+        return 1;
+    }
+
 }

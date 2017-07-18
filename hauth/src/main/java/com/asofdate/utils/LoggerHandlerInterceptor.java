@@ -2,7 +2,7 @@ package com.asofdate.utils;
 
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.dto.RequestUserDTO;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

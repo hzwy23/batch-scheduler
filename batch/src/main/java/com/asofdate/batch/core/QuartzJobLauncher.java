@@ -2,7 +2,7 @@ package com.asofdate.batch.core;
 
 import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.service.ArgumentService;
-import com.asofdate.batch.service.TaskStatusService;
+import com.asofdate.batch.service.JobKeyStatusService;
 import com.asofdate.utils.JoinCode;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -24,99 +24,40 @@ import java.util.UUID;
  * Created by hzwy23 on 2017/5/21.
  */
 public class QuartzJobLauncher extends QuartzJobBean {
-
     private final Logger logger = LoggerFactory.getLogger(QuartzJobLauncher.class);
-
     private JobLauncher jobLauncher;
     private JobRegistry jobRegistry;
-    //    private JobExplorer jobExplorer;
-//    private JobOperator jobOperator;
-    private TaskStatusService taskStatusService;
+    private JobKeyStatusService jobKeyStatusService;
     private ArgumentService argumentService;
     private String jobName;
 
-    public ArgumentService getArgumentService() {
-        return argumentService;
-    }
-
-    public void setArgumentService(ArgumentService argumentService) {
-        this.argumentService = argumentService;
-    }
-
-    public TaskStatusService getTaskStatusService() {
-        return taskStatusService;
-    }
-
-    public void setTaskStatusService(TaskStatusService taskStatusService) {
-        this.taskStatusService = taskStatusService;
-    }
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
-//    public JobOperator getJobOperator() {
-//        return jobOperator;
-//    }
-//
-//    public void setJobOperator(JobOperator jobOperator) {
-//        this.jobOperator = jobOperator;
-//    }
-//
-//    public JobExplorer getJobExplorer() {
-//        return jobExplorer;
-//    }
-//
-//    public void setJobExplorer(JobExplorer jobExplorer) {
-//        this.jobExplorer = jobExplorer;
-//    }
-
-    public JobRegistry getJobRegistry() {
-        return jobRegistry;
-    }
-
-    public void setJobRegistry(JobRegistry jobRegistry) {
-        this.jobRegistry = jobRegistry;
-    }
-
-    public JobLauncher getJobLauncher() {
-        return jobLauncher;
-    }
-
-    public void setJobLauncher(JobLauncher jobLauncher) {
-        this.jobLauncher = jobLauncher;
-    }
-
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
         try {
-
             Job job = jobRegistry.getJob(jobName);
-
             JobExecution jobExecution = jobLauncher.run(job, getJobParameters());
-
             if (ExitStatus.COMPLETED.getExitCode().equals(jobExecution.getExitStatus().getExitCode())) {
-                taskStatusService.setTaskCompleted(jobName);
-                jobRegistry.unregister(jobName);
+                jobKeyStatusService.setJobCompleted(jobName);
             } else {
-                taskStatusService.setTaskError(jobName);
+                jobKeyStatusService.setJobError(jobName);
             }
-
         } catch (NoSuchJobException e) {
-            e.printStackTrace();
+            jobKeyStatusService.setJobError(jobName);
+            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "NoSuchJobException");
         } catch (JobInstanceAlreadyCompleteException e) {
-            e.printStackTrace();
+            jobKeyStatusService.setJobError(jobName);
+            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobInstanceAlreadyCompleteException");
         } catch (JobExecutionAlreadyRunningException e) {
-            e.printStackTrace();
+            jobKeyStatusService.setJobError(jobName);
+            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobExecutionAlreadyRunningException");
         } catch (JobParametersInvalidException e) {
-            e.printStackTrace();
+            jobKeyStatusService.setJobError(jobName);
+            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobParametersInvalidException");
         } catch (JobRestartException e) {
-            e.printStackTrace();
+            jobKeyStatusService.setJobError(jobName);
+            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobRestartException");
+        } finally {
+            jobRegistry.unregister(jobName);
         }
     }
 
@@ -129,14 +70,56 @@ public class QuartzJobLauncher extends QuartzJobBean {
             builder.addString("uuid", UUID.randomUUID().toString());
             return builder.toJobParameters();
         }
-
         String jobParameters = "";
         for (TaskArgumentEntity m : list) {
-            jobParameters += " " + m.getArgValue();
+            String val = m.getArgValue();
+            if (val.contains(" ")) {
+                val = "\"" + val + "\"";
+            }
+            jobParameters += " " + val;
         }
         builder.addString("JobParameters", jobParameters.trim());
         builder.addString("uuid", UUID.randomUUID().toString());
-
         return builder.toJobParameters();
+    }
+
+    public JobLauncher getJobLauncher() {
+        return jobLauncher;
+    }
+
+    public void setJobLauncher(JobLauncher jobLauncher) {
+        this.jobLauncher = jobLauncher;
+    }
+
+    public JobRegistry getJobRegistry() {
+        return jobRegistry;
+    }
+
+    public void setJobRegistry(JobRegistry jobRegistry) {
+        this.jobRegistry = jobRegistry;
+    }
+
+    public JobKeyStatusService getJobKeyStatusService() {
+        return jobKeyStatusService;
+    }
+
+    public void setJobKeyStatusService(JobKeyStatusService jobKeyStatusService) {
+        this.jobKeyStatusService = jobKeyStatusService;
+    }
+
+    public ArgumentService getArgumentService() {
+        return argumentService;
+    }
+
+    public void setArgumentService(ArgumentService argumentService) {
+        this.argumentService = argumentService;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 }

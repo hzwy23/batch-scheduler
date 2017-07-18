@@ -2,7 +2,7 @@
 
 [oschina 极速下载地址](http://git.oschina.net/mirrors/asofdate-etl)
 
-[github 托管地址](https://github.com/hzwy23/asofdate-etl)
+[github 托管地址](https://github.com/asofdate/batch-scheduler)
 
 
 **在下Java水平有限,项目中出现错误和不规范的地方,请不吝赐教,感激不尽**

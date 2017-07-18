@@ -1,8 +1,8 @@
 package com.asofdate.batch.service;
 
-import com.asofdate.batch.entity.ArgumentDefineEntity;
+import com.asofdate.batch.dto.BatchRunConfDto;
+import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskArgumentEntity;
-import com.asofdate.utils.RetMsg;
 
 import java.util.List;
 
@@ -18,10 +18,9 @@ public interface ArgumentService {
      * 需要手工调用这个方法初始化对象中的变量属性
      * ArgumentServiceImpl中定义的属性，需要调用这个方法初始化
      *
-     * @param domainId
-     * @param batchId
+     * @param conf
      */
-    void afterPropertySet(String domainId, String batchId);
+    void afterPropertySet(BatchRunConfDto conf, List<GroupTaskEntity> jobKeyList);
 
     /**
      * 参数 id 是 dispatch_group_task_relation表中的id字段
@@ -33,32 +32,4 @@ public interface ArgumentService {
      */
     List<TaskArgumentEntity> queryArgument(String id);
 
-    /**
-     * 查询指定域中的所有参数信息
-     *
-     * @param domainID 域编码信息
-     * @return List 返回某一个域所有的参数定义信息
-     */
-    List<ArgumentDefineEntity> findAll(String domainID);
-
-    /**
-     * 向参数定义表中新增参数
-     *
-     * @param vo 参数信息
-     */
-    RetMsg addArgument(ArgumentDefineEntity vo);
-
-    /**
-     * 删除已经定义的参数信息
-     *
-     * @param list 准备删除的参数定义信息
-     */
-    RetMsg deleteArgument(List<ArgumentDefineEntity> list);
-
-    /**
-     * 更新参数信息
-     *
-     * @param vo
-     */
-    RetMsg updateArgument(ArgumentDefineEntity vo);
 }

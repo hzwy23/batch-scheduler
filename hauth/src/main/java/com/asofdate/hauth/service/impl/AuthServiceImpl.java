@@ -3,7 +3,7 @@ package com.asofdate.hauth.service.impl;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.dto.AuthDTO;
 import com.asofdate.hauth.service.AuthService;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.asofdate.utils.factory.AuthDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

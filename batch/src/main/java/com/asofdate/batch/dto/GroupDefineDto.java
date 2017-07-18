@@ -4,7 +4,7 @@ package com.asofdate.batch.dto;
  * Created by hzwy23 on 2017/7/7.
  */
 public class GroupDefineDto {
-    public String id;
+    public String jobKey;
     public String arg_id;
     public String arg_value;
     public String domain_id;
@@ -34,18 +34,18 @@ public class GroupDefineDto {
         this.domain_id = domain_id;
     }
 
-    public String getId() {
-        return id;
+    public String getJobKey() {
+        return jobKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setJobKey(String id) {
+        this.jobKey = id;
     }
 
     @Override
     public String toString() {
         return "GroupDefineDto{" +
-                "id='" + id + '\'' +
+                "id='" + jobKey + '\'' +
                 ", arg_id='" + arg_id + '\'' +
                 ", arg_value='" + arg_value + '\'' +
                 ", domain_id='" + domain_id + '\'' +

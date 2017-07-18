@@ -1,8 +1,9 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchDefineDao;
+import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.sql.SqlDefine;
 import com.asofdate.utils.TimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,60 +93,8 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     }
 
     @Override
-    public int batchPagging(String batchId) {
-        // 获取批次现在的状态信息
-        BatchDefineEntity bd = getBatchDetails(batchId);
-        if (!"2".equals(bd.getBatchStatus())) {
-            // 批次已经停止，无需翻页运行
-            return 4;
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date date = sdf.parse(bd.getAsOfDate());
-            Integer freq = Integer.parseInt(bd.getPaggingFreq());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            String dateAddVal;
-            switch (bd.getPaggingFreqMult()) {
-                case "MI":
-                    calendar.add(Calendar.MINUTE, freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "H":
-                    calendar.add(Calendar.HOUR, freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "D":
-                    calendar.add(Calendar.DATE, freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "W":
-                    calendar.add(Calendar.DATE, 7 * freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "M":
-                    calendar.add(Calendar.MONTH, freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "Q":
-                    calendar.add(Calendar.MONDAY, 3 * freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                case "Y":
-                    calendar.add(Calendar.YEAR, freq);
-                    dateAddVal = sdf.format(calendar.getTime());
-                    break;
-                default:
-                    return 6;
-            }
-            return jdbcTemplate.update(SqlDefine.sys_rdbms_176, dateAddVal, batchId, dateAddVal);
-        } catch (ParseException e) {
-            logger.error("批次日期格式不是：yyyy-MM-dd HH:mm:ss，解析失败,{}", e.getMessage());
-        } catch (NumberFormatException e) {
-            logger.error("批次执行频率不是正整数{}", e.getMessage());
-        }
-        return 5;
+    public int batchPagging(String batchId, String asOfDate) {
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_176, asOfDate, batchId);
     }
 
     @Override
@@ -172,10 +120,13 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     @Transactional
     @Override
     public int saveHistory(String batchId) {
+        String asOfDate = getBatchAsOfDate(batchId);
+
         String uuid = UUID.randomUUID().toString();
         jdbcTemplate.update(SqlDefine.sys_rdbms_192, uuid, batchId);
-        jdbcTemplate.update(SqlDefine.sys_rdbms_195, uuid, batchId);
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_196, uuid, batchId);
+        jdbcTemplate.update(SqlDefine.sys_rdbms_195, uuid, batchId, asOfDate);
+        jdbcTemplate.update(SqlDefine.sys_rdbms_212, uuid, batchId, asOfDate);
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_196, uuid, batchId, asOfDate);
     }
 
     @Override
@@ -184,28 +135,26 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
             String asOfDate = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_102, String.class, batchId);
             return TimeFormat.formatTime(asOfDate);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    private BatchDefineEntity getBatchDetails(String batchId) {
+    @Override
+    public BatchDefineEntity findDetailsByBatchId(String batchId) {
         BatchDefineEntity ret = new BatchDefineEntity();
-
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(SqlDefine.sys_rdbms_210, batchId);
-
         jdbcTemplate.query(SqlDefine.sys_rdbms_210, new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet resultSet) throws SQLException {
                 String batchStatus = resultSet.getString("batch_status");
                 String asOfDate = resultSet.getString("as_of_date");
-                asOfDate = TimeFormat.formatTime(asOfDate);
                 String completeDate = resultSet.getString("complete_date");
                 String paggingFreq = resultSet.getString("pagging_freq");
                 String paggingFreqMult = resultSet.getString("pagging_freq_mult");
 
-                ret.setAsOfDate(asOfDate);
+                ret.setAsOfDate(TimeFormat.formatTime(asOfDate));
                 ret.setBatchStatus(batchStatus);
-                ret.setCompleteDate(completeDate);
+                ret.setCompleteDate(TimeFormat.formatTime(completeDate));
                 ret.setPaggingFreq(paggingFreq);
                 ret.setPaggingFreqMult(paggingFreqMult);
             }

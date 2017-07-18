@@ -1,22 +1,24 @@
 package com.asofdate.batch.dao;
 
+import com.asofdate.batch.dto.BatchRunConfDto;
+
 import java.util.Map;
 
 /**
  * Created by hzwy23 on 2017/6/14.
  */
 public interface BatchJobStatusDao {
-    int init(String batchId, Map<String, Integer> map);
+    int init(BatchRunConfDto confDto, Map<String, Integer> map);
 
-    int setJobStatus(String batchId, String jobId, int status);
+    int setJobStatus(BatchRunConfDto conf, String jobId, int status);
 
-    int getJobStatus(String batchId, String jobId);
+    int getJobStatus(BatchRunConfDto conf, String jobId);
 
-    int getCompletedCnt(String batchId);
+    int getCompletedCnt(BatchRunConfDto conf);
 
-    int getTotalCnt(String batchId);
+    int getTotalCnt(BatchRunConfDto conf);
 
-    int setJobRunning(String batchId, String jobId, int status);
+    int setJobRunning(BatchRunConfDto conf, String jobId, int status);
 
-    int setJobEnd(String batchId, String jobId, int status);
+    int setJobEnd(BatchRunConfDto conf, String jobId, int status);
 }

@@ -1,7 +1,8 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchGroupStatusDao;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.batch.dto.BatchRunConfDto;
+import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,42 +20,45 @@ public class BatchGroupStatusDaoImp implements BatchGroupStatusDao {
 
     @Transactional
     @Override
-    public int init(String batchId, Map<String, Integer> map) {
+    public int init(BatchRunConfDto conf, Map<String, Integer> map) {
+
         // 删除当前批次的任务组历史信息
-        jdbcTemplate.update(SqlDefine.sys_rdbms_172, batchId);
+        jdbcTemplate.update(SqlDefine.sys_rdbms_172, conf.getBatchId(), conf.getAsOfDate());
+
+        // 初始化批次运行中需要的任务组状态信息
         for (Map.Entry<String, Integer> gid : map.entrySet()) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_173, batchId, gid.getKey(), gid.getValue());
+            jdbcTemplate.update(SqlDefine.sys_rdbms_173, conf.getBatchId(), gid.getKey(), gid.getValue(), conf.getAsOfDate());
         }
         return 1;
     }
 
     @Override
-    public int setGidStatus(String batchId, String gid, int status) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_174, status, batchId, gid);
+    public int setSuiteKeyStatus(BatchRunConfDto conf, String suiteKey, int status) {
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_174, status, conf.getBatchId(), suiteKey, conf.getAsOfDate());
     }
 
     @Override
-    public int getGidStatus(String batchId, String gid) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_175, Integer.class, batchId, gid);
+    public int getSuiteKeyStatus(BatchRunConfDto conf, String suiteKey) {
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_175, Integer.class, conf.getBatchId(), suiteKey, conf.getAsOfDate());
     }
 
     @Override
-    public int getCompletedCnt(String batchId) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_177, Integer.class, batchId);
+    public int getCompletedCnt(BatchRunConfDto conf) {
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_177, Integer.class, conf.getBatchId(), conf.getAsOfDate());
     }
 
     @Override
-    public int getTotalCnt(String batchId) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_177, Integer.class, batchId);
+    public int getTotalCnt(BatchRunConfDto conf) {
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_177, Integer.class, conf.getBatchId(), conf.getAsOfDate());
     }
 
     @Override
-    public int setGroupRunning(String batchId, String gid, int status) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_188, status, gid, batchId);
+    public int setGroupRunning(BatchRunConfDto conf, String suiteKey, int status) {
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_188, status, suiteKey, conf.getBatchId(), conf.getAsOfDate());
     }
 
     @Override
-    public int setGroupEnd(String batchId, String gid, int status) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_189, status, gid, batchId);
+    public int setGroupEnd(BatchRunConfDto conf, String suiteKey, int status) {
+        return jdbcTemplate.update(SqlDefine.sys_rdbms_189, status, suiteKey, conf.getBatchId(), conf.getAsOfDate());
     }
 }

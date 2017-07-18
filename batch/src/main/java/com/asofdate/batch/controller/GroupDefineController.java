@@ -7,13 +7,15 @@ import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
 import com.asofdate.batch.service.GroupDefineService;
 import com.asofdate.batch.service.GroupTaskService;
-import com.asofdate.batch.service.TaskDependencyService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +36,23 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/group/define")
+@Api("任务组管理")
 public class GroupDefineController {
     private final Logger logger = LoggerFactory.getLogger(GroupDefineController.class);
     @Autowired
     private GroupDefineService groupDefineService;
     @Autowired
     private GroupTaskService groupTaskService;
-    @Autowired
-    private TaskDependencyService taskDependencyService;
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
+    @ApiOperation(value = "查询域中所有的任务组", notes = "如果用户请求的域编码为空，则返回用户所在域中的任务组定义信息")
+    @ApiImplicitParam(required = true, name = "domain_id", value = "域编码")
     public List<GroupDefineEntity> getAll(HttpServletRequest request) {
-        String domainID = JwtService.getConnUser(request).getDomainID();
+        String domainID = request.getParameter("domain_id");
+        if (domainID == null || domainID.isEmpty()) {
+            domainID = JwtService.getConnUser(request).getDomainID();
+        }
         return groupDefineService.findAll(domainID);
     }
 
@@ -55,6 +61,7 @@ public class GroupDefineController {
     * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "新增任务组")
     public String add(HttpServletResponse response, HttpServletRequest request) {
         RetMsg retMsg = groupDefineService.add(parse(request));
         if (retMsg.checkCode()) {
@@ -107,34 +114,37 @@ public class GroupDefineController {
 
     @RequestMapping(value = "/task/dependency", method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "查询任务的上级依赖任务", notes = "根据jobKey值，获取所有上级任务")
+    @ApiImplicitParam(required = true, name = "id", value = "joeKye")
     public List<GroupTaskEntity> getTaskDependency(HttpServletRequest request) {
-        String id = request.getParameter("id");
-        return taskDependencyService.getTaskDependency(id);
+        String jobKey = request.getParameter("id");
+        logger.debug("jobKey is:{}", jobKey);
+        return groupTaskService.getJobKeyDep(jobKey);
     }
 
-    /*
-    * 查询任务组可以配置的上级依赖任务
-    * 禁止将任务组现有的下级任务配置成他的上级任务组依赖
-    * @param group_id 任务组编码
-    * @return JSON 可以选择的任务组列表
-    * */
+    /**
+     * 查询任务组可以配置的上级依赖任务
+     * 禁止将任务组现有的下级任务配置成他的上级任务组依赖
+     *
+     * @return JSON 可以选择的任务组列表
+     */
     @RequestMapping(value = "/group/task/current", method = RequestMethod.GET)
     @ResponseBody
     public List<GroupTaskEntity> getGroupTasks(HttpServletRequest request) {
         String groupId = request.getParameter("group_id");
-        String id = request.getParameter("id");
-        logger.debug("group_id is ：{},id is:{}", groupId, id);
-        return taskDependencyService.getGroupTask(groupId, id);
+        String jobKey = request.getParameter("id");
+        logger.debug("group_id is ：{},id is:{}", groupId, jobKey);
+        return groupTaskService.getGroupTask(groupId, jobKey);
     }
 
     @RequestMapping(value = "/group/task/dependency", method = RequestMethod.POST)
     @ResponseBody
     public String addGroupTask(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<TaskDependencyEntity> list = new GsonBuilder().create().fromJson(json,
-                new TypeToken<List<TaskDependencyEntity>>() {
-                }.getType());
-        RetMsg retMsg = taskDependencyService.addTaskDependency(list);
+
+        List<TaskDependencyEntity> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<TaskDependencyEntity>>() {
+        }.getType());
+        RetMsg retMsg = groupTaskService.addTaskDependency(list);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
@@ -146,7 +156,7 @@ public class GroupDefineController {
     @ResponseBody
     public String deleteTaskDependency(HttpServletResponse response, HttpServletRequest request) {
         String uuid = request.getParameter("uuid");
-        RetMsg retMsg = taskDependencyService.deleteTaskDependency(uuid);
+        RetMsg retMsg = groupTaskService.deleteTaskDependency(uuid);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
@@ -168,7 +178,7 @@ public class GroupDefineController {
         String uuid = request.getParameter("uuid");
         String argId = request.getParameter("arg_id");
 
-        logger.info("uuid is:" + uuid + ",arg value is:" + argValue);
+        logger.debug("uuid is:" + uuid + ",arg value is:" + argValue);
         RetMsg retMsg = groupDefineService.updateArg(argValue, uuid, argId);
         if (retMsg.checkCode()) {
             return Hret.success(retMsg);
@@ -204,7 +214,7 @@ public class GroupDefineController {
                 }.getType());
 
         for (GroupDefineDto m : list) {
-            args.add(m.getId());
+            args.add(m.getJobKey());
         }
 
         RetMsg retMsg = groupTaskService.deleteTask(args);
@@ -238,7 +248,7 @@ public class GroupDefineController {
                     }.getType());
 
             for (GroupDefineDto m : list) {
-                m.setId(id);
+                m.setJobKey(id);
                 m.setDomainId(domain_id);
             }
             retMsg = groupTaskService.addGroupArg(list);
@@ -252,13 +262,16 @@ public class GroupDefineController {
 
     private GroupDefineEntity parse(HttpServletRequest request) {
         String userId = JwtService.getConnUser(request).getUserId();
+        String domainId = request.getParameter("domain_id");
+        String codeNumber = request.getParameter("group_id");
+        String groupId = JoinCode.join(domainId, codeNumber);
+
         GroupDefineEntity groupDefineEntity = new GroupDefineEntity();
-        String groupId = JoinCode.join(request.getParameter("domain_id"), request.getParameter("group_id"));
         groupDefineEntity.setGroupId(groupId);
-        groupDefineEntity.setCodeNumber(request.getParameter("group_id"));
+        groupDefineEntity.setCodeNumber(codeNumber);
         groupDefineEntity.setCreateUser(userId);
         groupDefineEntity.setModifyUser(userId);
-        groupDefineEntity.setDomainId(request.getParameter("domain_id"));
+        groupDefineEntity.setDomainId(domainId);
         groupDefineEntity.setGroupDesc(request.getParameter("group_desc"));
         return groupDefineEntity;
     }

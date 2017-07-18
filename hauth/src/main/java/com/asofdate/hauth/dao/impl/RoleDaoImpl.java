@@ -3,7 +3,7 @@ package com.asofdate.hauth.dao.impl;
 import com.asofdate.hauth.dao.RoleDao;
 import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.entity.UserRoleEntity;
-import com.asofdate.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlDefine;
 import com.asofdate.utils.JoinCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

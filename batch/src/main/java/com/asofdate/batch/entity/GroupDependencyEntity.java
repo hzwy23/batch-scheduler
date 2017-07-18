@@ -5,8 +5,8 @@ package com.asofdate.batch.entity;
  */
 public class GroupDependencyEntity {
     public String uuid;
-    public String id;
-    public String up_id;
+    public String suiteKey;
+    public String upSuiteKey;
     public String domain_id;
 
     public String getUuid() {
@@ -17,20 +17,20 @@ public class GroupDependencyEntity {
         this.uuid = uuid;
     }
 
-    public String getId() {
-        return id;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSuiteKey(String id) {
+        this.suiteKey = id;
     }
 
-    public String getUpId() {
-        return up_id;
+    public String getUpSuiteKey() {
+        return upSuiteKey;
     }
 
-    public void setUpId(String up_id) {
-        this.up_id = up_id;
+    public void setUpSuiteKey(String up_id) {
+        this.upSuiteKey = up_id;
     }
 
     public String getDomainId() {
@@ -45,8 +45,8 @@ public class GroupDependencyEntity {
     public String toString() {
         return "GroupDependencyEntity{" +
                 "uuid='" + uuid + '\'' +
-                ", id='" + id + '\'' +
-                ", up_id='" + up_id + '\'' +
+                ", suiteKey='" + suiteKey + '\'' +
+                ", upSuiteKey='" + upSuiteKey + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 '}';
     }

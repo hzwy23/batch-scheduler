@@ -65,7 +65,7 @@
                     pbtn.className = "btn btn-info";
                     pbtn.setAttribute("role","button");
                     pbtn.innerHTML = "任务详情";
-                    pbtn.setAttribute("onclick","BatchGroupHistoryObj.getJobHistory('"+element.gid+"','"+element.groupDesc+"')");
+                    pbtn.setAttribute("onclick","BatchGroupHistoryObj.getJobHistory('"+element.suiteKey+"','"+element.groupDesc+"')");
 
                     var pbatchDesc = document.createElement("h3");
                     pbatchDesc.innerHTML = element.groupDesc;
@@ -73,9 +73,9 @@
 
                     var pgid = document.createElement("div");
                     var pgidlabel = document.createElement("label");
-                    pgidlabel.innerHTML = "id:&nbsp;";
+                    pgidlabel.innerHTML = "SuiteKey:&nbsp;";
                     var pgidvalue = document.createElement("span");
-                    pgidvalue.innerHTML = element.gid;
+                    pgidvalue.innerHTML = element.suiteKey;
                     pgid.appendChild(pgidlabel);
                     pgid.appendChild(pgidvalue);
 

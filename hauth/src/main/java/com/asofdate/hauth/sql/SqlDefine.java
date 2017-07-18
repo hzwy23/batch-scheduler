@@ -1,4 +1,4 @@
-package com.asofdate.sql;
+package com.asofdate.hauth.sql;
 
 /**
  * Created by hzwy23 on 2017/5/16.
@@ -8,7 +8,7 @@ public class SqlDefine {
     public static String sys_rdbms_002 = "select t.domain_id from sys_org_info t where t.org_unit_id  = ?";
     public static String sys_rdbms_003 = "select i.domain_id from sys_user_info t inner join sys_org_info i on t.org_unit_id = i.org_unit_id where t.user_id = ?";
     public static String sys_rdbms_004 = "select domain_id from sys_role_info where role_id = ?";
-    public static String sys_rdbms_005 = "update sys_resource_info set res_name = ?, res_up_id = ? where res_id = ?";
+    public static String sys_rdbms_005 = "update sys_resource_info set res_name = ? where res_id = ?";
     public static String sys_rdbms_006 = "select count(*) from sys_theme_value where theme_id = ? and res_id = ?";
     public static String sys_rdbms_007 = "delete from sys_user_info where user_id = ? and org_unit_id = ?";
     public static String sys_rdbms_008 = "insert into sys_theme_value(uuid,theme_id,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id) value(uuid(),?,?,?,?,?,?,?,?,?)";
@@ -86,7 +86,7 @@ public class SqlDefine {
     public static String sys_rdbms_104 = "select t.arg_id, t.arg_type,a.arg_type_desc,t.arg_value,t.code_number,t.create_user,t.create_date,t.modify_user,t.modify_date,t.domain_id,t.arg_desc,t.bind_as_of_date from dispatch_argument_define t left join dispatch_argument_type_attr a on t.arg_type = a.arg_type where t.domain_id = ?";
     public static String sys_rdbms_105 = "select t.uuid,t.batch_id,t.arg_id,t.arg_value,t.domain_id from dispatch_batch_argument_rel t where t.domain_id = ?";
     public static String sys_rdbms_106 = "select t.id as uuid,t.batch_id,t.group_id,t.domain_id from dispatch_batch_group_relation t where t.domain_id = ?";
-    public static String sys_rdbms_107 = "select t.batch_id,t.code_number,t.batch_desc,t.batch_status, t.as_of_date,t.start_date,t.ret_msg, t.complete_date, t.end_date,t.domain_id,a.batch_status_desc,t.pagging_freq,t.pagging_freq_mult,r.pagging_freq_mult_desc from dispatch_batch_define t inner join dispatch_batch_status_attr a on t.batch_status = a.batch_status inner join dispatch_batch_pagging_attr r on t.pagging_freq_mult = r.pagging_freq_mult where t.domain_id = ?";
+    public static String sys_rdbms_107 = "select t.batch_id,t.code_number,t.batch_desc,t.batch_status, t.as_of_date,t.start_date,t.ret_msg, t.complete_date, t.end_date,t.domain_id,a.batch_status_desc from dispatch_batch_define t inner join dispatch_batch_status_attr a on t.batch_status = a.batch_status where t.domain_id = ?";
     public static String sys_rdbms_108 = "select t.group_id,t.code_number,t.group_desc,t.create_user,t.create_date,t.modify_user,t.modify_date,t.domain_id from dispatch_group_define t where t.domain_id = ?";
     public static String sys_rdbms_109 = "select t.id as uuid,t.group_id,t.task_id,t.domain_id from dispatch_group_task_relation t where t.domain_id = ?";
     public static String sys_rdbms_110 = "select t.uuid,t.task_id,t.arg_id,t.arg_value,t.domain_id,t.sort_id from dispatch_task_argument_rel t where t.domain_id = ?";
@@ -107,9 +107,9 @@ public class SqlDefine {
     public static String sys_rdbms_125 = "insert into dispatch_task_define(task_id,code_number,task_desc,task_type,create_user,create_date,modify_date,modify_user,domain_id,script_file) values(?,?,?,?,?,now(),now(),?,?,?)";
     public static String sys_rdbms_126 = "update dispatch_task_define set task_desc = ?, task_type = ?,script_file = ? where task_id = ? and domain_id = ?";
     public static String sys_rdbms_127 = "delete from dispatch_task_define where task_id = ? and domain_id = ?";
-    public static String sys_rdbms_128 = "insert into dispatch_batch_define(batch_id,code_number,batch_desc,batch_status,as_of_date,ret_msg,complete_date,domain_id,pagging_freq,pagging_freq_mult) values(?,?,?,?,?,?,?,?,?,?)";
+    public static String sys_rdbms_128 = "insert into dispatch_batch_define(batch_id,code_number,batch_desc,batch_status,as_of_date,ret_msg,complete_date,domain_id) values(?,?,?,?,str_to_date(?,'%Y-%m-%d'),?,str_to_date(?,'%Y-%m-%d'),?)";
     public static String sys_rdbms_129 = "delete from dispatch_batch_define where batch_id = ? and domain_id = ?";
-    public static String sys_rdbms_130 = "update dispatch_batch_define set batch_desc = ?, as_of_date = ? , complete_date = ?,pagging_freq = ?, pagging_freq_mult = ? where batch_id = ? and domain_id = ?";
+    public static String sys_rdbms_130 = "update dispatch_batch_define set batch_desc = ?, batch_status = ?,as_of_date = str_to_date(?,'%Y-%m-%d'), complete_date = str_to_date(?,'%Y-%m-%d') where batch_id = ? and domain_id = ?";
     public static String sys_rdbms_131 = "select batch_status from dispatch_batch_define where batch_id = ?";
     public static String sys_rdbms_132 = "select t.uuid,t.task_id,t.arg_id,t.arg_value,t.sort_id,t.domain_id,d.arg_type,a.arg_type_desc,d.arg_desc,d.code_number,d.arg_value as fixed_arg_value from dispatch_task_argument_rel t inner join dispatch_argument_define d on t.arg_id = d.arg_id inner join dispatch_argument_type_attr a on d.arg_type = a.arg_type where t.task_id = ? order by sort_id asc";
     public static String sys_rdbms_133 = "select t.id,t.group_id,t.task_id,t.domain_id,d.task_desc,d.task_type,a.task_type_desc,d.code_number from dispatch_group_task_relation t inner join dispatch_task_define d on t.task_id = d.task_id inner join dispatch_task_type_attr a on d.task_type = a.task_type where t.group_id = ?";
@@ -155,7 +155,7 @@ public class SqlDefine {
     public static String sys_rdbms_173 = "insert into dispatch_batch_group_status(batch_id,gid,status) values(?,?,?)";
     public static String sys_rdbms_174 = "update dispatch_batch_group_status set status = ? where batch_id = ? and gid = ?";
     public static String sys_rdbms_175 = "select status from dispatch_batch_group_status where batch_id = ? and gid = ?";
-    public static String sys_rdbms_176 = "update dispatch_batch_define set as_of_date = ?, batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date >= ? and batch_status = '2'";
+    public static String sys_rdbms_176 = "update dispatch_batch_define set as_of_date = date_add(as_of_date,interval 1 day), batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date > as_of_date";
     public static String sys_rdbms_177 = "select count(*) from dispatch_batch_group_status where batch_id = ? and status = '2'";
     public static String sys_rdbms_178 = "update dispatch_batch_define set batch_status = '1',start_date = now(), ret_msg = null, end_date = null where batch_id = ? and complete_date >= as_of_date";
     public static String sys_rdbms_179 = "update dispatch_batch_define set ret_msg = ? , end_date = now(), batch_status = ? where batch_id = ?";
@@ -189,5 +189,4 @@ public class SqlDefine {
     public static String sys_rdbms_207 = "insert into sys_handle_logs(uuid,user_id,handle_time,client_ip,status_code,method,url,data,domain_id) values(uuid(),?,now(),?,?,?,?,?,?)";
     public static String sys_rdbms_208 = "select t.code_number,t.role_name,t.role_owner as create_user,t.role_create_date as create_date,a.role_status_desc,a.role_status_id as role_status_code,t.domain_id,o.domain_name as domain_desc,t.role_maintance_date as modify_date,t.role_maintance_user as modify_user,t.role_id from sys_role_info t inner join sys_role_status_attr a on t.role_status_id = a.role_status_id inner join sys_domain_info o on t.domain_id = o.domain_id where t.role_id = ?";
     public static String sys_rdbms_209 = "select t.uuid, t.role_id, t.res_id, i.res_name,res_up_id from sys_role_resource_relat t left join sys_resource_info i on t.res_id = i.res_id where t.role_id = ?";
-    public static String sys_rdbms_210 = "select batch_status,as_of_date,complete_date, pagging_freq,pagging_freq_mult from dispatch_batch_define where batch_id = ?";
 }

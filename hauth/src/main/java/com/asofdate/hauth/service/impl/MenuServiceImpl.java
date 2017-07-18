@@ -35,9 +35,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public RetMsg update(String resId, String resDesc, String resUpId) {
+    public RetMsg update(String resId, String resDesc) {
         try {
-            String msg = menuDao.update(resId, resDesc, resUpId);
+            String msg = menuDao.update(resId, resDesc);
             if ("success".equals(msg)) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }

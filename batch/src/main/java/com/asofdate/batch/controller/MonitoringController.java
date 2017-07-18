@@ -37,6 +37,8 @@ public class MonitoringController {
     @RequestMapping(method = RequestMethod.GET, value = "/radio")
     public BatchMonitoringDTO getBatchCompletedRadio(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
+
+        logger.debug("batch id is:{}", batchId);
         BatchMonitoringDTO batchMonitoringDTO = batchDefineService.getBatchCompletedRadio(batchId);
         return batchMonitoringDTO;
     }

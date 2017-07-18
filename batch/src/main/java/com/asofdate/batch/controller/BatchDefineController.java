@@ -9,6 +9,9 @@ import com.asofdate.utils.*;
 import com.asofdate.utils.factory.RetMsgFactory;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/define")
+@Api("批次定义管理")
 public class BatchDefineController {
     private static Logger logger = LoggerFactory.getLogger(BatchDefineController.class);
 
@@ -35,9 +39,11 @@ public class BatchDefineController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "查询指定域下边所有的批次", notes = "如果用户请求的域编码为空，则返回用户所在域下的所有批次信息")
+    @ApiImplicitParam(required = true, name = "domain_id", value = "域编码")
     public List<BatchDefineEntity> getAll(HttpServletRequest request) {
         String domainId = request.getParameter("domain_id");
-        if (domainId == null) {
+        if (domainId == null || domainId.isEmpty()) {
             domainId = JwtService.getConnUser(request).getDomainID();
         }
         return batchDefineService.findAll(domainId);
@@ -48,12 +54,13 @@ public class BatchDefineController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "新增批次信息")
     public String add(HttpServletResponse response, HttpServletRequest request) {
         BatchDefineEntity bdf = parse(request);
 
         RetMsg retMsg = valid(bdf);
         if (!retMsg.checkCode()) {
-            logger.info("ret msg is:{}",retMsg.toString());
+            logger.info("ret msg is:{}", retMsg.toString());
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
         }
@@ -71,6 +78,7 @@ public class BatchDefineController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "删除批次信息")
     public String delete(HttpServletResponse response, HttpServletRequest request) {
 
         String json = request.getParameter("JSON");
@@ -100,6 +108,7 @@ public class BatchDefineController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
+    @ApiOperation(value = "更新批次信息")
     public String update(HttpServletResponse response, HttpServletRequest request) {
         BatchDefineEntity m = parse(request);
         if (batchDefineService.getStatus(m.getBatchId()) == BatchStatus.BATCH_STATUS_RUNNING) {
@@ -109,7 +118,7 @@ public class BatchDefineController {
 
         // 参数校验
         RetMsg retMsg = valid(m);
-        if (!retMsg.checkCode()){
+        if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
         }
@@ -126,6 +135,7 @@ public class BatchDefineController {
 
     @RequestMapping(value = "/stop", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "停止批次")
     public String stop(HttpServletResponse response, HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
         RetMsg retMsg = batchDefineService.setStatus(batchId, 4);
@@ -139,6 +149,7 @@ public class BatchDefineController {
 
     @RequestMapping(value = "/argument", method = RequestMethod.GET)
     @ResponseBody
+    @ApiOperation(value = "查询批次参数")
     public List<BatchArgumentDTO> getBatchArg(HttpServletRequest request) {
         String id = request.getParameter("batch_id");
         return batchDefineService.findBatchArgsById(id);
@@ -146,6 +157,7 @@ public class BatchDefineController {
 
     @RequestMapping(value = "/argument", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "设置/更新批次参数", notes = "当批次参数值存在时，更新批次参数，当批次参数值不存在时，新增批次参数值")
     public String addBatchArg(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
         List<BatchArgumentDTO> list = new GsonBuilder().create().fromJson(json,
@@ -162,14 +174,15 @@ public class BatchDefineController {
 
     @RequestMapping(value = "/asofdate", method = RequestMethod.PUT)
     @ResponseBody
+    @ApiOperation(value = "更新批次日期")
     public String updateAsofdate(HttpServletResponse response, HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
         String asofdate = request.getParameter("as_of_date");
 
         // 校验批次日期
-        if (!Validator.isTime(asofdate)){
+        if (!Validator.isTime(asofdate)) {
             response.setStatus(421);
-            return Hret.error(421,"批次日期格式不正确，格式必须是：2008-08-08 20:08:08",null);
+            return Hret.error(421, "批次日期格式不正确，格式必须是：2008-08-08 20:08:08", null);
         }
 
         RetMsg retMsg = batchDefineService.updateAsofdate(asofdate, batchId);
@@ -194,7 +207,7 @@ public class BatchDefineController {
         }
         // 校验批次时间
         if (!Validator.isTime(bdf.getAsOfDate())) {
-            logger.info("批次日期是：{}",bdf.getAsOfDate());
+            logger.info("批次日期是：{}", bdf.getAsOfDate());
             return RetMsgFactory.getRetMsg(423, "批次日期格式不正确，格式是：2008-08-08 20:08:08", null);
         }
         // 校验终止时间

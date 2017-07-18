@@ -1,7 +1,7 @@
 package com.asofdate.batch.controller;
 
 import com.asofdate.batch.entity.ArgumentDefineEntity;
-import com.asofdate.batch.service.ArgumentService;
+import com.asofdate.batch.service.ArgumentDefineService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
@@ -28,7 +28,7 @@ import java.util.List;
 public class ArgumentController {
     private final Logger logger = LoggerFactory.getLogger(ArgumentController.class);
     @Autowired
-    private ArgumentService argumentService;
+    private ArgumentDefineService argumentService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

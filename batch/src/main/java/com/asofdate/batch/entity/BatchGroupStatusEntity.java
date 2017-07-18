@@ -5,7 +5,7 @@ package com.asofdate.batch.entity;
  */
 public class BatchGroupStatusEntity {
     public String batchId;
-    public String gid;
+    public String suiteKey;
     public String status;
     public String startTime;
     public String endTime;
@@ -14,13 +14,46 @@ public class BatchGroupStatusEntity {
     public Integer totalJobsCnt;
     public Integer completeJobsCnt;
     public Integer ratio;
+    public String asOfDate;
 
-    public Integer getRatio() {
-        return ratio;
+    public String getBatchId() {
+        return batchId;
     }
 
-    public void setRatio(Integer ratio) {
-        this.ratio = ratio;
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
+    public String getSuiteKey() {
+        return suiteKey;
+    }
+
+    public void setSuiteKey(String suiteKey) {
+        this.suiteKey = suiteKey;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getStatusDesc() {
@@ -55,51 +88,27 @@ public class BatchGroupStatusEntity {
         this.completeJobsCnt = completeJobsCnt;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Integer getRatio() {
+        return ratio;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setRatio(Integer ratio) {
+        this.ratio = ratio;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getAsOfDate() {
+        return asOfDate;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getBatchId() {
-        return batchId;
-    }
-
-    public void setBatchId(String batchId) {
-        this.batchId = batchId;
-    }
-
-    public String getGid() {
-        return gid;
-    }
-
-    public void setGid(String gid) {
-        this.gid = gid;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAsOfDate(String asOfDate) {
+        this.asOfDate = asOfDate;
     }
 
     @Override
     public String toString() {
         return "BatchGroupStatusEntity{" +
                 "batchId='" + batchId + '\'' +
-                ", gid='" + gid + '\'' +
+                ", suiteKey='" + suiteKey + '\'' +
                 ", status='" + status + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
@@ -108,6 +117,7 @@ public class BatchGroupStatusEntity {
                 ", totalJobsCnt=" + totalJobsCnt +
                 ", completeJobsCnt=" + completeJobsCnt +
                 ", ratio=" + ratio +
+                ", asOfDate='" + asOfDate + '\'' +
                 '}';
     }
 }

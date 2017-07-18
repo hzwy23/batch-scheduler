@@ -4,25 +4,25 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/17.
  */
 public class BatchJobHistoryEntity {
-    public String id;
+    public String sid;
     public String jobId;
     public String status;
     public String startTime;
     public String endTime;
-    public String gid;
+    public String suiteKey;
     public String statusDesc;
-    public String tid;
+    public String jobKey;
     public String taskId;
     public String taskDesc;
     public String taskType;
     public String taskTypeDesc;
 
-    public String getTid() {
-        return tid;
+    public String getJobKey() {
+        return jobKey;
     }
 
-    public void setTid(String tid) {
-        this.tid = tid;
+    public void setJobKey(String tid) {
+        this.jobKey = tid;
     }
 
     public String getTaskId() {
@@ -57,12 +57,12 @@ public class BatchJobHistoryEntity {
         this.taskTypeDesc = taskTypeDesc;
     }
 
-    public String getId() {
-        return id;
+    public String getSid() {
+        return sid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSid(String id) {
+        this.sid = id;
     }
 
     public String getJobId() {
@@ -97,12 +97,12 @@ public class BatchJobHistoryEntity {
         this.endTime = endTime;
     }
 
-    public String getGid() {
-        return gid;
+    public String getSuiteKey() {
+        return suiteKey;
     }
 
-    public void setGid(String gid) {
-        this.gid = gid;
+    public void setSuiteKey(String gid) {
+        this.suiteKey = gid;
     }
 
     public String getStatusDesc() {
@@ -116,14 +116,14 @@ public class BatchJobHistoryEntity {
     @Override
     public String toString() {
         return "BatchJobHistoryEntity{" +
-                "id='" + id + '\'' +
+                "sid='" + sid + '\'' +
                 ", jobId='" + jobId + '\'' +
                 ", status='" + status + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
-                ", gid='" + gid + '\'' +
+                ", suiteKey='" + suiteKey + '\'' +
                 ", statusDesc='" + statusDesc + '\'' +
-                ", tid='" + tid + '\'' +
+                ", jobKey='" + jobKey + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", taskDesc='" + taskDesc + '\'' +
                 ", taskType='" + taskType + '\'' +
