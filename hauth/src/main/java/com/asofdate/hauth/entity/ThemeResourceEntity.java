@@ -14,6 +14,15 @@ public class ThemeResourceEntity {
     private String Group_id;
     private String Res_img;
     private String Sort_id;
+    public String New_iframe;
+
+    public String getNew_iframe() {
+        return New_iframe;
+    }
+
+    public void setNew_iframe(String new_iframe) {
+        New_iframe = new_iframe;
+    }
 
     public String getTheme_id() {
         return Theme_id;

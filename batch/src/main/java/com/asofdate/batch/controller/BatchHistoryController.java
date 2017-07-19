@@ -7,6 +7,7 @@ import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/history")
+@Api("批次调度-批次历史管理")
 public class BatchHistoryController {
     @Autowired
     private BatchHistoryService batchHistoryService;

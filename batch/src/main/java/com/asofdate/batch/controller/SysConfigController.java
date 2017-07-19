@@ -1,9 +1,11 @@
 package com.asofdate.batch.controller;
 
+import com.asofdate.batch.dto.ProcListDTO;
 import com.asofdate.batch.dto.ScriptListDto;
 import com.asofdate.batch.service.SysConfigService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
+import com.asofdate.utils.SysStatus;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,13 +22,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by hzwy23 on 2017/6/15.
  */
 @RestController
-@Api("系统配置参数管理")
+@Api("批次调度-调度核心参数管理")
 public class SysConfigController {
     private final Logger logger = LoggerFactory.getLogger(SysConfigController.class);
     @Autowired
@@ -73,6 +77,34 @@ public class SysConfigController {
         List<ScriptListDto> list = new ArrayList<>();
         getChild(list, filePath, filePath);
         return new GsonBuilder().create().toJson(list);
+    }
+
+    @ApiOperation(value = "查询数据库中所有的存储过程和函数")
+    @RequestMapping(value = "/v1/dispatch/config/proc",method = RequestMethod.GET)
+    public String getProcList(HttpServletResponse response, HttpServletRequest request){
+        List<ProcListDTO> list = sysConfigService.getProcList();
+        List<ProcListDTO> procList = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (ProcListDTO m:list){
+            set.add(m.getProcName());
+            ProcListDTO row = new ProcListDTO();
+            row.setProcName(m.getProcName()+"."+m.getProcDesc());
+            row.setProcDesc(m.getProcDesc());
+            row.setProcUpId(m.getProcName());
+            row.setProcAttr("0");
+            procList.add(row);
+        }
+
+        for (String m :set){
+            ProcListDTO row = new ProcListDTO();
+            row.setProcName(m);
+            row.setProcDesc(m);
+            row.setProcUpId("-1");
+            row.setProcAttr("1");
+            procList.add(row);
+        }
+        String ret = new GsonBuilder().create().toJson(procList);
+        return ret;
     }
 
     private void getChild(List<ScriptListDto> list, String filePath, String basePath) {

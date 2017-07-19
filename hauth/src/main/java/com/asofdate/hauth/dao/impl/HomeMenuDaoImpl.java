@@ -91,6 +91,7 @@ public class HomeMenuDaoImpl implements HomeMenuDao {
                 homeMenuEntity.setRes_name(resourceMap.get(m.getRes_id()).getRes_name());
                 homeMenuEntity.setRes_open_type(m.getRes_type());
                 homeMenuEntity.setRes_url(m.getRes_url().replaceFirst("^/views", ""));
+                homeMenuEntity.setNew_iframe(m.getNew_iframe());
                 rst.add(homeMenuEntity);
             }
         }

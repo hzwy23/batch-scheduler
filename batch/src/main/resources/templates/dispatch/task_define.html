@@ -254,33 +254,22 @@
                         height: "30px",
                         checkbox: false,
                         nodeSelect: false,
+                        onclick:function () {
+                            var id = $("#h-dispatch-task-define-form").find("select[name='taskType']").val();
+                            DispatchTaskDefineObj.taskTypeClk(id);
+                        }
                     });
 
-                    $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id)
-                    setTimeout(function () {
-                        $.getJSON("/v1/dispatch/config/scripts",{
-                            domain_id:$("#h-dispatch-task-define-domain-list").val(),
-                        },function (data) {
-                            var arr = new Array();
-                            $(data).each(function (index, element) {
-                                var e = {};
-                                e.id = element.relativePath;
-                                e.text = element.scriptName;
-                                e.upId = element.parentPath;
-                                e.attr = element.scriptType;
-                                arr.push(e)
-                            });
-                            $("#h-dispatch-task-define-form")
-                                .find("select[name='scriptFile']")
-                                .Hselect({
-                                    height:"30px",
-                                    checkbox:false,
-                                    nodeSelect:false,
-                                    autoAttr:false,
-                                    data:arr,
-                                })
-                        });
-                    },230);
+                    $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id);
+
+                    $("#h-dispatch-task-define-form")
+                        .find("select[name='scriptFile']")
+                        .Hselect({
+                            height:"30px",
+                            checkbox:false,
+                            nodeSelect:false,
+                            autoAttr:false,
+                        })
                 }
             })
         },
@@ -325,12 +314,40 @@
                     $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id);
                     $("#h-dispatch-task-define-form").find("input[name='taskId']").val(row[0].codeNumber).attr("readonly","readonly");
                     $("#h-dispatch-task-define-form").find("input[name='taskDesc']").val(row[0].taskDesc);
+
                     $("#h-dispatch-task-define-form").find("select[name='taskType']").Hselect({
                         value:row[0].taskType,
                         height:"30px",
+                        onclick:function () {
+                            var id = $("#h-dispatch-task-define-form").find("select[name='taskType']").val();
+                            DispatchTaskDefineObj.taskTypeClk(id);
+                        }
                     });
 
-                    setTimeout(function () {
+                    if (row[0].taskType == "2") {
+                        $.getJSON("/v1/dispatch/config/proc",function (data) {
+                            var arr = new Array();
+                            $(data).each(function (index, element) {
+                                var e = {};
+                                e.id = element.procName;
+                                e.text = element.procDesc;
+                                e.upId = element.procUpId;
+                                e.attr = element.procAttr;
+                                arr.push(e)
+                            });
+                            console.log(arr)
+                            $("#h-dispatch-task-define-form")
+                                .find("select[name='scriptFile']")
+                                .Hselect({
+                                    height:"30px",
+                                    checkbox:false,
+                                    nodeSelect:false,
+                                    autoAttr:false,
+                                    data:arr,
+                                    value:row[0].scriptFile,
+                                })
+                        })
+                    } else {
                         $.getJSON("/v1/dispatch/config/scripts",{
                             domain_id:$("#h-dispatch-task-define-domain-list").val(),
                         },function (data) {
@@ -343,7 +360,6 @@
                                 e.attr = element.scriptType;
                                 arr.push(e)
                             });
-
                             $("#h-dispatch-task-define-form")
                                 .find("select[name='scriptFile']")
                                 .Hselect({
@@ -355,9 +371,58 @@
                                     value:row[0].scriptFile,
                                 })
                         });
-                    },230);
+                    }
+
                 }
             })
+        },
+        taskTypeClk:function (id) {
+            if (id == "2") {
+                $.getJSON("/v1/dispatch/config/proc",function (data) {
+                    var arr = new Array();
+                    $(data).each(function (index, element) {
+                        var e = {};
+                        e.id = element.procName;
+                        e.text = element.procDesc;
+                        e.upId = element.procUpId;
+                        e.attr = element.procAttr;
+                        arr.push(e)
+                    });
+                    console.log(arr)
+                    $("#h-dispatch-task-define-form")
+                        .find("select[name='scriptFile']")
+                        .Hselect({
+                            height:"30px",
+                            checkbox:false,
+                            nodeSelect:false,
+                            autoAttr:false,
+                            data:arr,
+                        })
+                })
+            } else {
+                $.getJSON("/v1/dispatch/config/scripts",{
+                    domain_id:$("#h-dispatch-task-define-domain-list").val(),
+                },function (data) {
+                    var arr = new Array();
+                    $(data).each(function (index, element) {
+                        var e = {};
+                        e.id = element.relativePath;
+                        e.text = element.scriptName;
+                        e.upId = element.parentPath;
+                        e.attr = element.scriptType;
+                        arr.push(e)
+                    });
+                    $("#h-dispatch-task-define-form")
+                        .find("select[name='scriptFile']")
+                        .Hselect({
+                            height:"30px",
+                            checkbox:false,
+                            nodeSelect:false,
+                            autoAttr:false,
+                            data:arr,
+                        })
+                });
+            }
         },
         delete: function () {
             var row = $("#h-dispatch-task-define-info-table-details").bootstrapTable('getSelections');
@@ -483,13 +548,13 @@
         <div class="col-sm-6 col-md-6 col-lg-6">
             <span>参数编码:</span>
             <select name="arg_id" placeholder="由1-30位字母,数字组成" class="form-control"
-                   style="height: 30px; line-height: 30px; width: 100%;">
+                    style="height: 30px; line-height: 30px; width: 100%;">
             </select>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <span>排序:</span>
             <input name="sort_id" placeholder="怕序号" class="form-control"
-                    style="height: 30px; line-height: 30px; width: 100%;"/>
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="display: none; margin-top: 20px;">
             <span>参数值:</span>

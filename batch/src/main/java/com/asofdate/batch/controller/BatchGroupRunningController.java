@@ -2,6 +2,7 @@ package com.asofdate.batch.controller;
 
 import com.asofdate.batch.entity.BatchGroupStatusEntity;
 import com.asofdate.batch.service.BatchGroupRunningService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/group/running")
+@Api("批次调度-任务组运行监控管理")
 public class BatchGroupRunningController {
     private final Logger logger = LoggerFactory.getLogger(BatchGroupRunningController.class);
     @Autowired

@@ -3,6 +3,7 @@ package com.asofdate.batch.controller;
 import com.asofdate.batch.dto.BatchMonitoringDTO;
 import com.asofdate.batch.service.BatchDefineService;
 import com.asofdate.hauth.authentication.JwtService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/monitoring")
+@Api("批次调度-批次运行实时监控")
 public class MonitoringController {
     private final Logger logger = LoggerFactory.getLogger(MonitoringController.class);
 

@@ -112,4 +112,5 @@ public class SqlDefine {
     public static String sys_rdbms_213 = "delete from dispatch_job_execute_log where batch_id = ? and as_of_date = ?";
     public static String sys_rdbms_214 = "select job_id,message,exec_time,sort_id,sid,batch_id from dispatch_job_execute_history where job_id = ? and sid = ?";
     public static String sys_rdbms_215 = "select t.suite_key,r.job_key,d.up_job_key from dispatch_batch_group_relation t inner join dispatch_group_task_relation r on t.group_id = r.group_id inner join dispatch_task_dependency d on r.job_key = d.job_key where t.domain_id = ? and t.batch_id = ?";
+    public static String sys_rdbms_216 = "select t.db as procName,t.name as procDesc,t.name as procUpId from mysql.proc t";
 }

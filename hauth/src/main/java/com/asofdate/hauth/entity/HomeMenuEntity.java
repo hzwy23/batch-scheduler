@@ -14,6 +14,15 @@ public class HomeMenuEntity {
     public String Group_id;
     public String Res_up_id;
     public String Res_open_type;
+    public String New_iframe;
+
+    public String getNew_iframe() {
+        return New_iframe;
+    }
+
+    public void setNew_iframe(String new_iframe) {
+        New_iframe = new_iframe;
+    }
 
     public String getRes_id() {
         return Res_id;

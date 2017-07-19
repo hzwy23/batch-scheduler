@@ -1,7 +1,9 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.dao.MenuDao;
+import com.asofdate.hauth.dao.ResourceDao;
 import com.asofdate.hauth.entity.MenuEntity;
+import com.asofdate.hauth.entity.ResourceEntity;
 import com.asofdate.hauth.entity.ThemeValueEntity;
 import com.asofdate.hauth.service.MenuService;
 import com.asofdate.utils.RetMsg;
@@ -12,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by hzwy23 on 2017/6/18.
@@ -23,6 +27,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuDao menuDao;
+    @Autowired
+    private ResourceDao resourceDao;
 
     @Override
     public List<MenuEntity> findAll() {
@@ -35,9 +41,20 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public RetMsg update(String resId, String resDesc) {
+    public RetMsg update(String resId, String resDesc, String resUpId) {
+        // 获取当前res_id 的所有下级菜单
+        List<ResourceEntity> subList = resourceDao.findSubByUpId(resId);
+        if (resId.equals(resUpId)){
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"禁止将当前菜单与上级菜单设置相同",null);
+        }
+        for(ResourceEntity m:subList){
+            if (resUpId.equals(m.getRes_id())){
+                return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"禁止将上级菜单设置成当前下级菜单",null);
+            }
+        }
+
         try {
-            String msg = menuDao.update(resId, resDesc);
+            String msg = menuDao.update(resId, resDesc, resUpId);
             if ("success".equals(msg)) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }

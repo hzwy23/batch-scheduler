@@ -1,6 +1,7 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.SysConfigDao;
+import com.asofdate.batch.dto.ProcListDTO;
 import com.asofdate.batch.entity.SysConfigEntity;
 import com.asofdate.batch.sql.SqlDefine;
 import com.asofdate.utils.JoinCode;
@@ -61,6 +62,12 @@ public class SysConfigDaoImpl implements SysConfigDao {
         } catch (EmptyResultDataAccessException e) {
             return defaultValue;
         }
+    }
+
+    @Override
+    public List<ProcListDTO> getProcList() {
+        RowMapper<ProcListDTO> rowMapper = new BeanPropertyRowMapper<>(ProcListDTO.class);
+        return jdbcTemplate.query(SqlDefine.sys_rdbms_216,rowMapper);
     }
 
     private boolean isExists(String domainId, String configId) {

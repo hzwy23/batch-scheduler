@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by hzwy23 on 2017/6/1.
  */
 @Controller
-@Api("批次调度静态页面管理")
+@Api("批次调度-静态页面管理")
 public class StaticPageController {
     private final Logger logger = LoggerFactory.getLogger(StaticPageController.class);
 

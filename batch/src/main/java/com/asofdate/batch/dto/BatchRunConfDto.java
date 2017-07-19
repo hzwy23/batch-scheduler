@@ -1,9 +1,11 @@
 package com.asofdate.batch.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by hzwy23 on 2017/7/16.
  */
-public class BatchRunConfDto {
+public class BatchRunConfDto implements Serializable{
     public String domainId;
     public String batchId;
     public String asOfDate;

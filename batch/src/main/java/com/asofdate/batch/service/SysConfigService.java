@@ -1,5 +1,6 @@
 package com.asofdate.batch.service;
 
+import com.asofdate.batch.dto.ProcListDTO;
 import com.asofdate.batch.entity.SysConfigEntity;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface SysConfigService {
      * @param configId
      */
     String getValue(String domainId, String configId);
+
+    List<ProcListDTO> getProcList();
 }

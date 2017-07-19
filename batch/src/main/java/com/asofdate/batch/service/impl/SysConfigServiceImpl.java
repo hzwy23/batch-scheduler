@@ -1,6 +1,7 @@
 package com.asofdate.batch.service.impl;
 
 import com.asofdate.batch.dao.SysConfigDao;
+import com.asofdate.batch.dto.ProcListDTO;
 import com.asofdate.batch.entity.SysConfigEntity;
 import com.asofdate.batch.service.SysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,10 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public String getValue(String domainId, String configId) {
         return sysConfigDao.getValue(domainId, configId);
+    }
+
+    @Override
+    public List<ProcListDTO> getProcList() {
+        return sysConfigDao.getProcList();
     }
 }

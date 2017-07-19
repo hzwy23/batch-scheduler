@@ -12,6 +12,7 @@ public class MenuEntity {
     public String res_type;
     public String res_type_desc;
     public String sys_flag;
+    public String new_iframe;
 
     public String getRes_id() {
         return res_id;

@@ -57,8 +57,8 @@
 
 </head>
 
-<body style="overflow: hidden" class="hzwy23-theme-background">
-<div id="bigdata-platform-subsystem"
+<body style="overflow: hidden">
+<div id="bigdata-platform-subsystem" class="hzwy23-theme-background"
      style="margin-right:0px; background-size: cover; overflow: hidden;">
     <div style="position: relative; height: 60px; text-align: left;">
         <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left: 30px;">
@@ -225,12 +225,15 @@
         Hutils.initMenu(0, -1, "系统服务", "工具集", "帮助信息");
         indexObj.adjustLocation();
         indexObj.bindEvents();
+        var clientHeight = document.documentElement.clientHeight;
+        $("#bigdata-platform-subsystem").height(clientHeight-36);
         NProgress.done();
     });
 
     window.onresize = function () {
         var hh = document.documentElement.clientHeight;
         $("#wrap").height(hh - 96);
+        $("#bigdata-platform-subsystem").height(hh-36);
     }
 </script>
 

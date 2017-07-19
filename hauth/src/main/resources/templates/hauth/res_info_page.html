@@ -203,6 +203,14 @@
                             style="vertical-align: middle;padding-left: 15px;">-
                         </td>
                     </tr>
+                    <tr style="height: 36px;line-height: 36px;">
+                        <td class="col-sm-4 col-md-4 col-lg-4"
+                            style="text-align: right;padding-right: 15px;vertical-align: middle;">iframe开关
+                        </td>
+                        <td id="h-resource-show-res-new-iframe" class="col-sm-8 col-md-8 col-lg-8"
+                            style="vertical-align: middle;padding-left: 15px;">-
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -243,6 +251,12 @@
                         height: "30px",
                         placeholder: "--请选择主题--",
                     });
+
+                    $("#h-res-new-iframe").Hselect({
+                        height: "30px",
+                        placeholder: "--请选择主题--",
+                    });
+
                     $("#h-res-modify-res-open-type").Hselect({
                         height: "30px",
                         placeholder: "--请选择打开方式--",
@@ -291,6 +305,7 @@
                     $("#h-res-add-res-class").parent().parent().show();
                     $("#h-res-add-res-url").parent().parent().show();
                     $("#h-res-modify-res-open-type").parent().parent().show();
+                    $("#h-res-new-iframe").parent().parent().hide();
                     break;
                 case "1":
                     // 子页面系统
@@ -319,6 +334,7 @@
                     $("#h-res-add-res-class").parent().parent().show();
                     $("#h-res-add-res-url").parent().parent().show();
                     $("#h-res-modify-res-open-type").parent().parent().show();
+                    $("#h-res-new-iframe").parent().parent().show();
                     break;
                 case "2":
                     // 功能按钮
@@ -347,6 +363,7 @@
                     $("#h-res-add-res-class").parent().parent().hide();
                     $("#h-res-add-res-url").parent().parent().show();
                     $("#h-res-modify-res-open-type").parent().parent().hide();
+                    $("#h-res-new-iframe").parent().parent().hide();
                     break;
                 case "4":
                     // 虚拟节点
@@ -374,6 +391,7 @@
                     $("#h-res-add-res-class").parent().parent().hide();
                     $("#h-res-add-res-url").parent().parent().hide();
                     $("#h-res-modify-res-open-type").parent().parent().hide();
+                    $("#h-res-new-iframe").parent().parent().hide();
                     break;
             }
         },
@@ -392,6 +410,7 @@
                     $("#h-resource-show-res-sort-id").html("-")
                     $("#h-resource-show-res-res-type").html("-")
                     $("#h-resource-show-res-res-type-desc").html("-")
+                    $("#h-resource-show-res-new-iframe").html("-");
                 } else {
                     $(e).each(function (index, element) {
                         $("#h-resource-show-theme-id").html(element.theme_id)
@@ -411,6 +430,7 @@
                         } else {
                             $("#h-resource-show-res-res-type-desc").html("")
                         }
+                        $("#h-resource-show-res-new-iframe").html(element.new_iframe);
                     })
                 }
             })
@@ -448,16 +468,17 @@
                             $("#h-resource-show-res-sort-id").html("-");
                             $("#h-resource-show-res-res-type").html("-");
                             $("#h-resource-show-res-res-type-desc").html("-");
+                            $("#h-resource-show-res-new-iframe").html("-");
 
                             var id = $(obj).attr("data-id")
                             $.getJSON("/v1/auth/menu/details", {res_id: id}, function (e) {
                                 $(e).each(function (index, element) {
-                                    $("#h-resource-show-id").html(element.res_id)
-                                    $("#h-resource-show-name").html(element.res_name)
-                                    $("#h-resource-show-up-id").html(element.res_up_id)
-                                    $("#h-resource-show-attr-desc").html(element.res_attr_desc)
-                                    $("#h-resource-show-type-desc").html(element.res_type_desc)
-                                    $("#h-resource-show-type-id").html(element.res_type)
+                                    $("#h-resource-show-id").html(element.res_id);
+                                    $("#h-resource-show-name").html(element.res_name);
+                                    $("#h-resource-show-up-id").html(element.res_up_id);
+                                    $("#h-resource-show-attr-desc").html(element.res_attr_desc);
+                                    $("#h-resource-show-type-desc").html(element.res_type_desc);
+                                    $("#h-resource-show-type-id").html(element.res_type);
                                 })
                             });
                             var theme_id = $("#h-resource-theme-style-code").val();
@@ -480,6 +501,7 @@
                                     } else {
                                         $("#h-resource-show-res-res-type-desc").html("")
                                     }
+                                    $("#h-resource-show-res-new-iframe").html(element.new_iframe);
                                 })
 
                             })
@@ -609,6 +631,7 @@
                     var res_group_id = $("#h-res-modify-group-id").val()
                     var res_sort_id = $("#h-res-modify-sort-id").val()
                     var res_type = $("#h-res-modify-res-type").val();
+                    var new_iframe = $("#h-res-modify-new-iframe").val();
                     if (res_sort_id == "") {
                         res_sort_id = "0";
                     }
@@ -625,6 +648,7 @@
                             group_id: res_group_id,
                             sort_id: res_sort_id,
                             res_open_type: res_type,
+                            res_new_iframe: new_iframe,
                             res_type: 3,
                         },
                         success: function () {
@@ -646,7 +670,8 @@
                     var res_group_id = $("#h-resource-show-res-group-id").html()
                     var res_sort_id = $("#h-resource-show-res-sort-id").html()
                     var open_type = $("#h-resource-show-res-res-type").html();
-
+                    var new_iframe = $("#h-resource-show-res-new-iframe").html();
+                    var res_type = $("#h-resource-show-type-id").html();
                     if (res_type == "2") {
                         $("#h-res-modify-res-class").parent().parent().hide()
                         $("#h-res-modify-res-img").parent().parent().hide()
@@ -673,6 +698,17 @@
                         height: "30px",
                         value: theme_id,
                     });
+
+                    $("#h-res-modify-new-iframe").Hselect({
+                        height: "30px",
+                        value: new_iframe,
+                    });
+
+                    if (res_type != "1") {
+                        $("#h-res-modify-new-iframe").parent().parent().hide();
+                    }
+
+
                     $("#h-res-modify-res-url").val(res_url)
                 },
             })
@@ -763,12 +799,24 @@
                        class="form-control" style="height: 30px; line-height: 30px;"/>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 8px;">
+        <div class="col-sm-3" style="margin-top: 8px;">
             <label class=" control-label"
                    style="font-size: 14px; font-weight: 500;text-align: left">图标色彩：</label>
             <div class="">
                 <input id="h-res-add-res-bg-color" placeholder="#339999" name="res_bg_color" type="text"
                        class="form-control" style="height: 30px; line-height: 30px;"/>
+            </div>
+        </div>
+
+        <div class="col-sm-3" style="margin-top: 8px;">
+            <label class=" control-label"
+                   style="font-size: 14px; font-weight: 500;text-align: left">iframe开关：</label>
+            <div class="">
+                <select id="h-res-new-iframe" name="res_new_iframe" class="form-control"
+                        style="height: 30px; line-height: 30px;">
+                    <option value="true">启用iframe打开页面</option>
+                    <option value="false">不使用iframe</option>
+                </select>
             </div>
         </div>
 
@@ -913,13 +961,24 @@
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 8px;">
             <label class="col-sm-12 control-label"
+                   style="font-size: 14px; font-weight: 500;text-align: left">iframe开关：</label>
+            <div class="col-sm-12">
+                <select id="h-res-modify-new-iframe" name="res_new_iframe" class="form-control"
+                        style="height: 30px; line-height: 30px;">
+                    <option value="true">启用iframe打开页面</option>
+                    <option value="false">不使用iframe</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3" style="margin-top: 8px;">
+            <label class="col-sm-12 control-label"
                    style="font-size: 14px; font-weight: 500;text-align: left">分组编号：</label>
             <div class="col-sm-12">
                 <input id="h-res-modify-group-id" placeholder="菜单所属分组，请用数字表示" type="number" class="form-control"
                        name="group_id" style="height: 30px; line-height: 30px;"/>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 8px;">
+        <div class="col-sm-3" style="margin-top: 8px;">
             <label class="col-sm-12 control-label"
                    style="font-size: 14px; font-weight: 500;text-align: left">排序号：</label>
             <div class="col-sm-12">

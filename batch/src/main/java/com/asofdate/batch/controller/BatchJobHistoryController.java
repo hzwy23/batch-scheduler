@@ -2,6 +2,7 @@ package com.asofdate.batch.controller;
 
 import com.asofdate.batch.service.BatchJobHistoryService;
 import com.asofdate.batch.service.ExecService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/job/history")
+@Api("批次调度-批次Job运行历史")
 public class BatchJobHistoryController {
     private final Logger logger = LoggerFactory.getLogger(BatchJobHistoryController.class);
     @Autowired

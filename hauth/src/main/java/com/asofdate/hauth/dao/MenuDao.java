@@ -18,7 +18,7 @@ public interface MenuDao {
 
     String delete(String resId);
 
-    String update(String resId, String resDesc);
+    String update(String resId, String resDesc, String resUpId);
 
     ThemeValueEntity getThemeDetails(String themeId, String resId);
 

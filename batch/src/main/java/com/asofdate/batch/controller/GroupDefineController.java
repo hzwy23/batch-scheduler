@@ -36,7 +36,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/group/define")
-@Api("任务组管理")
+@Api("批次调度-任务组管理")
 public class GroupDefineController {
     private final Logger logger = LoggerFactory.getLogger(GroupDefineController.class);
     @Autowired

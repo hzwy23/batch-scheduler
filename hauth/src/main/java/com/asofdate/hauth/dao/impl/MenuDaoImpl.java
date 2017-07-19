@@ -67,7 +67,8 @@ public class MenuDaoImpl implements MenuDao {
                         themeValueEntity.getRes_class(),
                         themeValueEntity.getGroup_id(),
                         themeValueEntity.getRes_img(),
-                        themeValueEntity.getSort_id());
+                        themeValueEntity.getSort_id(),
+                        themeValueEntity.getNew_iframe());
             }
             return "success";
         } catch (Exception e) {
@@ -93,8 +94,8 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
-    public String update(String resId, String resDesc) {
-        jdbcTemplate.update(SqlDefine.sys_rdbms_005, resDesc, resId);
+    public String update(String resId, String resDesc, String resUpId) {
+        jdbcTemplate.update(SqlDefine.sys_rdbms_005, resDesc, resUpId, resId);
         return "success";
     }
 
@@ -140,6 +141,7 @@ public class MenuDaoImpl implements MenuDao {
                     themeValueEntity.getGroup_id(),
                     themeValueEntity.getSort_id(),
                     themeValueEntity.getRes_open_type(),
+                    themeValueEntity.getNew_iframe(),
                     themeValueEntity.getTheme_id(),
                     themeValueEntity.getRes_id());
             return "success";

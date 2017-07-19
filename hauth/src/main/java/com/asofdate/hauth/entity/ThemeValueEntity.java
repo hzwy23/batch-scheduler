@@ -18,6 +18,15 @@ public class ThemeValueEntity {
     public String res_up_id;
     public String res_attr;
     public String res_open_type;
+    public String new_iframe;
+
+    public String getNew_iframe() {
+        return new_iframe;
+    }
+
+    public void setNew_iframe(String new_iframe) {
+        this.new_iframe = new_iframe;
+    }
 
     public String getRes_name() {
         return res_name;

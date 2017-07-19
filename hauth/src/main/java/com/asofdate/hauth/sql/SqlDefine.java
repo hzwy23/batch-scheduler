@@ -8,11 +8,11 @@ public class SqlDefine {
     public static String sys_rdbms_002 = "select t.domain_id from sys_org_info t where t.org_unit_id  = ?";
     public static String sys_rdbms_003 = "select i.domain_id from sys_user_info t inner join sys_org_info i on t.org_unit_id = i.org_unit_id where t.user_id = ?";
     public static String sys_rdbms_004 = "select domain_id from sys_role_info where role_id = ?";
-    public static String sys_rdbms_005 = "update sys_resource_info set res_name = ? where res_id = ?";
+    public static String sys_rdbms_005 = "update sys_resource_info set res_name = ?, res_up_id = ? where res_id = ?";
     public static String sys_rdbms_006 = "select count(*) from sys_theme_value where theme_id = ? and res_id = ?";
     public static String sys_rdbms_007 = "delete from sys_user_info where user_id = ? and org_unit_id = ?";
-    public static String sys_rdbms_008 = "insert into sys_theme_value(uuid,theme_id,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id) value(uuid(),?,?,?,?,?,?,?,?,?)";
-    public static String sys_rdbms_009 = "update sys_theme_value set res_url = ?, res_bg_color = ?, res_class = ?, res_img = ?, group_id = ?, sort_id = ?, res_type = ? where theme_id = ? and res_id = ?";
+    public static String sys_rdbms_008 = "insert into sys_theme_value(uuid,theme_id,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id,new_iframe) value(uuid(),?,?,?,?,?,?,?,?,?,?)";
+    public static String sys_rdbms_009 = "update sys_theme_value set res_url = ?, res_bg_color = ?, res_class = ?, res_img = ?, group_id = ?, sort_id = ?, res_type = ?, new_iframe = ? where theme_id = ? and res_id = ?";
     public static String sys_rdbms_010 = "select authorization_level from sys_domain_share_info where domain_id = ? and target_domain_id = ?";
     public static String sys_rdbms_011 = "select distinct t2.res_url from sys_user_theme t1 inner join sys_theme_value t2 on t1.theme_id = t2.theme_id inner join sys_resource_info t3 on t2.res_id = t3.res_id where t1.user_id = ? and t2.res_id = ? and t3.res_type = '0'";
     public static String sys_rdbms_012 = "select uuid,user_id,handle_time,client_ip,status_code,method,url,data from sys_handle_logs t where t.domain_id = ? order by handle_time desc";
@@ -54,7 +54,7 @@ public class SqlDefine {
     public static String sys_rdbms_048 = "insert into sys_role_user_relation(uuid,role_id,user_id,maintance_date,maintance_user) values(uuid(),?,?,now(),?)";
     public static String sys_rdbms_050 = "update sys_role_info t set t.role_name = ? ,t.role_status_id = ?, role_maintance_date = now(), role_maintance_user = ? where t.role_id = ?";
     public static String sys_rdbms_069 = "update sys_org_info set org_unit_desc = ? ,up_org_id = ?, maintance_date = now(),maintance_user=? where org_unit_id = ?";
-    public static String sys_rdbms_070 = "select t.theme_id,i.theme_desc, res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id from sys_theme_value t left join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? and t.res_id = ?";
+    public static String sys_rdbms_070 = "select t.theme_id,i.theme_desc, res_id,res_url,res_type,res_bg_color,res_class, t.group_id, t.res_img, t.sort_id, t.new_iframe from sys_theme_value t left join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? and t.res_id = ?";
     public static String sys_rdbms_071 = "select t.res_id,t.res_name,t.res_attr, a.res_attr_desc,t.res_up_id,t.res_type,r.res_type_desc,t.sys_flag from sys_resource_info t inner join sys_resource_info_attr a on t.res_attr = a.res_attr inner join sys_resource_type_attr r on t.res_type = r.res_type";
     public static String sys_rdbms_072 = "insert into sys_resource_info(res_id,res_name,res_attr,res_up_id,res_type) values(?,?,?,?,?)";
     public static String sys_rdbms_073 = "select t.id,d.up_id from dispatch_batch_group_relation t inner join dispatch_group_dependency d on t.id = d.id where t.batch_id = ?";
@@ -80,7 +80,7 @@ public class SqlDefine {
     public static String sys_rdbms_098 = "update sys_sec_user set continue_error_cnt = ? where user_id = ?";
     public static String sys_rdbms_099 = "update sys_sec_user set status_id = 1 where user_id = ?";
     public static String sys_rdbms_100 = "select role_id,res_id from sys_role_resource_relat where role_id = ?";
-    public static String sys_rdbms_101 = "select t.theme_id,i.theme_desc,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id from sys_theme_value t inner join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? order by group_id,sort_id asc";
+    public static String sys_rdbms_101 = "select t.theme_id,i.theme_desc,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id,new_iframe from sys_theme_value t inner join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? order by group_id,sort_id asc";
     public static String sys_rdbms_102 = "select as_of_date from dispatch_batch_define where batch_id = ? and complete_date >= as_of_date";
     public static String sys_rdbms_103 = "select theme_id from sys_user_theme where user_id = ?";
     public static String sys_rdbms_104 = "select t.arg_id, t.arg_type,a.arg_type_desc,t.arg_value,t.code_number,t.create_user,t.create_date,t.modify_user,t.modify_date,t.domain_id,t.arg_desc,t.bind_as_of_date from dispatch_argument_define t left join dispatch_argument_type_attr a on t.arg_type = a.arg_type where t.domain_id = ?";

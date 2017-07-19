@@ -2,6 +2,7 @@ package com.asofdate.batch.controller;
 
 import com.asofdate.batch.entity.BatchJobStatusEntity;
 import com.asofdate.batch.service.BatchJobRunningService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/job/running")
+@Api("批次调度-批次Job运行监控")
 public class BatchJobRunningController {
     @Autowired
     private BatchJobRunningService batchJobRunningService;

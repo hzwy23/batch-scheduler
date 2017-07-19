@@ -34,9 +34,9 @@ public class MenuController {
     public String update(HttpServletResponse response, HttpServletRequest request) {
         String resId = request.getParameter("res_id");
         String resDesc = request.getParameter("res_name");
-        //String resUpId = request.getParameter("res_up_id");
+        String resUpId = request.getParameter("res_up_id");
 
-        RetMsg msg = menuService.update(resId, resDesc);
+        RetMsg msg = menuService.update(resId, resDesc, resUpId);
         if (msg.checkCode()) {
             return Hret.success(msg);
         }
@@ -104,11 +104,12 @@ public class MenuController {
         String resClass = request.getParameter("res_class");
         String groupId = request.getParameter("group_id");
         String sortId = request.getParameter("sort_id");
+        String newIframe = request.getParameter("res_new_iframe");
         String resAttr = "0";
-
         switch (resType) {
             case "0":
                 resUpId = "-1";
+                newIframe = "false";
                 break;
             case "1":
                 resAttr = "1";
@@ -116,9 +117,11 @@ public class MenuController {
             case "2":
                 resAttr = "1";
                 sortId = "0";
+                newIframe = "false";
                 break;
             case "4":
                 sortId = "0";
+                newIframe = "false";
                 break;
         }
 
@@ -135,6 +138,7 @@ public class MenuController {
         menuModel.setRes_attr(resAttr);
         menuModel.setGroup_id(groupId);
         menuModel.setSort_id(sortId);
+        menuModel.setNew_iframe(newIframe);
 
         return menuModel;
     }

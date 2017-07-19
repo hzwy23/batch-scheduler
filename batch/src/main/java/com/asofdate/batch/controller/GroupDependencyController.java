@@ -8,6 +8,7 @@ import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/27.
  */
 @RestController
+@Api("批次调度-批次内任务组依赖管理")
 public class GroupDependencyController {
     private final Logger logger = LoggerFactory.getLogger(GroupDependencyController.class);
     @Autowired

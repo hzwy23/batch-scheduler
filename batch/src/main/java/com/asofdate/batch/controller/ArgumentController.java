@@ -8,6 +8,7 @@ import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.GsonBuilder;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @RequestMapping(value = "/v1/dispatch/argument/define")
 @RestController
+@Api("批次调度-参数配置管理")
 public class ArgumentController {
     private final Logger logger = LoggerFactory.getLogger(ArgumentController.class);
     @Autowired
