@@ -5,10 +5,10 @@ import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.DomainService;
 import com.asofdate.utils.Hret;
-import com.asofdate.utils.ParseJson;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.Validator;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,10 +16,10 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +35,6 @@ import java.util.List;
 @Api("域信息管理")
 public class DomainController {
     private final Logger logger = LoggerFactory.getLogger(DomainController.class);
-
     @Autowired
     private DomainService domainService;
     @Autowired
@@ -59,7 +58,7 @@ public class DomainController {
 
         //用户非超级管理域，过滤超级管理域信息
         for (int i = 0; i < list.size(); i++) {
-            if (Validator.isAdminDomain(list.get(i).getDomain_id())) {
+            if (Validator.isAdminDomain(list.get(i).getDomainId())) {
                 list.remove(i);
                 i--;
             }
@@ -78,14 +77,16 @@ public class DomainController {
     @ApiOperation(value = "删除域信息", notes = "删除系统中的域信息，如果域中已经配置了机构信息，则无法被删除，如果非超级管理员，只能删除用户拥有[读写]权限的域")
     public String delete(HttpServletResponse response, HttpServletRequest request) {
         String jsonObj = request.getParameter("JSON");
-        List<DomainEntity> list = new ParseJson<DomainEntity>().toList(jsonObj);
+        List<DomainEntity> list = new GsonBuilder().create().fromJson(jsonObj,
+                new TypeToken<List<DomainEntity>>() {
+                }.getType());
 
         // 校验用户是否有权删除这些域
         for (DomainEntity m : list) {
-            Boolean status = authService.domainAuth(request, m.getDomain_id(), "w").getStatus();
+            Boolean status = authService.domainAuth(request, m.getDomainId(), "w").getStatus();
             if (!status) {
                 response.setStatus(403);
-                return Hret.error(403, "您没有权限删除域【 " + m.getDomain_desc() + " 】", null);
+                return Hret.error(403, "您没有权限删除域【 " + m.getDomainDesc() + " 】", null);
             }
         }
 
@@ -104,9 +105,17 @@ public class DomainController {
     @ResponseBody
     @ApiOperation(value = "新增域信息", notes = "添加新的域信息，新增的域默认授权给创建人")
     @ApiImplicitParam(name = "domain_id", value = "域编码", required = true, dataType = "String")
-    public String add(HttpServletResponse response, HttpServletRequest request) {
-        DomainEntity domainEntity = parse(request);
+    public String add(@Validated DomainEntity domainEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+        if (bindingResult.hasErrors()){
+            for (ObjectError m : bindingResult.getAllErrors()) {
+                response.setStatus(421);
+                return Hret.error(421, m.getDefaultMessage(), null);
+            }
+        }
 
+        String userId = JwtService.getConnUser(request).getUserId();
+        domainEntity.setDomainModifyUser(userId);
+        domainEntity.setCreateUserId(userId);
         RetMsg retMsg = domainService.add(domainEntity);
 
         if (retMsg.checkCode()) {
@@ -128,9 +137,9 @@ public class DomainController {
     })
     public String getDomainDetails(HttpServletRequest request) {
         String domainId = request.getParameter("domain_id");
-        if (domainId == null || domainId.isEmpty()) {
-            logger.info("domain id is empty, return null");
-            return null;
+        if (domainId == null || domainId.isEmpty() ) {
+            logger.info("can not get parameter domain_id, request failed.");
+            return "";
         }
 
         // 检查用户对域有没有读权限
@@ -143,7 +152,6 @@ public class DomainController {
         return new GsonBuilder().create().toJson(domainEntity);
     }
 
-
     /**
      * 更新域信息
      */
@@ -154,12 +162,22 @@ public class DomainController {
             @ApiImplicitParam(required = true, name = "domain_id", value = "域编码"),
             @ApiImplicitParam(required = true, name = "domain_desc", value = "域描述信息")
     })
-    public String update(HttpServletResponse response, HttpServletRequest request) {
-        DomainEntity domainEntity = parse(request);
-        Boolean status = authService.domainAuth(request, domainEntity.getDomain_id(), "w").getStatus();
+    public String update(@Validated DomainEntity domainEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError m : bindingResult.getAllErrors()) {
+                response.setStatus(421);
+                return Hret.error(421, m.getDefaultMessage(), null);
+            }
+        }
+
+        String userId = JwtService.getConnUser(request).getUserId();
+        domainEntity.setDomainModifyUser(userId);
+        domainEntity.setCreateUserId(userId);
+
+        Boolean status = authService.domainAuth(request, domainEntity.getDomainId(), "w").getStatus();
         if (!status) {
             response.setStatus(403);
-            return Hret.error(403, "你没有权限编辑域 [ " + domainEntity.getDomain_desc() + " ]", domainEntity);
+            return Hret.error(403, "你没有权限编辑域 [ " + domainEntity.getDomainDesc() + " ]", domainEntity);
         }
 
         RetMsg retMsg = domainService.update(domainEntity);
@@ -169,18 +187,5 @@ public class DomainController {
 
         response.setStatus(retMsg.getCode());
         return Hret.error(retMsg);
-
-    }
-
-    private DomainEntity parse(HttpServletRequest request) {
-        DomainEntity domainEntity = new DomainEntity();
-        domainEntity.setDomain_id(request.getParameter("domain_id"));
-        domainEntity.setDomain_desc(request.getParameter("domain_desc"));
-        domainEntity.setDomain_status_cd(request.getParameter("domain_status_cd"));
-        domainEntity.setDomain_status_id(request.getParameter("domain_status_id"));
-        String userId = JwtService.getConnUser(request).getUserId();
-        domainEntity.setDomain_modify_user(userId);
-        domainEntity.setCreate_user_id(userId);
-        return domainEntity;
     }
 }

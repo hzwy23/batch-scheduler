@@ -43,7 +43,7 @@ public class DomainShareDaoImpl implements DomainShareDao {
             set.add(m.getTarget_domain_id());
         }
         for (int i = 0; i < list.size(); i++) {
-            if (set.contains(list.get(i).getDomain_id())) {
+            if (set.contains(list.get(i).getDomainId())) {
                 list.remove(i);
                 i--;
             }

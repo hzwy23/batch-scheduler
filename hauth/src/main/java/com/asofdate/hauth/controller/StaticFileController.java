@@ -83,13 +83,13 @@ public class StaticFileController {
         }
         DomainEntity domainEntity = domainService.getDomainDetails(domainId);
 
-        map.put("domainId", domainEntity.getDomain_id());
-        map.put("domainDesc", domainEntity.getDomain_desc());
-        map.put("statusDesc", domainEntity.getDomain_status_desc());
-        map.put("createDate", domainEntity.getMaintance_date());
-        map.put("createUser", domainEntity.getCreate_user_id());
-        map.put("modifyDate", domainEntity.getDomain_modify_date());
-        map.put("modifyUser", domainEntity.getDomain_modify_user());
+        map.put("domainId", domainEntity.getDomainId());
+        map.put("domainDesc", domainEntity.getDomainDesc());
+        map.put("statusDesc", domainEntity.getDomainStatusDesc());
+        map.put("createDate", domainEntity.getMaintanceDate());
+        map.put("createUser", domainEntity.getCreateUserId());
+        map.put("modifyDate", domainEntity.getDomainModifyDate());
+        map.put("modifyUser", domainEntity.getDomainModifyUser());
         return "hauth/domain_share_info";
     }
 

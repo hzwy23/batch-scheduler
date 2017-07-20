@@ -30,7 +30,7 @@ public class DomainServiecImpl implements DomainService {
         List<DomainEntity> list = domainDao.findAll();
         Set<String> set = domainShareDao.findAll(domainId);
         for (int i = 0; i < list.size(); i++) {
-            if (!set.contains(list.get(i).getDomain_id())) {
+            if (!set.contains(list.get(i).getDomainId())) {
                 list.remove(i);
                 i--;
             }

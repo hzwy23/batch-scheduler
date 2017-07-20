@@ -4,6 +4,7 @@ package com.asofdate.hauth.entity;
  * Created by hzwy23 on 2017/5/17.
  */
 public class ThemeResourceEntity {
+    public String New_iframe;
     private String Theme_id;
     private String Theme_desc;
     private String Res_id;
@@ -14,7 +15,6 @@ public class ThemeResourceEntity {
     private String Group_id;
     private String Res_img;
     private String Sort_id;
-    public String New_iframe;
 
     public String getNew_iframe() {
         return New_iframe;

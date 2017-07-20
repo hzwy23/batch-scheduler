@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by hzwy23 on 2017/6/18.
@@ -44,12 +42,12 @@ public class MenuServiceImpl implements MenuService {
     public RetMsg update(String resId, String resDesc, String resUpId) {
         // 获取当前res_id 的所有下级菜单
         List<ResourceEntity> subList = resourceDao.findSubByUpId(resId);
-        if (resId.equals(resUpId)){
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"禁止将当前菜单与上级菜单设置相同",null);
+        if (resId.equals(resUpId)) {
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "禁止将当前菜单与上级菜单设置相同", null);
         }
-        for(ResourceEntity m:subList){
-            if (resUpId.equals(m.getRes_id())){
-                return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"禁止将上级菜单设置成当前下级菜单",null);
+        for (ResourceEntity m : subList) {
+            if (resUpId.equals(m.getRes_id())) {
+                return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "禁止将上级菜单设置成当前下级菜单", null);
             }
         }
 

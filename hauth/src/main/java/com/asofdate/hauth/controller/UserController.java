@@ -6,7 +6,8 @@ import com.asofdate.hauth.entity.UserEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.UserService;
 import com.asofdate.utils.Hret;
-import com.asofdate.utils.ParseJson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +94,9 @@ public class UserController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<UserEntity> list = new ParseJson<UserEntity>().toList(json);
+        List<UserEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<UserEntity>>() {
+                }.getType());
         int size = userService.delete(list);
         if (size == 1) {
             return Hret.success(200, "success", null);

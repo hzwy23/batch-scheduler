@@ -8,7 +8,6 @@ import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.RoleService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.JoinCode;
-import com.asofdate.utils.ParseJson;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -54,7 +53,9 @@ public class RoleController {
     public String auth(HttpServletResponse response, HttpServletRequest request) {
         String modifyUserId = JwtService.getConnUser(request).getUserId();
         String json = request.getParameter("JSON");
-        List<UserRoleEntity> list = new ParseJson<UserRoleEntity>().toList(json);
+        List<UserRoleEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<UserRoleEntity>>() {
+                }.getType());
         try {
             int size = roleService.auth(list, modifyUserId);
             if (1 == size) {
@@ -74,7 +75,9 @@ public class RoleController {
     public String batchAuth(HttpServletResponse response, HttpServletRequest request) {
         String modifyUserId = JwtService.getConnUser(request).getUserId();
         String json = request.getParameter("JSON");
-        List<UserRoleEntity> list = new ParseJson<UserRoleEntity>().toList(json);
+        List<UserRoleEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<UserRoleEntity>>() {
+                }.getType());
         try {
             int size = roleService.batchAuth(list, modifyUserId);
             if (1 == size) {
@@ -92,7 +95,9 @@ public class RoleController {
     @RequestMapping(value = "/revoke", method = RequestMethod.POST)
     public String revoke(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<UserRoleEntity> list = new ParseJson<UserRoleEntity>().toList(json);
+        List<UserRoleEntity> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<UserRoleEntity>>() {
+                }.getType());
         try {
             int size = roleService.revoke(list);
             if (1 == size) {

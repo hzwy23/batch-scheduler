@@ -238,23 +238,23 @@
                     title: "温馨提示",
                     message: "您选中了多行，不知道您具体需要编辑哪一行",
                     type: "warning",
-                })
+                });
                 return
             } else if (rst.length == 1) {
                 var tr = rst[0];
                 var editMenu = function (hmode) {
                     var domainid = tr.domain_id;
-                    var domainDesc = $("#h-domain-add-tpl").find("input[name='domain_desc']").val();
-                    var domainStatus = $("#h-domain-add-tpl").find("select[name='domain_status_id'] option:selected").val();
+                    var domainDesc = $("#h-domain-add-tpl").find("input[name='domainDesc']").val();
+                    var domainStatus = $("#h-domain-add-tpl").find("select[name='domainStatusId'] option:selected").val();
 
                     $.HAjaxRequest({
                         type: "Put",
                         url: "/v1/auth/domain",
                         cache: false,
                         data: {
-                            domain_id: domainid,
-                            domain_desc: domainDesc,
-                            domain_status_id: domainStatus,
+                            domainId: domainid,
+                            domainDesc: domainDesc,
+                            domainStatusId: domainStatus,
                         },
                         async: false,
                         dataType: "text",
@@ -274,8 +274,8 @@
                 var preHand = function () {
                     var domainid = tr.domain_id;
                     var domainDesc = tr.domain_desc;
-                    $("#h-domain-add-tpl").find("input[name='domain_id']").val(domainid).attr("readonly", "readonly");
-                    $("#h-domain-add-tpl").find("input[name='domain_desc']").val(domainDesc);
+                    $("#h-domain-add-tpl").find("input[name='domainId']").val(domainid).attr("readonly", "readonly");
+                    $("#h-domain-add-tpl").find("input[name='domainDesc']").val(domainDesc);
 
                     $("#h-domain-add-status").Hselect({
                         height: "30px",
@@ -307,17 +307,17 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group-sm col-sm-12 col-md-12 col-lg-12">
                     <label class="h-label" style="width:100%;">域编码：</label>
-                    <input placeholder="1至30个字母，数字组成" name="domain_id" type="text" class="form-control"
+                    <input placeholder="1至30个字母，数字组成" name="domainId" type="text" class="form-control"
                            style="width: 100%;height: 30px;line-height: 30px;"/>
                 </div>
                 <div class="form-group-sm col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
                     <label class="h-label" style="width: 100%;">域描述：</label>
-                    <input placeholder="1至30个汉字、字母、数字组成" type="text" class="form-control" name="domain_desc"
+                    <input placeholder="1至30个汉字、字母、数字组成" type="text" class="form-control" name="domainDesc"
                            style="width: 100%;height: 30px;line-height: 30px;"/>
                 </div>
                 <div class="form-group-sm col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
                     <label class="h-label" style="width: 100%;">状　态：</label>
-                    <select id="h-domain-add-status" name="domain_status_id" class="form-control"
+                    <select id="h-domain-add-status" name="domainStatusId" class="form-control"
                             style="width: 100%;height: 30px;line-height: 30px;">
                         <option value="0">正常</option>
                         <option value="1">失效</option>

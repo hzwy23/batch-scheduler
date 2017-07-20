@@ -40,17 +40,17 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public int update(DomainEntity domainEntity) {
         return jdbcTemplate.update(SqlDefine.sys_rdbms_038,
-                domainEntity.getDomain_desc(),
-                domainEntity.getDomain_status_id(),
-                domainEntity.getDomain_modify_user(),
-                domainEntity.getDomain_id());
+                domainEntity.getDomainDesc(),
+                domainEntity.getDomainStatusId(),
+                domainEntity.getDomainModifyUser(),
+                domainEntity.getDomainId());
     }
 
     @Transactional
     @Override
     public int delete(List<DomainEntity> list) {
         for (DomainEntity m : list) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_037, m.getDomain_id());
+            jdbcTemplate.update(SqlDefine.sys_rdbms_037, m.getDomainId());
         }
         return 1;
     }
@@ -58,28 +58,16 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public int add(DomainEntity domainEntity) {
         return jdbcTemplate.update(SqlDefine.sys_rdbms_036,
-                domainEntity.getDomain_id(),
-                domainEntity.getDomain_desc(),
-                domainEntity.getDomain_status_id(),
-                domainEntity.getCreate_user_id(),
-                domainEntity.getDomain_modify_user());
+                domainEntity.getDomainId(),
+                domainEntity.getDomainDesc(),
+                domainEntity.getDomainStatusId(),
+                domainEntity.getCreateUserId(),
+                domainEntity.getDomainModifyUser());
     }
 
     @Override
     public DomainEntity getDomainDetails(String domainId) {
-        DomainEntity domainEntity = new DomainEntity();
-        jdbcTemplate.query(SqlDefine.sys_rdbms_084, new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                domainEntity.setDomain_id(domainId);
-                domainEntity.setDomain_desc(resultSet.getString("domain_desc"));
-                domainEntity.setDomain_status_desc(resultSet.getString("domain_status_desc"));
-                domainEntity.setMaintance_date(resultSet.getString("maintance_date"));
-                domainEntity.setCreate_user_id(resultSet.getString("create_user_id"));
-                domainEntity.setDomain_modify_user(resultSet.getString("domain_modify_user"));
-                domainEntity.setDomain_modify_date(resultSet.getString("domain_modify_date"));
-            }
-        }, domainId);
-        return domainEntity;
+        BeanPropertyRowMapper<DomainEntity> rowMapper = BeanPropertyRowMapper.newInstance(DomainEntity.class);
+        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_084,rowMapper,domainId);
     }
 }

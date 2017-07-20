@@ -1,14 +1,22 @@
 package com.asofdate.hauth.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 /**
  * Created by hzwy23 on 2017/6/1.
  */
 public class DomainEntity {
+    @Size(min = 1,max = 30,message = "域编码长度必须由1-30位字母、数字组成")
     public String domain_id;
-    public String domain_desc;
-    public String domain_status_id;
-    public String domain_status_desc;
 
+    @Size(min = 1,max = 100,message = "域名称必须由1-100位字母、汉字、数字等组成")
+    public String domain_desc;
+
+    @NotBlank(message = "请选择域状态")
+    public String domain_status_id;
+
+    public String domain_status_desc;
     public String domain_status;
     public String maintance_date;
     public String create_user_id;
@@ -16,83 +24,99 @@ public class DomainEntity {
     public String domain_modify_user;
     public String domain_status_cd;
 
-    public String getDomain_status_cd() {
+    public String getDomainStatusCd() {
         return domain_status_cd;
     }
 
-    public void setDomain_status_cd(String domain_status_cd) {
+    public void setDomainStatusCd(String domain_status_cd) {
         this.domain_status_cd = domain_status_cd;
     }
 
-    public String getMaintance_date() {
+    public String getMaintanceDate() {
         return maintance_date;
     }
 
-    public void setMaintance_date(String maintance_date) {
+    public void setMaintanceDate(String maintance_date) {
         this.maintance_date = maintance_date;
     }
 
-    public String getCreate_user_id() {
+    public String getCreateUserId() {
         return create_user_id;
     }
 
-    public void setCreate_user_id(String create_user_id) {
+    public void setCreateUserId(String create_user_id) {
         this.create_user_id = create_user_id;
     }
 
-    public String getDomain_modify_date() {
+    public String getDomainModifyDate() {
         return domain_modify_date;
     }
 
-    public void setDomain_modify_date(String domain_modify_date) {
+    public void setDomainModifyDate(String domain_modify_date) {
         this.domain_modify_date = domain_modify_date;
     }
 
-    public String getDomain_modify_user() {
+    public String getDomainModifyUser() {
         return domain_modify_user;
     }
 
-    public void setDomain_modify_user(String domain_modify_user) {
+    public void setDomainModifyUser(String domain_modify_user) {
         this.domain_modify_user = domain_modify_user;
     }
 
-    public String getDomain_status() {
+    public String getDomainStatus() {
         return domain_status;
     }
 
-    public void setDomain_status(String domain_status) {
+    public void setDomainStatus(String domain_status) {
         this.domain_status = domain_status;
     }
 
-    public String getDomain_id() {
+    public String getDomainId() {
         return domain_id;
     }
 
-    public void setDomain_id(String domain_id) {
-        this.domain_id = domain_id;
+    public void setDomainId(String domainId) {
+        this.domain_id = domainId;
     }
 
-    public String getDomain_desc() {
+    public String getDomainDesc() {
         return domain_desc;
     }
 
-    public void setDomain_desc(String domain_desc) {
-        this.domain_desc = domain_desc;
+    public void setDomainDesc(String domainDesc) {
+        this.domain_desc = domainDesc;
     }
 
-    public String getDomain_status_id() {
+    public String getDomainStatusId() {
         return domain_status_id;
     }
 
-    public void setDomain_status_id(String domain_status_id) {
+    public void setDomainStatusId(String domain_status_id) {
         this.domain_status_id = domain_status_id;
     }
 
-    public String getDomain_status_desc() {
+    public String getDomainStatusDesc() {
         return domain_status_desc;
     }
 
-    public void setDomain_status_desc(String domain_status_desc) {
+    public void setDomainStatusDesc(String domain_status_desc) {
         this.domain_status_desc = domain_status_desc;
+    }
+
+    @Override
+    public String toString() {
+        return "DomainEntity{" +
+                "domain_id='" + domain_id + '\'' +
+                ", domain_desc='" + domain_desc + '\'' +
+                ", domain_status_id='" + domain_status_id + '\'' +
+                ", domain_status_desc='" + domain_status_desc + '\'' +
+                ", domain_status='" + domain_status + '\'' +
+                ", maintance_date='" + maintance_date + '\'' +
+                ", create_user_id='" + create_user_id + '\'' +
+                ", domain_modify_date='" + domain_modify_date + '\'' +
+                ", domain_modify_user='" + domain_modify_user + '\'' +
+                ", domain_status_cd='" + domain_status_cd + '\'' +
+                '}';
     }
 }

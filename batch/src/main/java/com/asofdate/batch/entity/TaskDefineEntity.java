@@ -2,12 +2,15 @@ package com.asofdate.batch.entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class TaskDefineEntity {
 
     @NotEmpty(message = "任务编码必须由1-30位字母、数字组成")
+    @Size(min = 1,max = 30)
     public String taskId;
 
     public String codeNumber;
