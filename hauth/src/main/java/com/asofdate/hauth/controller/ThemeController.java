@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,7 @@ public class ThemeController {
                 response.setStatus(421);
                 return Hret.error(421, "modify user theme failed", null);
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             logger.info(e.getMessage());
             response.setStatus(422);
             return Hret.error(422, e.getMessage(), null);
@@ -105,7 +106,7 @@ public class ThemeController {
             return Hret.success(200, msg, null);
         } else {
             response.setStatus(421);
-            logger.info("user id is not exists or old password is not right.");
+            logger.debug("user id is not exists or old password is not right.");
             return Hret.error(421, msg, null);
         }
     }
@@ -116,8 +117,7 @@ public class ThemeController {
         Authentication authentication = JwtService
                 .getAuthentication((HttpServletRequest) request);
         String username = authentication.getName();
-        logger.info("check user details info. user id is : " + username);
-        UserDetailsEntity userDetailsEntity = userDetailsService.findById(username);
-        return userDetailsEntity;
+        logger.debug("check user details info. user id is : " + username);
+        return userDetailsService.findById(username);
     }
 }

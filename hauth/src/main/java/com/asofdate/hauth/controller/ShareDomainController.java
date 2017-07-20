@@ -64,9 +64,6 @@ public class ShareDomainController {
     @RequestMapping(method = RequestMethod.PUT)
     public String update(HttpServletResponse response, HttpServletRequest request) {
         ShareDomainEntity arg = parse(request);
-        if (arg == null) {
-            return Hret.error(421, "解析参数失败", null);
-        }
         String domainId = arg.getDomain_id();
         Boolean status = authService.domainAuth(request, domainId, "w").getStatus();
         if (!status) {
