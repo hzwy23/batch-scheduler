@@ -1,6 +1,6 @@
 package com.asofdate.hauth.authentication;
 
-import com.asofdate.hauth.dto.LoginMsgDTO;
+import com.asofdate.hauth.dto.LoginMsgDto;
 import com.asofdate.utils.Hret;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -74,8 +74,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        LoginMsgDTO loginMsgDTO = new GsonBuilder().create().fromJson(failed.getMessage(), LoginMsgDTO.class);
-        String retMsg = Hret.error(loginMsgDTO.getRetCode(), loginMsgDTO.getMessage(), loginMsgDTO);
+        LoginMsgDto loginMsgDto = new GsonBuilder().create().fromJson(failed.getMessage(), LoginMsgDto.class);
+        String retMsg = Hret.error(loginMsgDto.getRetCode(), loginMsgDto.getMessage(), loginMsgDto);
         response.getOutputStream().println(retMsg);
     }
 }

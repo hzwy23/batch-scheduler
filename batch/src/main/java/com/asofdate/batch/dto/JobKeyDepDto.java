@@ -4,9 +4,9 @@ package com.asofdate.batch.dto;
  * Created by hzwy23 on 2017/7/17.
  */
 public class JobKeyDepDto {
-    public String jobKey;
-    public String upJobKey;
-    public String suiteKey;
+    private String jobKey;
+    private String upJobKey;
+    private String suiteKey;
 
     public String getJobKey() {
         return jobKey;

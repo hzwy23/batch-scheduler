@@ -1,12 +1,19 @@
 package com.asofdate.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/7/3.
  */
 public class HsuccessEntity {
-    public Integer reply_code;
-    public String reply_msg;
-    public Object data;
+    @JsonProperty("reply_code")
+    private Integer reply_code;
+
+    @JsonProperty("reply_msg")
+    private String reply_msg;
+
+    @JsonProperty("data")
+    private Object data;
 
     public HsuccessEntity(RetMsg retMsg) {
         this.reply_code = retMsg.getCode();

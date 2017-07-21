@@ -1,17 +1,27 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class BatchArgumentEntiry {
-    public String uuid;
-    public String batch_id;
-    public String arg_id;
-    public String arg_desc;
-    public String code_number;
-    public String arg_value;
-    public String domain_id;
-    public String bind_as_of_date;
+    @JsonProperty("uuid")
+    private String uuid;
+    @JsonProperty("batch_id")
+    private String batch_id;
+    @JsonProperty("arg_id")
+    private String arg_id;
+    @JsonProperty("arg_desc")
+    private String arg_desc;
+    @JsonProperty("code_number")
+    private String code_number;
+    @JsonProperty("arg_value")
+    private String arg_value;
+    @JsonProperty("domain_id")
+    private String domain_id;
+    @JsonProperty("bind_as_of_date")
+    private String bind_as_of_date;
 
     public String getArgDesc() {
         return arg_desc;

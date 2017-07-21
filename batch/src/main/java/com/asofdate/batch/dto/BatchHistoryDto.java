@@ -1,10 +1,11 @@
 package com.asofdate.batch.dto;
 
+
 /**
  * Created by hzwy23 on 2017/6/27.
  */
-public class BatchHistoryDTO {
-    public String sid;
+public class BatchHistoryDto {
+    private String sid;
 
     public String getSid() {
         return sid;
@@ -16,7 +17,7 @@ public class BatchHistoryDTO {
 
     @Override
     public String toString() {
-        return "BatchHistoryDTO{" +
+        return "BatchHistoryDto{" +
                 "sid='" + sid + '\'' +
                 '}';
     }

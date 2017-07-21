@@ -112,7 +112,7 @@ public class UserController {
             return Hret.error(422, "参数解析失败,请按照要求填写表单", null);
         }
 
-        String domainId = args.getDomain_id();
+        String domainId = args.getDomainId();
 
         Boolean status = authService.domainAuth(request, domainId, "w").getStatus();
         if (!status) {
@@ -140,17 +140,17 @@ public class UserController {
         String userStatus = request.getParameter("userStatus");
         String crateUserId = JwtService.getConnUser(request).getUserId();
 
-        userEntity.setUser_id(userId);
-        userEntity.setUser_name(userDesc);
-        userEntity.setUser_passwd(userPasswd);
-        userEntity.setUser_passwd_confirm(userPasswdConfirm);
-        userEntity.setUser_email(userEmail);
-        userEntity.setUser_phone(userPhone);
-        userEntity.setOrg_unit_id(userOrgUnitId);
-        userEntity.setUser_status(userStatus);
-        userEntity.setDomain_id(domainId);
-        userEntity.setCreate_user(crateUserId);
-        userEntity.setModify_user(crateUserId);
+        userEntity.setUserId(userId);
+        userEntity.setUserName(userDesc);
+        userEntity.setUserPasswd(userPasswd);
+        userEntity.setUserPasswdConfirm(userPasswdConfirm);
+        userEntity.setUserEmail(userEmail);
+        userEntity.setUserPhone(userPhone);
+        userEntity.setOrgUnitId(userOrgUnitId);
+        userEntity.setUserStatus(userStatus);
+        userEntity.setDomainId(domainId);
+        userEntity.setCreateUser(crateUserId);
+        userEntity.setModifyUser(crateUserId);
 
         return userEntity;
     }

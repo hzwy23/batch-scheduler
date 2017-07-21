@@ -1,6 +1,6 @@
 package com.asofdate.batch.service;
 
-import com.asofdate.batch.dto.BatchGroupDTO;
+import com.asofdate.batch.dto.BatchGroupDto;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.utils.RetMsg;
@@ -33,14 +33,14 @@ public interface BatchGroupService {
      *
      * @param list
      */
-    RetMsg addGroup(List<BatchGroupDTO> list);
+    RetMsg addGroup(List<BatchGroupDto> list);
 
     /**
      * 删除任务组
      *
      * @param list
      */
-    RetMsg deleteGroup(List<BatchGroupDTO> list);
+    RetMsg deleteGroup(List<BatchGroupDto> list);
 
     /**
      * 获取批次中，任务组的依赖

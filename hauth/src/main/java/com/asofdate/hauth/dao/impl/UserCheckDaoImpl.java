@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.UserCheckDao;
 import com.asofdate.hauth.entity.UserLoginEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,10 +19,12 @@ import java.util.List;
 public class UserCheckDaoImpl implements UserCheckDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List findByUserId(String user_id) {
-        List list = jdbcTemplate.query(SqlDefine.sys_rdbms_001, new RowMapper() {
+        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_001"), new RowMapper() {
             @Override
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 UserLoginEntity uc = new UserLoginEntity();

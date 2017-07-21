@@ -3,14 +3,14 @@ package com.asofdate.hauth.dto;
 /**
  * Created by hzwy23 on 2017/6/29.
  */
-public class AuthDTO {
-    public Boolean status;
-    public String message;
+public class AuthDto {
+    private Boolean status;
+    private String message;
 
-    public AuthDTO() {
+    public AuthDto() {
     }
 
-    public AuthDTO(Boolean status, String message) {
+    public AuthDto(Boolean status, String message) {
         this.status = status;
         this.message = message;
     }
@@ -33,7 +33,7 @@ public class AuthDTO {
 
     @Override
     public String toString() {
-        return "AuthDTO{" +
+        return "AuthDto{" +
                 "status='" + status + '\'' +
                 ", message='" + message + '\'' +
                 '}';

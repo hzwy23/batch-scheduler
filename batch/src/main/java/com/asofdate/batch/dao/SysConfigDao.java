@@ -1,6 +1,6 @@
 package com.asofdate.batch.dao;
 
-import com.asofdate.batch.dto.ProcListDTO;
+import com.asofdate.batch.entity.ProcEntity;
 import com.asofdate.batch.entity.SysConfigEntity;
 
 import java.util.List;
@@ -15,5 +15,5 @@ public interface SysConfigDao {
 
     String getValue(String domainId, String configId);
 
-    List<ProcListDTO> getProcList();
+    List<ProcEntity> getProcList();
 }

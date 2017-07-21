@@ -1,8 +1,8 @@
 package com.asofdate.hauth.dto;
 
 public class PagingDto<T> {
-    public T rows;
-    public Integer total;
+    private T rows;
+    private Integer total;
 
     public PagingDto() {
     }

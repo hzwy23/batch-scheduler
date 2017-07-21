@@ -1,20 +1,41 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/15.
  */
 
 public class HomeMenuEntity {
-    public String Res_id;
-    public String Res_name;
-    public String Res_url;
-    public String Res_bg_color;
-    public String Res_class;
-    public String Res_img;
-    public String Group_id;
-    public String Res_up_id;
-    public String Res_open_type;
-    public String New_iframe;
+    @JsonProperty("Res_id")
+    private String Res_id;
+
+    @JsonProperty("Res_name")
+    private String Res_name;
+
+    @JsonProperty("Res_url")
+    private String Res_url;
+
+    @JsonProperty("Res_bg_color")
+    private String Res_bg_color;
+
+    @JsonProperty("Res_class")
+    private String Res_class;
+
+    @JsonProperty("Res_img")
+    private String Res_img;
+
+    @JsonProperty("Group_id")
+    private String Group_id;
+
+    @JsonProperty("Res_up_id")
+    private String Res_up_id;
+
+    @JsonProperty("Res_open_type")
+    private String Res_open_type;
+
+    @JsonProperty("New_iframe")
+    private String New_iframe;
 
     public String getNew_iframe() {
         return New_iframe;

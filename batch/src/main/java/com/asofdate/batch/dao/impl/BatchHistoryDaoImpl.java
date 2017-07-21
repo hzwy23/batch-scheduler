@@ -1,8 +1,8 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchHistoryDao;
+import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.entity.BatchHistoryEntity;
-import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,18 +18,20 @@ import java.util.List;
 public class BatchHistoryDaoImpl implements BatchHistoryDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BatchSqlText batchSqlText;
 
     @Override
     public List<BatchHistoryEntity> findAll(String domainId) {
         RowMapper<BatchHistoryEntity> rowMapper = new BeanPropertyRowMapper<>(BatchHistoryEntity.class);
-        List<BatchHistoryEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_193, rowMapper, domainId);
+        List<BatchHistoryEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_193"), rowMapper, domainId);
         return list;
     }
 
     @Override
     public int delete(List<BatchHistoryEntity> list) {
         for (BatchHistoryEntity m : list) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_194, m.getSid());
+            jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_194"), m.getSid());
         }
         return 1;
     }

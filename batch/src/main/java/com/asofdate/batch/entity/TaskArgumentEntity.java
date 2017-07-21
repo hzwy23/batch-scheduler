@@ -1,20 +1,43 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class TaskArgumentEntity {
-    public String uuid;
-    public String task_id;
-    public String arg_id;
-    public String arg_value;
-    public String domain_id;
-    public String sort_id;
-    public String arg_type;
-    public String arg_type_desc;
-    public String code_number;
-    public String arg_desc;
-    public String fixed_arg_value;
+    @JsonProperty("uuid")
+    private String uuid;
+
+    @JsonProperty("task_id")
+    private String task_id;
+
+    @JsonProperty("arg_id")
+    private String arg_id;
+
+    @JsonProperty("arg_value")
+    private String arg_value;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("sort_id")
+    private String sort_id;
+
+    @JsonProperty("arg_type")
+    private String arg_type;
+
+    @JsonProperty("arg_type_desc")
+    private String arg_type_desc;
+
+    @JsonProperty("code_number")
+    private String code_number;
+
+    @JsonProperty("arg_desc")
+    private String arg_desc;
+
+    @JsonProperty("fixed_arg_value")
+    private String fixed_arg_value;
 
     public String getArgType() {
         return arg_type;

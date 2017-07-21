@@ -1,14 +1,24 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/20.
  */
 public class RoleResourceEntity {
-    public String uuid;
-    public String role_id;
-    public String res_id;
-    public String res_name;
-    public String res_up_id;
+    private String uuid;
+
+    @JsonProperty("role_id")
+    private String role_id;
+
+    @JsonProperty("res_id")
+    private String res_id;
+
+    @JsonProperty("res_name")
+    private String res_name;
+
+    @JsonProperty("res_up_id")
+    private String res_up_id;
 
     public String getUuid() {
         return uuid;

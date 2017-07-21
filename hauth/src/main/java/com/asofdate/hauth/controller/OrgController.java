@@ -1,7 +1,7 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.AuthDTO;
+import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.entity.OrgEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.OrgService;
@@ -84,8 +84,8 @@ public class OrgController {
             String orgId = m.getOrg_id();
             String domainId = m.getDomain_id();
 
-            AuthDTO authDTO = authService.domainAuth(request, domainId, "w");
-            if (!authDTO.getStatus()) {
+            AuthDto authDto = authService.domainAuth(request, domainId, "w");
+            if (!authDto.getStatus()) {
                 return Hret.error(403, "您没有权限删除域【" + domainId + "】中的机构信息", null);
             }
         }

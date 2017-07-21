@@ -1,12 +1,17 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/1.
  */
 public class DomainShareEntity {
-    public String domain_id;
-    public String target_domain_id;
-    public String authorization_level;
+    @JsonProperty("domain_id")
+    private String domain_id;
+    @JsonProperty("target_domain_id")
+    private String target_domain_id;
+    @JsonProperty("authorization_level")
+    private String authorization_level;
 
     public String getDomain_id() {
         return domain_id;

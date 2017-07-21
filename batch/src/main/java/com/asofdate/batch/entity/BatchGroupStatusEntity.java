@@ -4,17 +4,17 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/15.
  */
 public class BatchGroupStatusEntity {
-    public String batchId;
-    public String suiteKey;
-    public String status;
-    public String startTime;
-    public String endTime;
-    public String statusDesc;
-    public String groupDesc;
-    public Integer totalJobsCnt;
-    public Integer completeJobsCnt;
-    public Integer ratio;
-    public String asOfDate;
+    private String batchId;
+    private String suiteKey;
+    private String status;
+    private String startTime;
+    private String endTime;
+    private String statusDesc;
+    private String groupDesc;
+    private Integer totalJobsCnt;
+    private Integer completeJobsCnt;
+    private Integer ratio;
+    private String asOfDate;
 
     public String getBatchId() {
         return batchId;

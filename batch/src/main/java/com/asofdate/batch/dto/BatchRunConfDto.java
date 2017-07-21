@@ -5,15 +5,15 @@ import java.io.Serializable;
 /**
  * Created by hzwy23 on 2017/7/16.
  */
-public class BatchRunConfDto implements Serializable{
-    public String domainId;
-    public String batchId;
-    public String asOfDate;
-    public String redisSwitch;
-    public String basePath;
-    public String completeDate;
-    public String paggingFreq;
-    public String paggingFreqMult;
+public class BatchRunConfDto implements Serializable {
+    private String domainId;
+    private String batchId;
+    private String asOfDate;
+    private String redisSwitch;
+    private String basePath;
+    private String completeDate;
+    private String paggingFreq;
+    private String paggingFreqMult;
 
     public String getDomainId() {
         return domainId;

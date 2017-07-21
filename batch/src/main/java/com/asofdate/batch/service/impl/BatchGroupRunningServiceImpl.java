@@ -18,7 +18,7 @@ public class BatchGroupRunningServiceImpl implements BatchGroupRunningService {
 
     @Override
     public List<BatchGroupStatusEntity> findAll(String batchId, String asOfDate) {
-        return batchGroupRunningDao.findAll(batchId,asOfDate);
+        return batchGroupRunningDao.findAll(batchId, asOfDate);
     }
 
     @Override

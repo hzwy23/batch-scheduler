@@ -1,6 +1,6 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.dto.BatchGroupDTO;
+import com.asofdate.batch.dto.BatchGroupDto;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.utils.Hret;
@@ -48,10 +48,10 @@ public class BatchGroupRelController {
         String batchId = request.getParameter("batch_id");
         String domainId = request.getParameter("domain_id");
         String json = request.getParameter("JSON");
-        List<BatchGroupDTO> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDTO>>() {
+        List<BatchGroupDto> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDto>>() {
         }.getType());
 
-        for (BatchGroupDTO m : list) {
+        for (BatchGroupDto m : list) {
             m.setDomainId(domainId);
             m.setBatchId(batchId);
         }
@@ -70,7 +70,7 @@ public class BatchGroupRelController {
     @ApiOperation(value = "删除批次中配置的任务组信息")
     public String deleteGroupList(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<BatchGroupDTO> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDTO>>() {
+        List<BatchGroupDto> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<BatchGroupDto>>() {
         }.getType());
         RetMsg retMsg = batchGroupService.deleteGroup(list);
         if (retMsg.checkCode()) {
@@ -87,8 +87,8 @@ public class BatchGroupRelController {
         String id = request.getParameter("id");
         logger.debug("suiteKey is:{}", id);
 
-        List<BatchGroupDTO> list = new ArrayList<>();
-        BatchGroupDTO dto = new BatchGroupDTO();
+        List<BatchGroupDto> list = new ArrayList<>();
+        BatchGroupDto dto = new BatchGroupDto();
         dto.setSuiteKey(id);
         list.add(dto);
 

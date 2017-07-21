@@ -1,7 +1,7 @@
 package com.asofdate.batch.service.impl;
 
 import com.asofdate.batch.dao.BatchGroupDao;
-import com.asofdate.batch.dto.BatchGroupDTO;
+import com.asofdate.batch.dto.BatchGroupDto;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.batch.service.BatchGroupService;
@@ -36,10 +36,10 @@ public class BatchGroupServiceImpl implements BatchGroupService {
     }
 
     @Override
-    public RetMsg addGroup(List<BatchGroupDTO> list) {
+    public RetMsg addGroup(List<BatchGroupDto> list) {
         List<BatchGroupEntity> args = new ArrayList<>();
 
-        for (BatchGroupDTO m : list) {
+        for (BatchGroupDto m : list) {
             String domainId = m.getDomainId();
             String batchId = m.getBatchId();
             String groupId = m.getGroupId();
@@ -66,9 +66,9 @@ public class BatchGroupServiceImpl implements BatchGroupService {
     }
 
     @Override
-    public RetMsg deleteGroup(List<BatchGroupDTO> list) {
+    public RetMsg deleteGroup(List<BatchGroupDto> list) {
         List<BatchGroupEntity> args = new ArrayList<>();
-        for (BatchGroupDTO m : list) {
+        for (BatchGroupDto m : list) {
             String id = m.getSuiteKey();
             BatchGroupEntity entity = new BatchGroupEntity();
             entity.setSuiteKey(id);

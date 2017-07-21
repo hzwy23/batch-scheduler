@@ -1,7 +1,7 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.DomainDTO;
+import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.service.DomainService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class UserDomainController {
 
     @RequestMapping(value = "/v1/auth/domain/self/owner", method = RequestMethod.GET)
     @ResponseBody
-    public DomainDTO getDomain(HttpServletRequest request) {
+    public DomainDto getDomain(HttpServletRequest request) {
 
         // 获取连接用户账号
         String domainId = JwtService.getConnUser(request).getDomainID();

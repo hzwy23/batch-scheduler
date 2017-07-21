@@ -1,17 +1,27 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class GroupDefineEntity {
-    public String group_id;
-    public String code_number;
-    public String group_desc;
-    public String create_user;
-    public String create_date;
-    public String modify_user;
-    public String modify_date;
-    public String domain_id;
+    @JsonProperty("group_id")
+    private String group_id;
+    @JsonProperty("code_number")
+    private String code_number;
+    @JsonProperty("group_desc")
+    private String group_desc;
+    @JsonProperty("create_user")
+    private String create_user;
+    @JsonProperty("create_date")
+    private String create_date;
+    @JsonProperty("modify_user")
+    private String modify_user;
+    @JsonProperty("modify_date")
+    private String modify_date;
+    @JsonProperty("domain_id")
+    private String domain_id;
 
     public String getGroupId() {
         return group_id;

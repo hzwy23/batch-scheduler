@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.OrgDao;
 import com.asofdate.hauth.entity.OrgEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,13 @@ public class OrgDaoImpl implements OrgDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List<OrgEntity> findAll(String domainId) {
         RowMapper<OrgEntity> rowMapper = new BeanPropertyRowMapper<>(OrgEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_041, rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_041"), rowMapper, domainId);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class OrgDaoImpl implements OrgDao {
 
     @Override
     public int add(OrgEntity orgEntity) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_043,
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_043"),
                 orgEntity.getCode_number(),
                 orgEntity.getOrg_desc(),
                 orgEntity.getUp_org_id(),
@@ -61,7 +63,7 @@ public class OrgDaoImpl implements OrgDao {
     @Override
     public int delete(List<OrgEntity> list) {
         for (OrgEntity m : list) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_044, m.getOrg_id(), m.getDomain_id());
+            jdbcTemplate.update(sqlText.getSql("sys_rdbms_044"), m.getOrg_id(), m.getDomain_id());
         }
         return 1;
     }
@@ -69,7 +71,7 @@ public class OrgDaoImpl implements OrgDao {
     @Override
     public int update(OrgEntity orgEntity) {
         logger.debug("{},{},{},{}", orgEntity.getOrg_desc(), orgEntity.getUp_org_id(), orgEntity.getModify_user(), orgEntity.getOrg_id());
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_069,
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_069"),
                 orgEntity.getOrg_desc(),
                 orgEntity.getUp_org_id(),
                 orgEntity.getModify_user(),

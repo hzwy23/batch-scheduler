@@ -1,8 +1,8 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchGroupHistoryDao;
+import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.entity.BatchGroupHistoryEntity;
-import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,11 +18,13 @@ import java.util.List;
 public class BatchGroupHistoryDaoImpl implements BatchGroupHistoryDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BatchSqlText batchSqlText;
 
     @Override
     public List<BatchGroupHistoryEntity> findAll(String uuid) {
         RowMapper<BatchGroupHistoryEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupHistoryEntity.class);
-        List<BatchGroupHistoryEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_197, rowMapper, uuid);
+        List<BatchGroupHistoryEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_197"), rowMapper, uuid);
         for (BatchGroupHistoryEntity bh : list) {
             String gid = bh.getSuiteKey();
             Integer totalCnt = getTotalJobs(uuid, gid);
@@ -34,11 +36,11 @@ public class BatchGroupHistoryDaoImpl implements BatchGroupHistoryDao {
     }
 
     private Integer getTotalJobs(String uuid, String gid) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_198, Integer.class, uuid, gid);
+        return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_198"), Integer.class, uuid, gid);
     }
 
     private Integer getCompleteJobs(String uuid, String gid) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_199, Integer.class, uuid, gid);
+        return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_199"), Integer.class, uuid, gid);
     }
 
 }

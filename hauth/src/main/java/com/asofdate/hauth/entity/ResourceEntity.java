@@ -1,17 +1,34 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/17.
  */
 public class ResourceEntity {
-    public String Res_id;
-    public String Res_name;
-    public String Res_attr;
-    public String Res_attr_desc;
-    public String Res_up_id;
-    public String Res_type;
-    public String Res_type_desc;
-    public String Sys_flag;
+    @JsonProperty("Res_id")
+    private String Res_id;
+
+    @JsonProperty("Res_name")
+    private String Res_name;
+
+    @JsonProperty("Res_attr")
+    private String Res_attr;
+
+    @JsonProperty("Res_attr_desc")
+    private String Res_attr_desc;
+
+    @JsonProperty("Res_up_id")
+    private String Res_up_id;
+
+    @JsonProperty("Res_type")
+    private String Res_type;
+
+    @JsonProperty("Res_type_desc")
+    private String Res_type_desc;
+
+    @JsonProperty("Sys_flag")
+    private String Sys_flag;
 
     public String getRes_id() {
         return Res_id;

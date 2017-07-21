@@ -1,16 +1,25 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class BatchGroupEntity {
-    public String batch_id;
-    public String group_id;
-    public String suiteKey;
-    public String upSuiteKey;
-    public String group_desc;
-    public String code_number;
-    public String domain_id;
+    @JsonProperty("batch_id")
+    private String batch_id;
+    @JsonProperty("group_id")
+    private String group_id;
+    @JsonProperty("suiteKey")
+    private String suiteKey;
+    @JsonProperty("upSuiteKey")
+    private String upSuiteKey;
+    @JsonProperty("group_desc")
+    private String group_desc;
+    @JsonProperty("code_number")
+    private String code_number;
+    @JsonProperty("domain_id")
+    private String domain_id;
 
     public String getUpSuiteKey() {
         return upSuiteKey;

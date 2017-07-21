@@ -8,4 +8,8 @@ import java.util.List;
  */
 public interface HomeMenuDao {
     List findById(String userId, String typeId, String resId);
+
+    String getSubSystemUrl(String username, String resId);
+
+    String getHomeUrl(String username);
 }

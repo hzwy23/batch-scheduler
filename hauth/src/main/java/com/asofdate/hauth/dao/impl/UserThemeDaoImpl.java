@@ -1,7 +1,7 @@
 package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.UserThemeDao;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,11 +12,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserThemeDaoImpl implements UserThemeDao {
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public String findById(String userId) {
-        String themeId = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_103, String.class, userId);
+        String themeId = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_103"), String.class, userId);
         return themeId;
     }
 }

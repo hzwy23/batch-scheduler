@@ -1,15 +1,19 @@
 package com.asofdate.hauth.dto;
 
 import com.asofdate.hauth.entity.DomainEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 /**
  * Created by hzwy23 on 2017/6/30.
  */
-public class DomainDTO {
-    public String domain_id;
-    public List<DomainEntity> owner_list;
+public class DomainDto {
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("owner_list")
+    private List<DomainEntity> owner_list;
 
     public String getDomainId() {
         return domain_id;

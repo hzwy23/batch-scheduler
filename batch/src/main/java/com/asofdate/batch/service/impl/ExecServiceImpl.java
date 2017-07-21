@@ -55,7 +55,7 @@ public class ExecServiceImpl implements ExecService {
             }
             return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "初始化执行记录表失败，请联系管理员", null);
         } catch (Exception e) {
-            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), confDto.batchId);
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), confDto.getBatchId());
         }
     }
 }

@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.ResourceDao;
 import com.asofdate.hauth.entity.ResourceEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,12 +18,14 @@ import java.util.List;
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List findAll() {
         RowMapper<ResourceEntity> rowMapper = new BeanPropertyRowMapper<ResourceEntity>(ResourceEntity.class);
-        List list = jdbcTemplate.query(SqlDefine.sys_rdbms_071, rowMapper);
+        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_071"), rowMapper);
         return list;
     }
 

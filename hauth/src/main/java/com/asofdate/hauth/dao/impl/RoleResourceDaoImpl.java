@@ -4,7 +4,7 @@ import com.asofdate.hauth.dao.ResourceDao;
 import com.asofdate.hauth.dao.RoleResourceDao;
 import com.asofdate.hauth.entity.ResourceEntity;
 import com.asofdate.hauth.entity.RoleResourceEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.JoinCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -30,11 +30,13 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List<RoleResourceEntity> findAll(String roleId) {
         RowMapper<RoleResourceEntity> rowMapper = new BeanPropertyRowMapper<>(RoleResourceEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_209, rowMapper, roleId);
+        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_209"), rowMapper, roleId);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
         child.add(resId);
 
         for (String m : child) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_093, roleId, m);
+            jdbcTemplate.update(sqlText.getSql("sys_rdbms_093"), roleId, m);
         }
         return 1;
     }
@@ -114,7 +116,7 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
 
         for (String m : newRes) {
             String uuid = JoinCode.join(roleId, m);
-            jdbcTemplate.update(SqlDefine.sys_rdbms_074, uuid, roleId, m);
+            jdbcTemplate.update(sqlText.getSql("sys_rdbms_074"), uuid, roleId, m);
         }
         return 1;
     }
@@ -150,7 +152,7 @@ public class RoleResourceDaoImpl implements RoleResourceDao {
 
     private Set<String> getAll(String roleId) {
         Set<String> set = new HashSet<>();
-        jdbcTemplate.query(SqlDefine.sys_rdbms_100, new RowCallbackHandler() {
+        jdbcTemplate.query(sqlText.getSql("sys_rdbms_100"), new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet resultSet) throws SQLException {
                 set.add(resultSet.getString("res_id"));

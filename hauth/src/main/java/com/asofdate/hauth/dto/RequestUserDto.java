@@ -3,15 +3,15 @@ package com.asofdate.hauth.dto;
 /**
  * Created by hzwy23 on 2017/6/27.
  */
-public class RequestUserDTO {
-    public String domainID;
-    public String userId;
-    public String orgID;
+public class RequestUserDto {
+    private String domainID;
+    private String userId;
+    private String orgID;
 
-    public RequestUserDTO() {
+    public RequestUserDto() {
     }
 
-    public RequestUserDTO(String domainID, String userId, String orgID) {
+    public RequestUserDto(String domainID, String userId, String orgID) {
         this.domainID = domainID;
         this.orgID = orgID;
         this.userId = userId;
@@ -43,7 +43,7 @@ public class RequestUserDTO {
 
     @Override
     public String toString() {
-        return "RequestUserDTO{" +
+        return "RequestUserDto{" +
                 "domainID='" + domainID + '\'' +
                 ", userId='" + userId + '\'' +
                 ", orgID='" + orgID + '\'' +

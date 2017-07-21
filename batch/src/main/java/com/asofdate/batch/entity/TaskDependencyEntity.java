@@ -4,10 +4,10 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/5/27.
  */
 public class TaskDependencyEntity {
-    public String uuid;
-    public String jobKey;
-    public String upJobKey;
-    public String domainId;
+    private String uuid;
+    private String jobKey;
+    private String upJobKey;
+    private String domainId;
 
     public String getUuid() {
         return uuid;

@@ -4,6 +4,7 @@ import com.asofdate.hauth.dao.*;
 import com.asofdate.hauth.entity.HomeMenuEntity;
 import com.asofdate.hauth.entity.ResourceEntity;
 import com.asofdate.hauth.entity.ThemeResourceEntity;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,16 +18,14 @@ import java.util.*;
 public class HomeMenuDaoImpl implements HomeMenuDao {
     @Autowired
     public JdbcTemplate jdbcTemplate;
-
     @Autowired
     public UserThemeDao userThemeDao;
-
     @Autowired
     public ThemeResourceDao themeResourceDao;
-
     @Autowired
     public ResourceDao resourceDao;
-
+    @Autowired
+    private SqlText sqlText;
     @Autowired
     private UserResourceDao userResourceDao;
 
@@ -96,5 +95,15 @@ public class HomeMenuDaoImpl implements HomeMenuDao {
             }
         }
         return rst;
+    }
+
+    @Override
+    public String getSubSystemUrl(String username, String resId) {
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_011"), String.class, username, resId);
+    }
+
+    @Override
+    public String getHomeUrl(String username) {
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_078"), String.class, username);
     }
 }

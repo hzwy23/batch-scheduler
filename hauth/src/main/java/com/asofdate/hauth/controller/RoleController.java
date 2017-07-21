@@ -1,7 +1,7 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.AuthDTO;
+import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.entity.UserRoleEntity;
 import com.asofdate.hauth.service.AuthService;
@@ -118,9 +118,9 @@ public class RoleController {
         if (domainId == null || domainId.isEmpty()) {
             domainId = JwtService.getConnUser(request).getDomainID();
         }
-        AuthDTO authDTO = authService.domainAuth(request, domainId, "r");
-        if (!authDTO.getStatus()) {
-            return Hret.error(403, "权限不足，您没有被授权访问这个域", authDTO.getMessage());
+        AuthDto authDto = authService.domainAuth(request, domainId, "r");
+        if (!authDto.getStatus()) {
+            return Hret.error(403, "权限不足，您没有被授权访问这个域", authDto.getMessage());
         }
         return new GsonBuilder().create().toJson(roleService.findAll(domainId));
     }
@@ -132,8 +132,8 @@ public class RoleController {
     public String add(HttpServletResponse response, HttpServletRequest request) {
         RoleEntity roleEntity = parse(request);
         String domainId = roleEntity.getDomain_id();
-        AuthDTO authDTO = authService.domainAuth(request, domainId, "w");
-        if (!authDTO.getStatus()) {
+        AuthDto authDto = authService.domainAuth(request, domainId, "w");
+        if (!authDto.getStatus()) {
             return Hret.error(403, "您没有权限在域【" + domainId + "】中新增角色", null);
         }
         RetMsg retMsg = roleService.add(roleEntity);
@@ -149,8 +149,8 @@ public class RoleController {
         RoleEntity roleEntity = parse(request);
 
         String domainId = roleEntity.getDomain_id();
-        AuthDTO authDTO = authService.domainAuth(request, domainId, "w");
-        if (!authDTO.getStatus()) {
+        AuthDto authDto = authService.domainAuth(request, domainId, "w");
+        if (!authDto.getStatus()) {
             return Hret.error(403, "您没有权限在域【" + domainId + "】中更新角色", null);
         }
 
@@ -169,8 +169,8 @@ public class RoleController {
         }.getType());
 
         for (RoleEntity m : list) {
-            AuthDTO authDTO = authService.domainAuth(request, m.getDomain_id(), "w");
-            if (!authDTO.getStatus()) {
+            AuthDto authDto = authService.domainAuth(request, m.getDomain_id(), "w");
+            if (!authDto.getStatus()) {
                 return Hret.error(403, "您没有权限删除域【" + m.getDomain_id() + "】中的角色信息", null);
             }
         }

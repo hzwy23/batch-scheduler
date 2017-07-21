@@ -1,5 +1,7 @@
 package com.asofdate.batch.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -8,14 +10,27 @@ import java.io.Serializable;
  *
  * @author hzwy23
  */
-public class BatchArgumentDTO implements Serializable {
-    public String code_number;
-    public String batch_id;
-    public String arg_id;
-    public String domain_id;
-    public String bind_as_of_date;
-    public String arg_desc;
-    public String arg_value;
+public class BatchArgumentDto implements Serializable {
+    @JsonProperty("code_number")
+    private String code_number;
+
+    @JsonProperty("batch_id")
+    private String batch_id;
+
+    @JsonProperty("arg_id")
+    private String arg_id;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("bind_as_of_date")
+    private String bind_as_of_date;
+
+    @JsonProperty("arg_desc")
+    private String arg_desc;
+
+    @JsonProperty("arg_value")
+    private String arg_value;
 
     public String getArgValue() {
         return arg_value;
@@ -76,7 +91,7 @@ public class BatchArgumentDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "BatchArgumentDTO{" +
+        return "BatchArgumentDto{" +
                 "code_number='" + code_number + '\'' +
                 ", batch_id='" + batch_id + '\'' +
                 ", arg_id='" + arg_id + '\'' +

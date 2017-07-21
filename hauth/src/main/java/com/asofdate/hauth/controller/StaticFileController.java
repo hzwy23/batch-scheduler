@@ -23,10 +23,8 @@ import java.util.Map;
 public class StaticFileController {
     @Autowired
     private DomainService domainService;
-
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private AuthService authService;
 
@@ -75,8 +73,8 @@ public class StaticFileController {
     public String getDomainSharePage(HttpServletResponse response, HttpServletRequest request, Map<String, Object> map) {
         String domainId = request.getParameter("domain_id");
 
-        Boolean o = authService.domainAuth(request, domainId, "r").getStatus();
-        if (!o) {
+        Boolean yes = authService.domainAuth(request, domainId, "r").getStatus();
+        if (!yes) {
             response.setStatus(423);
             map.put("domainId", domainId);
             return "hauth/NoAuth";

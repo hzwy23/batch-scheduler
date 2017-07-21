@@ -1,7 +1,6 @@
 package com.asofdate;
 
 import com.asofdate.batch.InitBatch;
-import com.asofdate.utils.Adaptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableAutoConfiguration
 public class AsofdateMain {
+
     // main函数，Spring Boot程序入口
     public static void main(String[] args) {
         SpringApplication.run(AsofdateMain.class, args);
-        Adaptor.initDb();
         InitBatch.initBatchInfo();
     }
 }

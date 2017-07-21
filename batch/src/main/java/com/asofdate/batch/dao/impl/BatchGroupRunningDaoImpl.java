@@ -2,9 +2,8 @@ package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchDefineDao;
 import com.asofdate.batch.dao.BatchGroupRunningDao;
+import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.entity.BatchGroupStatusEntity;
-import com.asofdate.batch.sql.SqlDefine;
-import com.asofdate.utils.TimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,16 +22,18 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
 
     @Autowired
     private BatchDefineDao batchDefineDao;
+    @Autowired
+    private BatchSqlText batchSqlText;
 
     @Override
     public List<BatchGroupStatusEntity> findAll(String batchId, String asOfDate) {
         RowMapper<BatchGroupStatusEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupStatusEntity.class);
-        List<BatchGroupStatusEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_201, rowMapper, batchId, asOfDate);
+        List<BatchGroupStatusEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_201"), rowMapper, batchId, asOfDate);
         for (BatchGroupStatusEntity bh : list) {
 
-            Integer totalCnt = getTotalJobs(batchId, bh.getSuiteKey(),asOfDate);
+            Integer totalCnt = getTotalJobs(batchId, bh.getSuiteKey(), asOfDate);
 
-            Integer completeCnt = getCompleteJobs(batchId, bh.getSuiteKey(),asOfDate);
+            Integer completeCnt = getCompleteJobs(batchId, bh.getSuiteKey(), asOfDate);
 
             bh.setTotalJobsCnt(totalCnt);
 
@@ -45,7 +46,7 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     public BatchGroupStatusEntity getDetails(String batchId, String suiteKey, String asOfDate) {
 
         RowMapper<BatchGroupStatusEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupStatusEntity.class);
-        BatchGroupStatusEntity batchGroupStatusEntity = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_205, rowMapper, batchId, suiteKey,asOfDate);
+        BatchGroupStatusEntity batchGroupStatusEntity = jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_205"), rowMapper, batchId, suiteKey, asOfDate);
 
         Integer totalCnt = getTotalJobs(batchId, suiteKey, asOfDate);
 
@@ -88,7 +89,7 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     * @return 返回这个任务组中任务总量
     * */
     private Integer getTotalJobs(String batchId, String gid, String asOfDate) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_202, Integer.class, batchId, gid, asOfDate);
+        return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_202"), Integer.class, batchId, gid, asOfDate);
     }
 
     /*
@@ -98,6 +99,6 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     * @return 返回这个任务组中已经完成的任务量
     * */
     private Integer getCompleteJobs(String uuid, String gid, String asOfDate) {
-        return jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_203, Integer.class, uuid, gid, asOfDate);
+        return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_203"), Integer.class, uuid, gid, asOfDate);
     }
 }

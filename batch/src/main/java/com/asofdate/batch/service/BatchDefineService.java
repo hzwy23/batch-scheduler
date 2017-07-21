@@ -1,7 +1,7 @@
 package com.asofdate.batch.service;
 
-import com.asofdate.batch.dto.BatchArgumentDTO;
-import com.asofdate.batch.dto.BatchMonitoringDTO;
+import com.asofdate.batch.dto.BatchArgumentDto;
+import com.asofdate.batch.dto.BatchMonitoringDto;
 import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
 import com.asofdate.utils.RetMsg;
@@ -102,7 +102,7 @@ public interface BatchDefineService {
      * @return 返回这个批次所拥有的配词类型的参数，
      * 如果参数绑定了批次日期，表示参数值与批次日期相等
      */
-    List<BatchArgumentDTO> findBatchArgsById(String batchId);
+    List<BatchArgumentDto> findBatchArgsById(String batchId);
 
     /**
      * 给批次类型参数赋值
@@ -110,15 +110,15 @@ public interface BatchDefineService {
      * @param list
      * @return RetMsg
      */
-    RetMsg addBatchArg(List<BatchArgumentDTO> list);
+    RetMsg addBatchArg(List<BatchArgumentDto> list);
 
     /**
      * 查询批次进度
      *
      * @param batchId 批次编码
-     * @return BatchMonitoringDTO
+     * @return BatchMonitoringDto
      */
-    BatchMonitoringDTO getBatchCompletedRadio(String batchId);
+    BatchMonitoringDto getBatchCompletedRadio(String batchId);
 
     /**
      * 销毁批次
@@ -145,6 +145,15 @@ public interface BatchDefineService {
     String getBatchAsOfDate(String batchId);
 
 
+    /**
+     * 初始化批次运行时的参数信息
+     *
+     * @param batchId
+     * @param domainId
+     */
     BatchRunConfDto initConf(String batchId, String domainId);
+
+
+    void initBatchStatus();
 
 }

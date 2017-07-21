@@ -1,13 +1,16 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/27.
  */
 public class GroupDependencyEntity {
-    public String uuid;
-    public String suiteKey;
-    public String upSuiteKey;
-    public String domain_id;
+    private String uuid;
+    private String suiteKey;
+    private String upSuiteKey;
+    @JsonProperty("domain_id")
+    private String domain_id;
 
     public String getUuid() {
         return uuid;

@@ -1,24 +1,55 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/21.
  */
 public class ThemeValueEntity {
-    public String theme_id;
-    public String theme_desc;
-    public String res_id;
-    public String res_url;
-    public String res_type;
-    public String res_bg_color;
-    public String res_class;
-    public String group_id;
-    public String res_img;
-    public String sort_id;
-    public String res_name;
-    public String res_up_id;
-    public String res_attr;
-    public String res_open_type;
-    public String new_iframe;
+    @JsonProperty("theme_id")
+    private String theme_id;
+
+    @JsonProperty("theme_desc")
+    private String theme_desc;
+
+    @JsonProperty("res_id")
+    private String res_id;
+
+    @JsonProperty("res_url")
+    private String res_url;
+
+    @JsonProperty("res_type")
+    private String res_type;
+
+    @JsonProperty("res_bg_color")
+    private String res_bg_color;
+
+    @JsonProperty("res_class")
+    private String res_class;
+
+    @JsonProperty("group_id")
+    private String group_id;
+
+    @JsonProperty("res_img")
+    private String res_img;
+
+    @JsonProperty("sort_id")
+    private String sort_id;
+
+    @JsonProperty("res_name")
+    private String res_name;
+
+    @JsonProperty("res_up_id")
+    private String res_up_id;
+
+    @JsonProperty("res_attr")
+    private String res_attr;
+
+    @JsonProperty("res_open_type")
+    private String res_open_type;
+
+    @JsonProperty("new_iframe")
+    private String new_iframe;
 
     public String getNew_iframe() {
         return new_iframe;

@@ -1,13 +1,14 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.TaskDefineDao;
+import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.entity.TaskDefineEntity;
-import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,17 +19,18 @@ import java.util.List;
 public class TaskDefineDaoImpl implements TaskDefineDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BatchSqlText batchSqlText;
 
     @Override
     public List findAll(String domainId) {
         RowMapper<TaskDefineEntity> rowMapper = new BeanPropertyRowMapper<TaskDefineEntity>(TaskDefineEntity.class);
-        List<TaskDefineEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_111, rowMapper, domainId);
-        return list;
+        return jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_111"), rowMapper, domainId);
     }
 
     @Override
     public int add(TaskDefineEntity m) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_125,
+        return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_125"),
                 m.getTaskId(),
                 m.getCodeNumber(),
                 m.getTaskDesc(),
@@ -39,10 +41,11 @@ public class TaskDefineDaoImpl implements TaskDefineDao {
                 m.getScriptFile());
     }
 
+    @Transactional
     @Override
     public String delete(List<TaskDefineEntity> m) {
         for (TaskDefineEntity l : m) {
-            if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_127, l.getTaskId(), l.getDomainId())) {
+            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_127"), l.getTaskId(), l.getDomainId())) {
                 return "删除[" + l.getCodeNumber() + "]失败";
             }
         }
@@ -51,7 +54,7 @@ public class TaskDefineDaoImpl implements TaskDefineDao {
 
     @Override
     public int update(TaskDefineEntity m) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_126,
+        return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_126"),
                 m.getTaskDesc(),
                 m.getTaskType(),
                 m.getScriptFile(),

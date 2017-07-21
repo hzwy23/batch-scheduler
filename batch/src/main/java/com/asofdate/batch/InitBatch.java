@@ -1,30 +1,27 @@
 package com.asofdate.batch;
 
-import com.asofdate.batch.sql.SqlDefine;
+import com.asofdate.batch.service.BatchDefineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
 /**
- * Created by hzwy23 on 2017/6/15.
+ * Created by hzwy23 on 2017/7/21.
  */
-@Component
+@Configuration
 public class InitBatch {
     private static InitBatch initBatch;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private BatchDefineService batchDefineService;
 
-    @Transactional
     public static void initBatchInfo() {
-        initBatch.jdbcTemplate.update(SqlDefine.sys_rdbms_180);
+        initBatch.batchDefineService.initBatchStatus();
     }
 
     @PostConstruct
     public void init() {
         this.initBatch = this;
-        this.initBatch.jdbcTemplate = jdbcTemplate;
+        this.initBatch.batchDefineService = batchDefineService;
     }
 }

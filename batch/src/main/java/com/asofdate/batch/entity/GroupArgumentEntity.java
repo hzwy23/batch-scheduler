@@ -1,16 +1,25 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/30.
  */
 public class GroupArgumentEntity {
-    public String uuid;
-    public String jobKey;
-    public String arg_id;
-    public String arg_value;
-    public String domain_id;
-    public String group_id;
-    public String task_id;
+    @JsonProperty("uuid")
+    private String uuid;
+    @JsonProperty("jobKey")
+    private String jobKey;
+    @JsonProperty("arg_id")
+    private String arg_id;
+    @JsonProperty("arg_value")
+    private String arg_value;
+    @JsonProperty("domain_id")
+    private String domain_id;
+    @JsonProperty("group_id")
+    private String group_id;
+    @JsonProperty("task_id")
+    private String task_id;
 
     public String getGroupId() {
         return group_id;

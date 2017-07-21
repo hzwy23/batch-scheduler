@@ -1,18 +1,35 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class GroupTaskEntity {
-    public String group_id;
-    public String task_id;
-    public String domain_id;
-    public String task_desc;
-    public String jobKey;
-    public String code_number;
-    public String upJobKey;
-    public String task_type;
-    public String task_type_desc;
+    @JsonProperty("group_id")
+    private String group_id;
+
+    @JsonProperty("task_id")
+    private String task_id;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("task_desc")
+    private String task_desc;
+
+    private String jobKey;
+
+    @JsonProperty("code_number")
+    private String code_number;
+
+    private String upJobKey;
+
+    @JsonProperty("task_type")
+    private String task_type;
+
+    @JsonProperty("task_type_desc")
+    private String task_type_desc;
 
 
     public String getTaskType() {

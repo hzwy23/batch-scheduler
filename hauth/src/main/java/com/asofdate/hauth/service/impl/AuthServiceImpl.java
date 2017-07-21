@@ -1,9 +1,9 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.AuthDTO;
+import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.service.AuthService;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.factory.AuthDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +20,8 @@ public class AuthServiceImpl implements AuthService {
     private final String WRITE_MODE = "w";
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     private Integer checkMode(String mode) {
         if (mode.toLowerCase().equals(READ_MODE)) {
@@ -33,13 +35,13 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public AuthDTO domainAuth(HttpServletRequest request, String domainId, String mode) {
+    public AuthDto domainAuth(HttpServletRequest request, String domainId, String mode) {
         String userDomainId = JwtService.getConnUser(request).getDomainID();
         if (userDomainId.equals(domainId) || "vertex_root".equals(userDomainId)) {
             return AuthDTOFactory.getAutoDTO(true, "success");
         }
         try {
-            Integer level = jdbcTemplate.queryForObject(SqlDefine.sys_rdbms_010, Integer.class, domainId, userDomainId);
+            Integer level = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_010"), Integer.class, domainId, userDomainId);
             if (level == 2) {
                 return AuthDTOFactory.getAutoDTO(true, "success");
             } else if (level == 1 && checkMode(mode) == 2) {
@@ -54,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthDTO basicAuth(HttpServletRequest request) {
+    public AuthDto basicAuth(HttpServletRequest request) {
         return null;
     }
 }

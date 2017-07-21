@@ -10,7 +10,7 @@ import java.util.List;
 public interface BatchGroupRunningDao {
     List<BatchGroupStatusEntity> findAll(String domainId, String asOfDate);
 
-    Integer getRatio(String batchId, String suiteKey,String asOfDate);
+    Integer getRatio(String batchId, String suiteKey, String asOfDate);
 
-    BatchGroupStatusEntity getDetails(String batchId, String suiteKey,String asOfDate);
+    BatchGroupStatusEntity getDetails(String batchId, String suiteKey, String asOfDate);
 }

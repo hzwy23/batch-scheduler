@@ -1,21 +1,35 @@
 package com.asofdate.batch.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class ArgumentDefineEntity {
-    public String arg_id;
-    public String arg_type;
-    public String arg_type_desc;
-    public String arg_value;
-    public String code_number;
-    public String create_user;
-    public String create_date;
-    public String modify_user;
-    public String modify_date;
-    public String domain_id;
-    public String arg_desc;
-    public String bind_as_of_date;
+    @JsonProperty("arg_id")
+    private String arg_id;
+    @JsonProperty("arg_type")
+    private String arg_type;
+    @JsonProperty("arg_type_desc")
+    private String arg_type_desc;
+    @JsonProperty("arg_value")
+    private String arg_value;
+    @JsonProperty("code_number")
+    private String code_number;
+    @JsonProperty("create_user")
+    private String create_user;
+    @JsonProperty("create_date")
+    private String create_date;
+    @JsonProperty("modify_user")
+    private String modify_user;
+    @JsonProperty("modify_date")
+    private String modify_date;
+    @JsonProperty("domain_id")
+    private String domain_id;
+    @JsonProperty("arg_desc")
+    private String arg_desc;
+    @JsonProperty("bind_as_of_date")
+    private String bind_as_of_date;
 
     public String getBindAsOfDate() {
         return bind_as_of_date;

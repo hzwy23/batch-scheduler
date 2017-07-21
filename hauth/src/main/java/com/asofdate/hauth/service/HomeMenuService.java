@@ -9,4 +9,8 @@ import java.util.List;
  */
 public interface HomeMenuService {
     List<HomeMenuEntity> findAuthedMenus(String userId, String typeId, String resId);
+
+    String getSubSystemUrl(String username, String resId);
+
+    String getHomeUrl(String username);
 }

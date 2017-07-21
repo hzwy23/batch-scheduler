@@ -115,7 +115,7 @@ public class StaticPageController {
         String batchId = request.getParameter("batch_id");
         String suiteKey = request.getParameter("suiteKey");
         String asOfDate = request.getParameter("as_of_date");
-        logger.info("batch id is:{},batch desc is:{},group desc is:{},as_of_date is:{}, suiteKey is:{}", batchId, batchDesc, groupDesc, asOfDate, suiteKey);
+        logger.debug("batch id is:{},batch desc is:{},group desc is:{},as_of_date is:{}, suiteKey is:{}", batchId, batchDesc, groupDesc, asOfDate, suiteKey);
         map.put("groupDesc", groupDesc);
         map.put("batchDesc", batchDesc);
         map.put("batchId", batchId);

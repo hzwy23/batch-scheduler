@@ -1,19 +1,40 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/18.
  */
 public class OrgEntity {
-    public String org_id;
-    public String org_desc;
-    public String up_org_id;
-    public String domain_id;
-    public String create_date;
-    public String modify_date;
-    public String create_user;
-    public String modify_user;
-    public String code_number;
-    public String org_dept;
+    @JsonProperty("org_id")
+    private String org_id;
+
+    @JsonProperty("org_desc")
+    private String org_desc;
+
+    @JsonProperty("up_org_id")
+    private String up_org_id;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("create_date")
+    private String create_date;
+
+    @JsonProperty("modify_date")
+    private String modify_date;
+
+    @JsonProperty("create_user")
+    private String create_user;
+
+    @JsonProperty("modify_user")
+    private String modify_user;
+
+    @JsonProperty("code_number")
+    private String code_number;
+
+    @JsonProperty("org_dept")
+    private String org_dept;
 
     public String getOrg_id() {
         return org_id;

@@ -4,7 +4,7 @@ import com.asofdate.hauth.dao.DomainDao;
 import com.asofdate.hauth.dao.DomainShareDao;
 import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.entity.DomainShareEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +23,8 @@ public class DomainShareDaoImpl implements DomainShareDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Autowired
     private DomainDao domainDao;
@@ -30,8 +32,7 @@ public class DomainShareDaoImpl implements DomainShareDao {
     @Override
     public List<DomainShareEntity> findAuth(String targetDomainID) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        List<DomainShareEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_116, rowMapper, targetDomainID);
-        return list;
+        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_116"), rowMapper, targetDomainID);
     }
 
     @Override
@@ -54,14 +55,13 @@ public class DomainShareDaoImpl implements DomainShareDao {
     @Override
     public List<DomainShareEntity> findShareTo(String domainId) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        List<DomainShareEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_117, rowMapper, domainId);
-        return list;
+        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_117"), rowMapper, domainId);
     }
 
     @Override
     public Set<String> findAll(String targetDomainId) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        List<DomainShareEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_116, rowMapper, targetDomainId);
+        List<DomainShareEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_116"), rowMapper, targetDomainId);
 
         Set<String> set = new HashSet<>();
         set.add(targetDomainId);

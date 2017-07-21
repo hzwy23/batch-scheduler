@@ -1,28 +1,46 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.Size;
 
 /**
  * Created by hzwy23 on 2017/6/1.
  */
 public class DomainEntity {
-    @Size(min = 1,max = 30,message = "域编码长度必须由1-30位字母、数字组成")
-    public String domain_id;
+    @JsonProperty("domain_id")
+    @Size(min = 1, max = 30, message = "域编码长度必须由1-30位字母、数字组成")
+    private String domain_id;
 
-    @Size(min = 1,max = 100,message = "域名称必须由1-100位字母、汉字、数字等组成")
-    public String domain_desc;
+    @JsonProperty("domain_desc")
+    @Size(min = 1, max = 100, message = "域名称必须由1-100位字母、汉字、数字等组成")
+    private String domain_desc;
 
+    @JsonProperty("domain_status_id")
     @NotBlank(message = "请选择域状态")
-    public String domain_status_id;
+    private String domain_status_id;
 
-    public String domain_status_desc;
-    public String domain_status;
-    public String maintance_date;
-    public String create_user_id;
-    public String domain_modify_date;
-    public String domain_modify_user;
-    public String domain_status_cd;
+    @JsonProperty("domain_status_desc")
+    private String domain_status_desc;
+
+    @JsonProperty("domain_status")
+    private String domain_status;
+
+    @JsonProperty("maintance_date")
+    private String maintance_date;
+
+    @JsonProperty("create_user_id")
+    private String create_user_id;
+
+    @JsonProperty("domain_modify_date")
+    private String domain_modify_date;
+
+    @JsonProperty("domain_modify_user")
+    private String domain_modify_user;
+
+    @JsonProperty("domain_status_cd")
+    private String domain_status_cd;
 
     public String getDomainStatusCd() {
         return domain_status_cd;

@@ -31,8 +31,8 @@ public class ExecTasklet implements Tasklet {
     public ExecTasklet(String cmd, ExecService execService, BatchRunConfDto conf) {
         this.cmd = cmd;
         this.execService = execService;
-        this.batchId = conf.batchId;
-        this.asOfDate = conf.asOfDate;
+        this.batchId = conf.getBatchId();
+        this.asOfDate = conf.getAsOfDate();
     }
 
     @Override
@@ -50,11 +50,12 @@ public class ExecTasklet implements Tasklet {
 
         BufferedReader input = null;
 
+        String line = null;
+        int idx = 1;
         try {
             process = Runtime.getRuntime().exec(cmd + " " + jobParameters);
-            input = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
-            int idx = 1;
-            String line = null;
+            input = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+
             while ((line = input.readLine()) != null) {
                 if (line.isEmpty()) {
                     continue;
@@ -63,6 +64,7 @@ public class ExecTasklet implements Tasklet {
             }
             process.waitFor();
         } catch (IOException e) {
+            writeLog(jobName, e.getMessage(), idx++);
             logger.error(e.getMessage());
         } finally {
             if (input != null) {

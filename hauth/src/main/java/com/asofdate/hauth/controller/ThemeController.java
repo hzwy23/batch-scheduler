@@ -3,7 +3,7 @@ package com.asofdate.hauth.controller;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.service.UserDetailsService;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.CryptoAES;
 import com.asofdate.utils.Hret;
 import io.swagger.annotations.Api;
@@ -32,6 +32,8 @@ public class ThemeController {
     public JdbcTemplate jdbcTemplate;
     @Autowired
     public UserDetailsService userDetailsService;
+    @Autowired
+    private SqlText sqlText;
 
     @RequestMapping(value = "/v1/auth/theme/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -43,7 +45,7 @@ public class ThemeController {
         String username = authentication.getName();
         logger.info("request user id is:" + username);
         try {
-            int code = jdbcTemplate.update(SqlDefine.sys_rdbms_024, themeId, username);
+            int code = jdbcTemplate.update(sqlText.getSql("sys_rdbms_024"), themeId, username);
             if (1 == code) {
                 return Hret.success(200, "modify theme info successfully", null);
             } else {
@@ -99,7 +101,7 @@ public class ThemeController {
         oldPassword = CryptoAES.aesEncrypt(oldPassword);
         newPassword = CryptoAES.aesEncrypt(newPassword);
 
-        int code = jdbcTemplate.update(SqlDefine.sys_rdbms_014, newPassword, userId, oldPassword);
+        int code = jdbcTemplate.update(sqlText.getSql("sys_rdbms_014"), newPassword, userId, oldPassword);
         if (1 == code) {
             response.setStatus(200);
             logger.info("modify user password successfully, user id is :" + username);

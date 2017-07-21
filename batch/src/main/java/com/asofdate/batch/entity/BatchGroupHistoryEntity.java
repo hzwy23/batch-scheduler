@@ -4,15 +4,15 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/17.
  */
 public class BatchGroupHistoryEntity {
-    public String sid;
-    public String suiteKey;
-    public String status;
-    public String statusDesc;
-    public String startTime;
-    public String endTime;
-    public String groupDesc;
-    public Integer totalJobsCnt;
-    public Integer completeJobsCnt;
+    private String sid;
+    private String suiteKey;
+    private String status;
+    private String statusDesc;
+    private String startTime;
+    private String endTime;
+    private String groupDesc;
+    private Integer totalJobsCnt;
+    private Integer completeJobsCnt;
 
     public String getSid() {
         return sid;

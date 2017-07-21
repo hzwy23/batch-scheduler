@@ -1,20 +1,43 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/18.
  */
 public class RoleEntity {
-    public String code_number;
-    public String role_name;
-    public String create_user;
-    public String create_date;
-    public String role_status_desc;
-    public String role_status_code;
-    public String domain_id;
-    public String domain_desc;
-    public String modify_date;
-    public String modify_user;
-    public String role_id;
+    @JsonProperty("code_number")
+    private String code_number;
+
+    @JsonProperty("role_name")
+    private String role_name;
+
+    @JsonProperty("create_user")
+    private String create_user;
+
+    @JsonProperty("create_date")
+    private String create_date;
+
+    @JsonProperty("role_status_desc")
+    private String role_status_desc;
+
+    @JsonProperty("role_status_code")
+    private String role_status_code;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("domain_desc")
+    private String domain_desc;
+
+    @JsonProperty("modify_date")
+    private String modify_date;
+
+    @JsonProperty("modify_user")
+    private String modify_user;
+
+    @JsonProperty("role_id")
+    private String role_id;
 
     public String getCode_number() {
         return code_number;

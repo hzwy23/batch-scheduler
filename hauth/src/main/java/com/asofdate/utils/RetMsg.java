@@ -4,9 +4,9 @@ package com.asofdate.utils;
  * Created by hzwy23 on 2017/6/26.
  */
 public class RetMsg {
-    public Integer code;
-    public String message;
-    public Object details;
+    private Integer code;
+    private String message;
+    private Object details;
 
     public RetMsg() {
     }

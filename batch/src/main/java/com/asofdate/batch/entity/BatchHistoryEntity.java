@@ -4,34 +4,17 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/16.
  */
 public class BatchHistoryEntity {
-    public String sid;
-    public String batchId;
-    public String batchDesc;
-    public String batchStatus;
-    public String batchStatusDesc;
-    public String asOfDate;
-    public String startTime;
-    public String endTime;
-    public String retMsg;
-    public String domainId;
-    public String codeNumber;
-
-    @Override
-    public String toString() {
-        return "BatchHistoryEntity{" +
-                "sid='" + sid + '\'' +
-                ", batchId='" + batchId + '\'' +
-                ", batchDesc='" + batchDesc + '\'' +
-                ", batchStatus='" + batchStatus + '\'' +
-                ", batchStatusDesc='" + batchStatusDesc + '\'' +
-                ", asOfDate='" + asOfDate + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", retMsg='" + retMsg + '\'' +
-                ", domainId='" + domainId + '\'' +
-                ", codeNumber='" + codeNumber + '\'' +
-                '}';
-    }
+    private String sid;
+    private String batchId;
+    private String batchDesc;
+    private String batchStatus;
+    private String batchStatusDesc;
+    private String asOfDate;
+    private String startTime;
+    private String endTime;
+    private String retMsg;
+    private String domainId;
+    private String codeNumber;
 
     public String getSid() {
         return sid;
@@ -119,5 +102,22 @@ public class BatchHistoryEntity {
 
     public void setCodeNumber(String codeNumber) {
         this.codeNumber = codeNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "BatchHistoryEntity{" +
+                "sid='" + sid + '\'' +
+                ", batchId='" + batchId + '\'' +
+                ", batchDesc='" + batchDesc + '\'' +
+                ", batchStatus='" + batchStatus + '\'' +
+                ", batchStatusDesc='" + batchStatusDesc + '\'' +
+                ", asOfDate='" + asOfDate + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", retMsg='" + retMsg + '\'' +
+                ", domainId='" + domainId + '\'' +
+                ", codeNumber='" + codeNumber + '\'' +
+                '}';
     }
 }

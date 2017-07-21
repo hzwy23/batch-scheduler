@@ -4,11 +4,11 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/15.
  */
 public class SysConfigEntity {
-    public String configId;
-    public String configDesc;
-    public String configValue;
-    public String image;
-    public String details;
+    private String configId;
+    private String configDesc;
+    private String configValue;
+    private String image;
+    private String details;
 
     public String getConfigId() {
         return configId;

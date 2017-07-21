@@ -5,7 +5,7 @@ import com.asofdate.hauth.dao.UserDao;
 import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.OrgEntity;
 import com.asofdate.hauth.entity.UserEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.CryptoAES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -25,6 +25,8 @@ import java.util.Set;
 public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Autowired
     private OrgDao orgDao;
@@ -32,7 +34,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<UserEntity> findAll(String domainid) {
         RowMapper<UserEntity> rowMapper = new BeanPropertyRowMapper<>(UserEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_017, rowMapper, domainid);
+        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_017"), rowMapper, domainid);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class UserDaoImpl implements UserDao {
         List<UserEntity> list = findAll(domainId);
         if ("0".equals(statusCd) || "1".equals(statusCd)) {
             for (int i = 0; i < list.size(); i++) {
-                if (!statusCd.equals(list.get(i).getStatus_cd())) {
+                if (!statusCd.equals(list.get(i).getStatusCd())) {
                     list.remove(i);
                     i--;
                 }
@@ -54,7 +56,7 @@ public class UserDaoImpl implements UserDao {
             }
             set.add(orgId);
             for (int i = 0; i < list.size(); i++) {
-                if (!set.contains(list.get(i).getOrg_unit_id())) {
+                if (!set.contains(list.get(i).getOrgUnitId())) {
                     list.remove(i);
                     i--;
                 }
@@ -66,39 +68,39 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     @Override
     public int add(UserEntity userEntity) {
-        jdbcTemplate.update(SqlDefine.sys_rdbms_018,
-                userEntity.getUser_id(),
-                userEntity.getUser_name(),
-                userEntity.getCreate_user(),
-                userEntity.getUser_email(),
-                userEntity.getUser_phone(),
-                userEntity.getOrg_unit_id(),
-                userEntity.getModify_user());
-        String password = CryptoAES.aesEncrypt(userEntity.getUser_passwd());
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_019,
-                userEntity.getUser_id(), password, 0);
+        jdbcTemplate.update(sqlText.getSql("sys_rdbms_018"),
+                userEntity.getUserId(),
+                userEntity.getUserName(),
+                userEntity.getCreateUser(),
+                userEntity.getUserEmail(),
+                userEntity.getUserPhone(),
+                userEntity.getOrgUnitId(),
+                userEntity.getModifyUser());
+        String password = CryptoAES.aesEncrypt(userEntity.getUserPasswd());
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_019"),
+                userEntity.getUserId(), password, 0);
     }
 
     @Transactional
     @Override
     public int delete(List<UserEntity> list) {
         for (UserEntity m : list) {
-            jdbcTemplate.update(SqlDefine.sys_rdbms_007,
-                    m.getUser_id(),
-                    m.getOrg_unit_id());
+            jdbcTemplate.update(sqlText.getSql("sys_rdbms_007"),
+                    m.getUserId(),
+                    m.getOrgUnitId());
         }
         return 1;
     }
 
     @Override
     public int update(UserEntity userEntity) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_021,
-                userEntity.getUser_name(),
-                userEntity.getUser_phone(),
-                userEntity.getUser_email(),
-                userEntity.getModify_user(),
-                userEntity.getOrg_unit_id(),
-                userEntity.getUser_id());
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_021"),
+                userEntity.getUserName(),
+                userEntity.getUserPhone(),
+                userEntity.getUserEmail(),
+                userEntity.getModifyUser(),
+                userEntity.getOrgUnitId(),
+                userEntity.getUserId());
     }
 
     @Override
@@ -106,12 +108,12 @@ public class UserDaoImpl implements UserDao {
         String userId = m.getUserId();
         String newPd = m.getNewPasswd();
         String passwd = CryptoAES.aesEncrypt(newPd);
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_015,
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_015"),
                 passwd, userId);
     }
 
     @Override
     public int changeStatus(String userId, String status) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_016, status, userId);
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_016"), status, userId);
     }
 }

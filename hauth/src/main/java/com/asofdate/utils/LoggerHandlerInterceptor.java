@@ -1,8 +1,8 @@
 package com.asofdate.utils;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.RequestUserDTO;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.dto.RequestUserDto;
+import com.asofdate.hauth.sql.SqlText;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,8 @@ public class LoggerHandlerInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(LoggerHandlerInterceptor.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
@@ -37,7 +39,7 @@ public class LoggerHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        RequestUserDTO httpConn = JwtService.getConnUser(httpServletRequest);
+        RequestUserDto httpConn = JwtService.getConnUser(httpServletRequest);
         String userId = httpConn.getUserId();
         String domainId = httpConn.getDomainID();
         String clientIp = httpServletRequest.getRemoteAddr();
@@ -47,7 +49,7 @@ public class LoggerHandlerInterceptor implements HandlerInterceptor {
         Map<String, String[]> map = httpServletRequest.getParameterMap();
         Map<String, String> dt = parseJSON(map);
         String dtvalue = new GsonBuilder().create().toJson(dt);
-        jdbcTemplate.update(SqlDefine.sys_rdbms_207, userId, clientIp, statuCd, method, uri, dtvalue, domainId);
+        jdbcTemplate.update(sqlText.getSql("sys_rdbms_207"), userId, clientIp, statuCd, method, uri, dtvalue, domainId);
     }
 
     private Map<String, String> parseJSON(Map<String, String[]> map) {

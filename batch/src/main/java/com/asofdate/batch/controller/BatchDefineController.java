@@ -1,6 +1,6 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.dto.BatchArgumentDTO;
+import com.asofdate.batch.dto.BatchArgumentDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
 import com.asofdate.batch.service.BatchDefineService;
 import com.asofdate.batch.utils.BatchStatus;
@@ -150,7 +150,7 @@ public class BatchDefineController {
     @RequestMapping(value = "/argument", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "查询批次参数")
-    public List<BatchArgumentDTO> getBatchArg(HttpServletRequest request) {
+    public List<BatchArgumentDto> getBatchArg(HttpServletRequest request) {
         String id = request.getParameter("batch_id");
         return batchDefineService.findBatchArgsById(id);
     }
@@ -160,8 +160,8 @@ public class BatchDefineController {
     @ApiOperation(value = "设置/更新批次参数", notes = "当批次参数值存在时，更新批次参数，当批次参数值不存在时，新增批次参数值")
     public String addBatchArg(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<BatchArgumentDTO> list = new GsonBuilder().create().fromJson(json,
-                new TypeToken<List<BatchArgumentDTO>>() {
+        List<BatchArgumentDto> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<BatchArgumentDto>>() {
                 }.getType());
 
         RetMsg retMsg = batchDefineService.addBatchArg(list);

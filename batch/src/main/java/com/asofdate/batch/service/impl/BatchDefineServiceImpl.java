@@ -3,8 +3,8 @@ package com.asofdate.batch.service.impl;
 import com.asofdate.batch.dao.BatchArgumentDao;
 import com.asofdate.batch.dao.BatchDefineDao;
 import com.asofdate.batch.dao.BatchJobStatusDao;
-import com.asofdate.batch.dto.BatchArgumentDTO;
-import com.asofdate.batch.dto.BatchMonitoringDTO;
+import com.asofdate.batch.dto.BatchArgumentDto;
+import com.asofdate.batch.dto.BatchMonitoringDto;
 import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchArgumentEntiry;
 import com.asofdate.batch.entity.BatchDefineEntity;
@@ -175,18 +175,18 @@ public class BatchDefineServiceImpl implements BatchDefineService {
                 return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "执行频率单位不正确，退出批次调度", conf);
         }
 
-        if (completeDate.before(calendar.getTime())){
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"批次运行到终止日期，批次调度正常退出服务",conf);
+        if (completeDate.before(calendar.getTime())) {
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "批次运行到终止日期，批次调度正常退出服务", conf);
         }
 
         // 获取批次现在的状态信息
         int status = batchDefineDao.getStatus(conf.getBatchId());
-        if (BatchStatus.BATCH_STATUS_COMPLETED != status){
+        if (BatchStatus.BATCH_STATUS_COMPLETED != status) {
             return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "批次状态不是完成状态，无法继续翻页执行，退出服务", conf);
         }
 
         try {
-            int size = batchDefineDao.batchPagging(conf.getBatchId(),dateAddVal);
+            int size = batchDefineDao.batchPagging(conf.getBatchId(), dateAddVal);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -211,15 +211,15 @@ public class BatchDefineServiceImpl implements BatchDefineService {
     }
 
     @Override
-    public List<BatchArgumentDTO> findBatchArgsById(String batchId) {
+    public List<BatchArgumentDto> findBatchArgsById(String batchId) {
         List<BatchArgumentEntiry> batchArgList = batchArgumentDao.findBatchArgsById(batchId);
         String asOfDate = batchArgumentDao.getAsOfDate(batchId);
         String flag;
 
-        List<BatchArgumentDTO> list = new ArrayList<>();
+        List<BatchArgumentDto> list = new ArrayList<>();
 
         for (BatchArgumentEntiry batchArg : batchArgList) {
-            BatchArgumentDTO ret = new BatchArgumentDTO();
+            BatchArgumentDto ret = new BatchArgumentDto();
             flag = batchArg.getBindAsOfDate();
             if ("1".equals(flag)) {
                 batchArg.setArgValue(asOfDate);
@@ -237,9 +237,9 @@ public class BatchDefineServiceImpl implements BatchDefineService {
     }
 
     @Override
-    public RetMsg addBatchArg(List<BatchArgumentDTO> list) {
+    public RetMsg addBatchArg(List<BatchArgumentDto> list) {
         List<BatchArgumentEntiry> args = new ArrayList<>();
-        for (BatchArgumentDTO m : list) {
+        for (BatchArgumentDto m : list) {
             BatchArgumentEntiry entity = new BatchArgumentEntiry();
             entity.setDomainId(m.getDomainId());
             entity.setBatchId(m.getBatchId());
@@ -260,7 +260,7 @@ public class BatchDefineServiceImpl implements BatchDefineService {
     }
 
     @Override
-    public BatchMonitoringDTO getBatchCompletedRadio(String batchId) {
+    public BatchMonitoringDto getBatchCompletedRadio(String batchId) {
         String asOfDate = batchDefineDao.getBatchAsOfDate(batchId);
         BatchRunConfDto conf = new BatchRunConfDto();
         conf.setAsOfDate(asOfDate);
@@ -269,16 +269,16 @@ public class BatchDefineServiceImpl implements BatchDefineService {
         int completedCnt = batchJobStatusDao.getCompletedCnt(conf);
         int totalCnt = batchJobStatusDao.getTotalCnt(conf);
 
-        BatchMonitoringDTO batchMonitoringDTO = new BatchMonitoringDTO();
-        batchMonitoringDTO.setAsOfDate(asOfDate);
+        BatchMonitoringDto batchMonitoringDto = new BatchMonitoringDto();
+        batchMonitoringDto.setAsOfDate(asOfDate);
 
         if (totalCnt == 0) {
-            batchMonitoringDTO.setRatio((float) 0);
-            return batchMonitoringDTO;
+            batchMonitoringDto.setRatio((float) 0);
+            return batchMonitoringDto;
         }
         float ratio = (float) completedCnt / (float) totalCnt;
-        batchMonitoringDTO.setRatio(ratio);
-        return batchMonitoringDTO;
+        batchMonitoringDto.setRatio(ratio);
+        return batchMonitoringDto;
 
     }
 
@@ -327,5 +327,10 @@ public class BatchDefineServiceImpl implements BatchDefineService {
         batchRunConfDto.setRedisSwitch(redisSwitch);
         logger.debug(batchRunConfDto.toString());
         return batchRunConfDto;
+    }
+
+    @Override
+    public void initBatchStatus() {
+        batchDefineDao.initBatchStatus();
     }
 }

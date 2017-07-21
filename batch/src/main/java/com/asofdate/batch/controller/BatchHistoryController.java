@@ -1,6 +1,6 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.dto.BatchHistoryDTO;
+import com.asofdate.batch.dto.BatchHistoryDto;
 import com.asofdate.batch.service.BatchHistoryService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
@@ -39,8 +39,8 @@ public class BatchHistoryController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteHistory(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
-        List<BatchHistoryDTO> list = new GsonBuilder().create().fromJson(json,
-                new TypeToken<List<BatchHistoryDTO>>() {
+        List<BatchHistoryDto> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<BatchHistoryDto>>() {
                 }.getType());
 
         RetMsg retMsg = batchHistoryService.delete(list);

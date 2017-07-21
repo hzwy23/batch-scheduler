@@ -1,6 +1,6 @@
 package com.asofdate.hauth.authentication;
 
-import com.asofdate.hauth.dto.RequestUserDTO;
+import com.asofdate.hauth.dto.RequestUserDto;
 import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.service.UserDetailsService;
 import com.asofdate.utils.Hret;
@@ -69,9 +69,9 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                 // 用户名写入标题
                 .setIssuer("hzwy23")
-                .claim("UserId", userDetailsEntity.getUser_id())
-                .claim("DomainId", userDetailsEntity.getDomain_id())
-                .claim("OrgUnitId", userDetailsEntity.getOrg_unit_id())
+                .claim("UserId", userDetailsEntity.getUserId())
+                .claim("DomainId", userDetailsEntity.getDomainId())
+                .claim("OrgUnitId", userDetailsEntity.getOrgUnitId())
                 // 保存权限（角色）
                 .claim("authorities", JWT_ROLES)
                 // 签名设置
@@ -119,7 +119,7 @@ public class JwtService {
         return null;
     }
 
-    public static RequestUserDTO getConnUser(HttpServletRequest request) {
+    public static RequestUserDto getConnUser(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
         if (token == null) {
             token = getTokenFromCookis(request);
@@ -129,12 +129,12 @@ public class JwtService {
             Claims claims = Jwts.parser().setSigningKey(SECRET)
                     .parseClaimsJws(token).getBody();
 
-            return new RequestUserDTO(
+            return new RequestUserDto(
                     claims.get("DomainId", String.class),
                     claims.get("UserId", String.class),
                     claims.get("OrgUnitId", String.class));
         }
-        return new RequestUserDTO();
+        return new RequestUserDto();
     }
 
     @PostConstruct

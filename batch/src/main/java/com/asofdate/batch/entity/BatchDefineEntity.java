@@ -1,26 +1,40 @@
 package com.asofdate.batch.entity;
 
 import com.asofdate.utils.TimeFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by hzwy23 on 2017/5/24.
  */
 public class BatchDefineEntity {
-    public String batch_id;
-    public String code_number;
-    public String batch_desc;
-    public String batch_status;
-    public String as_of_date;
-    public String start_date;
-    public String ret_msg;
-    public String complete_date;
-    public String end_date;
-    public String domain_id;
-    public String batch_status_desc;
-
-    public String pagging_freq;
-    public String pagging_freq_mult;
-    public String pagging_freq_mult_desc;
+    @JsonProperty("batch_id")
+    private String batch_id;
+    @JsonProperty("code_number")
+    private String code_number;
+    @JsonProperty("batch_desc")
+    private String batch_desc;
+    @JsonProperty("batch_status")
+    private String batch_status;
+    @JsonProperty("as_of_date")
+    private String as_of_date;
+    @JsonProperty("start_date")
+    private String start_date;
+    @JsonProperty("ret_msg")
+    private String ret_msg;
+    @JsonProperty("complete_date")
+    private String complete_date;
+    @JsonProperty("end_date")
+    private String end_date;
+    @JsonProperty("domain_id")
+    private String domain_id;
+    @JsonProperty("batch_status_desc")
+    private String batch_status_desc;
+    @JsonProperty("pagging_freq")
+    private String pagging_freq;
+    @JsonProperty("pagging_freq_mult")
+    private String pagging_freq_mult;
+    @JsonProperty("pagging_freq_mult_desc")
+    private String pagging_freq_mult_desc;
 
     public String getPaggingFreq() {
         return pagging_freq;

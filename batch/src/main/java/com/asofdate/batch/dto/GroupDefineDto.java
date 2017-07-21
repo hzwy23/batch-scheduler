@@ -1,13 +1,22 @@
 package com.asofdate.batch.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/7/7.
  */
 public class GroupDefineDto {
-    public String jobKey;
-    public String arg_id;
-    public String arg_value;
-    public String domain_id;
+
+    private String jobKey;
+
+    @JsonProperty("arg_id")
+    private String arg_id;
+
+    @JsonProperty("arg_value")
+    private String arg_value;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
 
 
     public String getArgId() {

@@ -3,14 +3,14 @@ package com.asofdate.hauth.dto;
 /**
  * Created by hzwy23 on 2017/7/4.
  */
-public class LoginMsgDTO {
-    public String username;
-    public String password;
-    public String statusId;
-    public String continueErrorCnt;
-    public String flag;
-    public String message;
-    public Integer retCode;
+public class LoginMsgDto {
+    private String username;
+    private String password;
+    private String statusId;
+    private String continueErrorCnt;
+    private String flag;
+    private String message;
+    private Integer retCode;
 
     public String getUsername() {
         return username;
@@ -70,7 +70,7 @@ public class LoginMsgDTO {
 
     @Override
     public String toString() {
-        return "LoginMsgDTO{" +
+        return "LoginMsgDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", statusId='" + statusId + '\'' +

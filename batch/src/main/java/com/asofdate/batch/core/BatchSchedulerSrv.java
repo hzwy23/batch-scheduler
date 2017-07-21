@@ -6,7 +6,6 @@ import com.asofdate.batch.utils.BatchStatus;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
-import org.aspectj.apache.bcel.generic.RET;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class BatchSchedulerSrv extends Thread {
     }
 
 
-    private int schedulerCenter(){
+    private int schedulerCenter() {
         try {
             while (scheduler.isRunning()) {
 
@@ -120,9 +119,9 @@ public class BatchSchedulerSrv extends Thread {
 
     @Override
     public void run() {
-        while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED){
+        while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED) {
             RetMsg retMsg = batchPagging();
-            if (!retMsg.checkCode()){
+            if (!retMsg.checkCode()) {
                 logger.error(retMsg.getMessage());
                 return;
             }
@@ -143,8 +142,8 @@ public class BatchSchedulerSrv extends Thread {
             scheduler = batchSchedulerConfig.createSchedulerFactoryBean(conf, drm);
         } catch (Exception e) {
             e.printStackTrace();
-            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE,"初始化调度器失败",null);
+            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, "初始化调度器失败", null);
         }
-        return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE,"success",null);
+        return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
     }
 }

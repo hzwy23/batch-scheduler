@@ -1,13 +1,21 @@
 package com.asofdate.batch.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/27.
  */
-public class BatchGroupDTO {
-    public String suiteKey;
-    public String domain_id;
-    public String batch_id;
-    public String group_id;
+public class BatchGroupDto {
+    private String suiteKey;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("batch_id")
+    private String batch_id;
+
+    @JsonProperty("group_id")
+    private String group_id;
 
     public String getSuiteKey() {
         return suiteKey;
@@ -43,7 +51,7 @@ public class BatchGroupDTO {
 
     @Override
     public String toString() {
-        return "BatchGroupDTO{" +
+        return "BatchGroupDto{" +
                 "id='" + suiteKey + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 ", batch_id='" + batch_id + '\'' +

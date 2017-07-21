@@ -1,7 +1,7 @@
 package com.asofdate.batch.service.impl;
 
 import com.asofdate.batch.dao.BatchHistoryDao;
-import com.asofdate.batch.dto.BatchHistoryDTO;
+import com.asofdate.batch.dto.BatchHistoryDto;
 import com.asofdate.batch.entity.BatchHistoryEntity;
 import com.asofdate.batch.service.BatchHistoryService;
 import com.asofdate.utils.RetMsg;
@@ -27,9 +27,9 @@ public class BatchHistoryServiceImpl implements BatchHistoryService {
     }
 
     @Override
-    public RetMsg delete(List<BatchHistoryDTO> list) {
+    public RetMsg delete(List<BatchHistoryDto> list) {
         List<BatchHistoryEntity> args = new ArrayList<>();
-        for (BatchHistoryDTO m : list) {
+        for (BatchHistoryDto m : list) {
             BatchHistoryEntity entity = new BatchHistoryEntity();
             entity.setSid(m.getSid());
             args.add(entity);

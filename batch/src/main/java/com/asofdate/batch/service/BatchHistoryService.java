@@ -1,6 +1,6 @@
 package com.asofdate.batch.service;
 
-import com.asofdate.batch.dto.BatchHistoryDTO;
+import com.asofdate.batch.dto.BatchHistoryDto;
 import com.asofdate.batch.entity.BatchHistoryEntity;
 import com.asofdate.utils.RetMsg;
 
@@ -24,5 +24,5 @@ public interface BatchHistoryService {
      *
      * @param list
      */
-    RetMsg delete(List<BatchHistoryDTO> list);
+    RetMsg delete(List<BatchHistoryDto> list);
 }

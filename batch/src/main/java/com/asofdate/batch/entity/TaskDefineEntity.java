@@ -8,29 +8,28 @@ import javax.validation.constraints.Size;
  * Created by hzwy23 on 2017/5/24.
  */
 public class TaskDefineEntity {
-
     @NotEmpty(message = "任务编码必须由1-30位字母、数字组成")
-    @Size(min = 1,max = 30)
-    public String taskId;
+    @Size(min = 1, max = 30)
+    private String taskId;
 
-    public String codeNumber;
+    private String codeNumber;
 
     @NotEmpty(message = "请输入任务详细描述信息")
-    public String taskDesc;
+    private String taskDesc;
 
     @NotEmpty(message = "请选择任务类型")
-    public String taskType;
-    public String taskTypeDesc;
-    public String createUser;
-    public String createDate;
-    public String modifyDate;
-    public String modifyUser;
+    private String taskType;
+    private String taskTypeDesc;
+    private String createUser;
+    private String createDate;
+    private String modifyDate;
+    private String modifyUser;
 
     @NotEmpty(message = "域信息编码格式不正确，请联系管理员")
-    public String domainId;
+    private String domainId;
 
     @NotEmpty(message = "请输入脚本路径及名称")
-    public String scriptFile;
+    private String scriptFile;
 
     public String getScriptFile() {
         return scriptFile;

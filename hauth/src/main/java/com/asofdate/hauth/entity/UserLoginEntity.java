@@ -5,19 +5,19 @@ package com.asofdate.hauth.entity;
  */
 public class UserLoginEntity {
 
-    public String username = "";
+    private String username;
 
-    public String password = "";
+    private String password;
 
-    public String statusId = "";
+    private String statusId;
 
-    public int continueErrorCnt = 0;
+    private int continueErrorCnt;
 
-    public boolean flag = false;
+    private boolean flag;
 
-    public String message = "success";
+    private String message;
 
-    public String retCode = "403";
+    private String retCode;
 
     public String getRetCode() {
         return retCode;

@@ -4,18 +4,18 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/17.
  */
 public class BatchJobHistoryEntity {
-    public String sid;
-    public String jobId;
-    public String status;
-    public String startTime;
-    public String endTime;
-    public String suiteKey;
-    public String statusDesc;
-    public String jobKey;
-    public String taskId;
-    public String taskDesc;
-    public String taskType;
-    public String taskTypeDesc;
+    private String sid;
+    private String jobId;
+    private String status;
+    private String startTime;
+    private String endTime;
+    private String suiteKey;
+    private String statusDesc;
+    private String jobKey;
+    private String taskId;
+    private String taskDesc;
+    private String taskType;
+    private String taskTypeDesc;
 
     public String getJobKey() {
         return jobKey;

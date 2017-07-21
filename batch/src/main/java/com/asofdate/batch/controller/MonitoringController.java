@@ -1,6 +1,6 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.dto.BatchMonitoringDTO;
+import com.asofdate.batch.dto.BatchMonitoringDto;
 import com.asofdate.batch.service.BatchDefineService;
 import com.asofdate.hauth.authentication.JwtService;
 import io.swagger.annotations.Api;
@@ -37,11 +37,11 @@ public class MonitoringController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/radio")
-    public BatchMonitoringDTO getBatchCompletedRadio(HttpServletRequest request) {
+    public BatchMonitoringDto getBatchCompletedRadio(HttpServletRequest request) {
         String batchId = request.getParameter("batch_id");
 
         logger.debug("batch id is:{}", batchId);
-        BatchMonitoringDTO batchMonitoringDTO = batchDefineService.getBatchCompletedRadio(batchId);
-        return batchMonitoringDTO;
+        BatchMonitoringDto batchMonitoringDto = batchDefineService.getBatchCompletedRadio(batchId);
+        return batchMonitoringDto;
     }
 }

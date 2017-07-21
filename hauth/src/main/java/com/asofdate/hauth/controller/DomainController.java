@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,7 +109,7 @@ public class DomainController {
     @ApiOperation(value = "新增域信息", notes = "添加新的域信息，新增的域默认授权给创建人")
     @ApiImplicitParam(name = "domain_id", value = "域编码", required = true, dataType = "String")
     public String add(@Validated DomainEntity domainEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
                 return Hret.error(421, m.getDefaultMessage(), null);
@@ -137,7 +140,7 @@ public class DomainController {
     })
     public String getDomainDetails(HttpServletRequest request) {
         String domainId = request.getParameter("domain_id");
-        if (domainId == null || domainId.isEmpty() ) {
+        if (domainId == null || domainId.isEmpty()) {
             logger.info("can not get parameter domain_id, request failed.");
             return "";
         }

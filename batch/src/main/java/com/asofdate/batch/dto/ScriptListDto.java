@@ -5,11 +5,11 @@ package com.asofdate.batch.dto;
  */
 public class ScriptListDto {
     @Deprecated
-    public String basePath;
-    public String scriptName;
-    public String relativePath;
-    public String parentPath;
-    public String scriptType;
+    private String basePath;
+    private String scriptName;
+    private String relativePath;
+    private String parentPath;
+    private String scriptType;
 
     public String getBasePath() {
         return basePath;

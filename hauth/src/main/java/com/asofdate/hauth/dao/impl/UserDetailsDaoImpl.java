@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.UserDetailsDao;
 import com.asofdate.hauth.entity.UserDetailsEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,14 +16,15 @@ import java.util.List;
  */
 @Repository
 public class UserDetailsDaoImpl implements UserDetailsDao {
-
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List findById(String userId) {
         RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
-        List list = jdbcTemplate.query(SqlDefine.sys_rdbms_023, rowMapper, userId);
+        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_023"), rowMapper, userId);
         return list;
     }
 }

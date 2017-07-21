@@ -37,7 +37,7 @@ public class BatchGroupRunningController {
         String batchId = request.getParameter("batch_id");
         String gid = request.getParameter("gid");
         String asOfDate = request.getParameter("as_of_date");
-        return batchGroupRunningService.getRatio(batchId, gid,asOfDate);
+        return batchGroupRunningService.getRatio(batchId, gid, asOfDate);
     }
 
     @RequestMapping(value = "/details", method = RequestMethod.GET)

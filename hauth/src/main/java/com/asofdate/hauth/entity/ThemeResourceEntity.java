@@ -1,19 +1,42 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/5/17.
  */
 public class ThemeResourceEntity {
-    public String New_iframe;
+    @JsonProperty("New_iframe")
+    private String New_iframe;
+
+    @JsonProperty("Theme_id")
     private String Theme_id;
+
+    @JsonProperty("Theme_desc")
     private String Theme_desc;
+
+    @JsonProperty("Res_id")
     private String Res_id;
+
+    @JsonProperty("Res_url")
     private String Res_url;
+
+    @JsonProperty("Res_type")
     private String Res_type;
+
+    @JsonProperty("Res_bg_color")
     private String Res_bg_color;
+
+    @JsonProperty("Res_class")
     private String Res_class;
+
+    @JsonProperty("Group_id")
     private String Group_id;
+
+    @JsonProperty("Res_img")
     private String Res_img;
+
+    @JsonProperty("Sort_id")
     private String Sort_id;
 
     public String getNew_iframe() {

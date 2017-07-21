@@ -4,13 +4,13 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/7/13.
  */
 public class ExecLogEntity {
-    public String jobId;
-    public String message;
-    public String execTime;
-    public int sortId;
-    public String batchId;
-    public String sid;
-    public String asOfDate;
+    private String jobId;
+    private String message;
+    private String execTime;
+    private int sortId;
+    private String batchId;
+    private String sid;
+    private String asOfDate;
 
     public String getAsOfDate() {
         return asOfDate;

@@ -1,9 +1,9 @@
 package com.asofdate.batch.dao.impl;
 
 import com.asofdate.batch.dao.BatchGroupDao;
+import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
-import com.asofdate.batch.sql.SqlDefine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,17 +23,19 @@ import java.util.UUID;
 public class BatchGroupDaoImpl implements BatchGroupDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private BatchSqlText batchSqlText;
 
     @Override
     public List findAll(String domainId, String batchId) {
         RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_106, rowMapper, domainId, batchId);
+        return jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_106"), rowMapper, domainId, batchId);
     }
 
     @Override
     public List<BatchGroupEntity> getGroup(String batchId) {
         RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_137, rowMapper, batchId);
+        return jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_137"), rowMapper, batchId);
     }
 
     @Transactional
@@ -46,7 +48,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
             String group_id = m.getGroupId();
             String domain_id = m.getDomainId();
 
-            if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_154,
+            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_154"),
                     id, batch_id, group_id, domain_id)) {
                 return -1;
             }
@@ -59,7 +61,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
     public int deleteGroup(List<BatchGroupEntity> list) {
         for (BatchGroupEntity m : list) {
             String id = m.getSuiteKey();
-            if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_155, id)) {
+            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_155"), id)) {
                 return -1;
             }
         }
@@ -83,7 +85,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
 
     private Set<String> getChildren(String batchId, String id) {
         RowMapper<GroupDependencyEntity> rowMapper = new BeanPropertyRowMapper<>(GroupDependencyEntity.class);
-        List<GroupDependencyEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_073, rowMapper, batchId);
+        List<GroupDependencyEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_073"), rowMapper, batchId);
 
         Set<String> set = new HashSet<>();
         children(list, id, set);
@@ -97,7 +99,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
 
     private List<BatchGroupEntity> getOwner(String id) {
         RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_138, rowMapper, id);
+        return jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_138"), rowMapper, id);
     }
 
     private void children(List<GroupDependencyEntity> all, String id, Set<String> set) {
@@ -116,23 +118,22 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
     @Override
     public List<BatchGroupEntity> getGroupDependency(String suiteKey) {
         RowMapper<BatchGroupEntity> rowMapper = new BeanPropertyRowMapper<>(BatchGroupEntity.class);
-        return jdbcTemplate.query(SqlDefine.sys_rdbms_138, rowMapper, suiteKey);
+        return jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_138"), rowMapper, suiteKey);
     }
 
     @Override
     public int deleteGroupDependency(String uuid) {
-        return jdbcTemplate.update(SqlDefine.sys_rdbms_153, uuid);
+        return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_153"), uuid);
     }
 
     @Transactional
     @Override
     public int addGroupDependency(List<GroupDependencyEntity> list) {
         for (GroupDependencyEntity m : list) {
-
             String domainId = m.getDomainId();
             String id = m.getSuiteKey();
             String upId = m.getUpSuiteKey();
-            if (1 != jdbcTemplate.update(SqlDefine.sys_rdbms_156, id, upId, domainId)) {
+            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_156"), id, upId, domainId)) {
                 return -1;
             }
         }

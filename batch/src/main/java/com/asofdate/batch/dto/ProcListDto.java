@@ -3,12 +3,11 @@ package com.asofdate.batch.dto;
 /**
  * Created by hzwy23 on 2017/7/19.
  */
-public class ProcListDTO {
-    public String procName;
-    public String procDesc;
-    public String procUpId;
-    public String procAttr;
-
+public class ProcListDto {
+    private String procName;
+    private String procDesc;
+    private String procUpId;
+    private String procAttr;
 
     public String getProcAttr() {
         return procAttr;

@@ -2,7 +2,7 @@ package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.ThemeResourceDao;
 import com.asofdate.hauth.entity.ThemeResourceEntity;
-import com.asofdate.hauth.sql.SqlDefine;
+import com.asofdate.hauth.sql.SqlText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,11 +18,13 @@ import java.util.List;
 public class ThemeResourceDaoImpl implements ThemeResourceDao {
     @Autowired
     public JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SqlText sqlText;
 
     @Override
     public List findByThemeId(String themeId) {
         RowMapper<ThemeResourceEntity> rowMapper = new BeanPropertyRowMapper<ThemeResourceEntity>(ThemeResourceEntity.class);
-        List<ThemeResourceEntity> list = jdbcTemplate.query(SqlDefine.sys_rdbms_101, rowMapper, themeId);
+        List<ThemeResourceEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_101"), rowMapper, themeId);
         return list;
     }
 }

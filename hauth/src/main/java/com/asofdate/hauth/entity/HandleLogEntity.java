@@ -1,17 +1,27 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/18.
  */
 public class HandleLogEntity {
-    public String uuid;
-    public String user_id;
-    public String handle_time;
-    public String client_ip;
-    public String status_code;
-    public String method;
-    public String url;
-    public String data;
+    private String uuid;
+
+    @JsonProperty("user_id")
+    private String user_id;
+
+    @JsonProperty("handle_time")
+    private String handle_time;
+
+    @JsonProperty("client_ip")
+    private String client_ip;
+
+    @JsonProperty("status_code")
+    private String status_code;
+    private String method;
+    private String url;
+    private String data;
 
     public String getUuid() {
         return uuid;

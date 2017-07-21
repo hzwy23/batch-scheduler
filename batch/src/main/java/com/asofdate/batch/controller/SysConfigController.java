@@ -1,11 +1,11 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.dto.ProcListDTO;
+import com.asofdate.batch.dto.ProcListDto;
 import com.asofdate.batch.dto.ScriptListDto;
+import com.asofdate.batch.entity.ProcEntity;
 import com.asofdate.batch.service.SysConfigService;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.utils.Hret;
-import com.asofdate.utils.SysStatus;
 import com.google.gson.GsonBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -80,31 +80,31 @@ public class SysConfigController {
     }
 
     @ApiOperation(value = "查询数据库中所有的存储过程和函数")
-    @RequestMapping(value = "/v1/dispatch/config/proc",method = RequestMethod.GET)
-    public String getProcList(HttpServletResponse response, HttpServletRequest request){
-        List<ProcListDTO> list = sysConfigService.getProcList();
-        List<ProcListDTO> procList = new ArrayList<>();
+    @RequestMapping(value = "/v1/dispatch/config/proc", method = RequestMethod.GET)
+    public String getProcList(HttpServletResponse response, HttpServletRequest request) {
+        List<ProcEntity> list = sysConfigService.getProcList();
+
+        List<ProcListDto> procList = new ArrayList<>();
         Set<String> set = new HashSet<>();
-        for (ProcListDTO m:list){
+        for (ProcEntity m : list) {
             set.add(m.getProcName());
-            ProcListDTO row = new ProcListDTO();
-            row.setProcName(m.getProcName()+"."+m.getProcDesc());
+            ProcListDto row = new ProcListDto();
+            row.setProcName(m.getProcName() + "." + m.getProcDesc());
             row.setProcDesc(m.getProcDesc());
             row.setProcUpId(m.getProcName());
             row.setProcAttr("0");
             procList.add(row);
         }
 
-        for (String m :set){
-            ProcListDTO row = new ProcListDTO();
+        for (String m : set) {
+            ProcListDto row = new ProcListDto();
             row.setProcName(m);
             row.setProcDesc(m);
             row.setProcUpId("-1");
             row.setProcAttr("1");
             procList.add(row);
         }
-        String ret = new GsonBuilder().create().toJson(procList);
-        return ret;
+        return new GsonBuilder().create().toJson(procList);
     }
 
     private void getChild(List<ScriptListDto> list, String filePath, String basePath) {
@@ -128,10 +128,10 @@ public class SysConfigController {
     private ScriptListDto pack(String scriptName, String relativePath,
                                String parentPath, String scriptType) {
         ScriptListDto row = new ScriptListDto();
-        row.scriptName = scriptName;
-        row.relativePath = relativePath;
-        row.parentPath = parentPath;
-        row.scriptType = scriptType;
+        row.setScriptName(scriptName);
+        row.setRelativePath(relativePath);
+        row.setParentPath(parentPath);
+        row.setScriptType(scriptType);
         return row;
     }
 }

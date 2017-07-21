@@ -4,18 +4,18 @@ package com.asofdate.batch.entity;
  * Created by hzwy23 on 2017/6/14.
  */
 public class BatchJobStatusEntity {
-    public String batchId;
-    public String jobId;
-    public String status;
-    public String startTime;
-    public String endTime;
-    public String suiteKey;
-    public String statusDesc;
-    public String jobKey;
-    public String taskId;
-    public String taskDesc;
-    public String taskType;
-    public String taskTypeDesc;
+    private String batchId;
+    private String jobId;
+    private String status;
+    private String startTime;
+    private String endTime;
+    private String suiteKey;
+    private String statusDesc;
+    private String jobKey;
+    private String taskId;
+    private String taskDesc;
+    private String taskType;
+    private String taskTypeDesc;
 
     public String getStartTime() {
         return startTime;

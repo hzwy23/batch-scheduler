@@ -1,18 +1,36 @@
 package com.asofdate.hauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/19.
  */
 public class ShareDomainEntity {
-    public String uuid;
-    public String domain_id;
-    public String target_domain_id;
-    public String domain_name;
-    public String authorization_level;
-    public String create_user;
-    public String create_date;
-    public String modify_user;
-    public String modify_date;
+    private String uuid;
+
+    @JsonProperty("domain_id")
+    private String domain_id;
+
+    @JsonProperty("target_domain_id")
+    private String target_domain_id;
+
+    @JsonProperty("domain_name")
+    private String domain_name;
+
+    @JsonProperty("authorization_level")
+    private String authorization_level;
+
+    @JsonProperty("create_user")
+    private String create_user;
+
+    @JsonProperty("create_date")
+    private String create_date;
+
+    @JsonProperty("modify_user")
+    private String modify_user;
+
+    @JsonProperty("modify_date")
+    private String modify_date;
 
     public String getDomain_id() {
         return domain_id;

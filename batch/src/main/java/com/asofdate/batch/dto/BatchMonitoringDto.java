@@ -1,11 +1,14 @@
 package com.asofdate.batch.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/6/26.
  */
-public class BatchMonitoringDTO {
-    public String as_of_date;
-    public Float ratio;
+public class BatchMonitoringDto {
+    @JsonProperty("as_of_date")
+    private String as_of_date;
+    private Float ratio;
 
     public String getAsOfDate() {
         return as_of_date;
@@ -25,7 +28,7 @@ public class BatchMonitoringDTO {
 
     @Override
     public String toString() {
-        return "BatchMonitoringDTO{" +
+        return "BatchMonitoringDto{" +
                 "as_of_date='" + as_of_date + '\'' +
                 ", ratio='" + ratio + '\'' +
                 '}';

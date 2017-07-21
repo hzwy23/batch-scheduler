@@ -1,12 +1,19 @@
 package com.asofdate.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by hzwy23 on 2017/7/3.
  */
 public class HerrorEntity {
-    public Integer error_code;
-    public String error_msg;
-    public Object error_details;
+    @JsonProperty("error_code")
+    private Integer error_code;
+
+    @JsonProperty("error_msg")
+    private String error_msg;
+
+    @JsonProperty("error_details")
+    private Object error_details;
 
     public HerrorEntity(RetMsg retMsg) {
         this.error_code = retMsg.getCode();

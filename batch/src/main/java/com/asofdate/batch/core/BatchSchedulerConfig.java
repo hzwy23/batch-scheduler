@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.configuration.DuplicateJobException;
 import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.support.ReferenceJobFactory;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -43,8 +42,8 @@ public class BatchSchedulerConfig {
     private JobLauncher jobLauncher;
     @Autowired
     private JobRegistry jobRegistry;
-    private BatchRunConfDto conf;
 
+    private BatchRunConfDto conf;
     private JobKeyStatusService jobKeyStatusService;
     private ArgumentService argumentService;
     private Map<String, TaskDefineEntity> taskDefineMap;

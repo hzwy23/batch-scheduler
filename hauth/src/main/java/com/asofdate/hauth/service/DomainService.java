@@ -1,6 +1,6 @@
 package com.asofdate.hauth.service;
 
-import com.asofdate.hauth.dto.DomainDTO;
+import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.utils.RetMsg;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/1.
  */
 public interface DomainService {
-    DomainDTO findAll(String domainId);
+    DomainDto findAll(String domainId);
 
     List<DomainEntity> getAll();
 
