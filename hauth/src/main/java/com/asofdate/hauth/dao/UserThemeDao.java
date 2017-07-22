@@ -5,4 +5,5 @@ package com.asofdate.hauth.dao;
  */
 public interface UserThemeDao {
     String findById(String userId);
+    int changeTheme(String themeId, String username);
 }

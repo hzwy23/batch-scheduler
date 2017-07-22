@@ -3,6 +3,7 @@ package com.asofdate.hauth.service.impl;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.service.AuthService;
+import com.asofdate.hauth.service.ShareDomainService;
 import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.factory.AuthDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthServiceImpl implements AuthService {
     private final String READ_MODE = "r";
     private final String WRITE_MODE = "w";
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SqlText sqlText;
+    private ShareDomainService shareDomainService;
 
     private Integer checkMode(String mode) {
         if (mode.toLowerCase().equals(READ_MODE)) {
@@ -38,21 +38,19 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto domainAuth(HttpServletRequest request, String domainId, String mode) {
         String userDomainId = JwtService.getConnUser(request).getDomainID();
         if (userDomainId.equals(domainId) || "vertex_root".equals(userDomainId)) {
-            return AuthDTOFactory.getAutoDTO(true, "success");
+            return AuthDTOFactory.getAuthDTO(true, "success");
         }
-        try {
-            Integer level = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_010"), Integer.class, domainId, userDomainId);
-            if (level == 2) {
-                return AuthDTOFactory.getAutoDTO(true, "success");
-            } else if (level == 1 && checkMode(mode) == 2) {
-                return AuthDTOFactory.getAutoDTO(false, "只有读取权限,没有写入权限");
-            } else if (level == 1 && checkMode(mode) == 1) {
-                return AuthDTOFactory.getAutoDTO(true, "success");
-            }
-            return AuthDTOFactory.getAutoDTO(false, "您没有被授权访问这个域");
-        } catch (Exception e) {
-            return AuthDTOFactory.getAutoDTO(false, "您没有被授权访问域 [" + domainId + "]");
+
+        Integer level = shareDomainService.getAuthLevel(domainId,userDomainId);
+        if (level == 2) {
+            return AuthDTOFactory.getAuthDTO(true, "success");
+        } else if (level == 1 && checkMode(mode) == 2) {
+            return AuthDTOFactory.getAuthDTO(false, "只有读取权限,没有写入权限");
+        } else if (level == 1 && checkMode(mode) == 1) {
+            return AuthDTOFactory.getAuthDTO(true, "success");
         }
+        return AuthDTOFactory.getAuthDTO(false, "您没有被授权访问这个域");
+
     }
 
     @Override

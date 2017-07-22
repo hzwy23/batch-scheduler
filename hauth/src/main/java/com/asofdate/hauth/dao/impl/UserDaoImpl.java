@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
                 userEntity.getUserPhone(),
                 userEntity.getOrgUnitId(),
                 userEntity.getModifyUser());
-        String password = CryptoAES.aesEncrypt(userEntity.getUserPasswd());
+        String password = CryptoAES.getInstance().aesEncrypt(userEntity.getUserPasswd());
         return jdbcTemplate.update(sqlText.getSql("sys_rdbms_019"),
                 userEntity.getUserId(), password, 0);
     }
@@ -107,7 +107,7 @@ public class UserDaoImpl implements UserDao {
     public int changePassword(UserDTO m) {
         String userId = m.getUserId();
         String newPd = m.getNewPasswd();
-        String passwd = CryptoAES.aesEncrypt(newPd);
+        String passwd = CryptoAES.getInstance().aesEncrypt(newPd);
         return jdbcTemplate.update(sqlText.getSql("sys_rdbms_015"),
                 passwd, userId);
     }

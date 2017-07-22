@@ -21,4 +21,9 @@ public class UserThemeDaoImpl implements UserThemeDao {
         String themeId = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_103"), String.class, userId);
         return themeId;
     }
+
+    @Override
+    public int changeTheme(String themeId, String username) {
+        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_024"), themeId, username);
+    }
 }

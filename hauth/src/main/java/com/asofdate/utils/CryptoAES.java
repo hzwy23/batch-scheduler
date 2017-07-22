@@ -14,7 +14,15 @@ import java.security.NoSuchAlgorithmException;
  * Created by hzwy23 on 2017/5/16.
  */
 public class CryptoAES {
-    private static final String PASSWORD_KEY = "hzwy23@hustwb09y";
+    private final String PASSWORD_KEY = "hzwy23@hustwb09y";
+
+    private static CryptoAES INSTANCE = new CryptoAES();
+
+    private CryptoAES(){}
+
+    public static CryptoAES getInstance(){
+        return INSTANCE;
+    }
 
     /**
      * 解密AES加密过的字符串
@@ -22,7 +30,7 @@ public class CryptoAES {
      * @param content AES加密过过的内容
      * @return 明文
      */
-    public static String aesEncrypt(String content) {
+    public String aesEncrypt(String content) {
 
         try {
 
@@ -69,7 +77,7 @@ public class CryptoAES {
      * @param content 需要被加密的字符串
      * @return 密文
      */
-    public static String aesDecrypt(String content) {
+    public String aesDecrypt(String content) {
         try {
 
             byte[] encrypted1 = new BASE64Decoder().decodeBuffer(content);
@@ -91,7 +99,7 @@ public class CryptoAES {
     }
 
 
-    public static String getSha1(String str) {
+    public String getSha1(String str) {
         if (null == str || 0 == str.length()) {
             return null;
         }

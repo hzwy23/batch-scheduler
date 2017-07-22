@@ -4,6 +4,8 @@ import com.asofdate.batch.dao.ExecDao;
 import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.ExecLogEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +19,7 @@ import java.util.List;
  */
 @Repository
 public class ExecDaoImpl implements ExecDao {
-
+    private final Logger logger = LoggerFactory.getLogger(ExecDaoImpl.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -38,7 +40,7 @@ public class ExecDaoImpl implements ExecDao {
     }
 
     @Override
-    public int init(BatchRunConfDto conf) {
-        return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_213"), conf.getBatchId(), conf.getAsOfDate());
+    public void init(BatchRunConfDto conf) {
+        jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_213"), conf.getBatchId(), conf.getAsOfDate());
     }
 }

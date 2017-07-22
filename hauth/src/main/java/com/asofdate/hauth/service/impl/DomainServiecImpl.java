@@ -1,7 +1,7 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.dao.DomainDao;
-import com.asofdate.hauth.dao.DomainShareDao;
+import com.asofdate.hauth.dao.ShareDomainDao;
 import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.service.DomainService;
@@ -23,12 +23,12 @@ public class DomainServiecImpl implements DomainService {
     @Autowired
     private DomainDao domainDao;
     @Autowired
-    private DomainShareDao domainShareDao;
+    private ShareDomainDao shareDomainDaoo;
 
     @Override
     public DomainDto findAll(String domainId) {
         List<DomainEntity> list = domainDao.findAll();
-        Set<String> set = domainShareDao.findAll(domainId);
+        Set<String> set = shareDomainDaoo.findShareDomain(domainId);
         for (int i = 0; i < list.size(); i++) {
             if (!set.contains(list.get(i).getDomainId())) {
                 list.remove(i);

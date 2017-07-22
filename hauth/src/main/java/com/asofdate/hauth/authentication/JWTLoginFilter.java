@@ -1,6 +1,7 @@
 package com.asofdate.hauth.authentication;
 
 import com.asofdate.hauth.dto.LoginMsgDto;
+import com.asofdate.utils.CryptoAES;
 import com.asofdate.utils.Hret;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -17,8 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.asofdate.utils.CryptoAES.aesEncrypt;
 
 /**
  * Created by hzwy23 on 2017/5/18.
@@ -40,7 +39,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         if (password != null) {
-            password = aesEncrypt(password);
+            password = CryptoAES.getInstance().aesEncrypt(password);
         }
 
         // 返回一个验证令牌

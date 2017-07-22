@@ -27,6 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 关闭csrf验证
         http.csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
                 // 对请求进行认证
                 .authorizeRequests()
                 // 所有 / 的所有请求 都放行

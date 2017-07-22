@@ -6,6 +6,8 @@ import com.asofdate.hauth.service.UserDetailsService;
 import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.CryptoAES;
 import com.asofdate.utils.Hret;
+import com.asofdate.utils.RetMsg;
+import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 public class ThemeController {
     private final static Logger logger = LoggerFactory.getLogger(SystemPageController.class);
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     @Autowired
-    public UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
     @Autowired
     private SqlText sqlText;
 
@@ -40,36 +42,24 @@ public class ThemeController {
     public String changeTheme(HttpServletResponse response, HttpServletRequest request) {
         String themeId = request.getParameter("theme_id");
 
-        Authentication authentication = JwtService
-                .getAuthentication((HttpServletRequest) request);
-        String username = authentication.getName();
-        logger.info("request user id is:" + username);
-        try {
-            int code = jdbcTemplate.update(sqlText.getSql("sys_rdbms_024"), themeId, username);
-            if (1 == code) {
-                return Hret.success(200, "modify theme info successfully", null);
-            } else {
-                response.setStatus(421);
-                return Hret.error(421, "modify user theme failed", null);
-            }
-        } catch (DataAccessException e) {
-            logger.info(e.getMessage());
-            response.setStatus(422);
-            return Hret.error(422, e.getMessage(), null);
+        String username = JwtService.getConnUser(request).getUserId();
+        logger.debug("request user id is:" + username);
+        RetMsg retMsg = userDetailsService.changeTheme(themeId,username);
+        if (retMsg.checkCode()) {
+            return Hret.success(retMsg);
         }
-
+        response.setStatus(retMsg.getCode());
+        return Hret.error(retMsg);
     }
 
     @RequestMapping(value = "/v1/auth/passwd/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public String changePasswd(HttpServletResponse response, HttpServletRequest request) {
-        String msg = "modify user password success";
-        Authentication authentication = JwtService
-                .getAuthentication((HttpServletRequest) request);
-        String username = authentication.getName();
+
+        String username = JwtService.getConnUser(request).getUserId();
         String userId = request.getParameter("userid");
         if (!username.equals(userId)) {
-            msg = "forbin change other user's password";
+            String msg = "forbin change other user's password";
             response.setStatus(421);
             logger.info(msg);
             return Hret.error(421, msg, null);
@@ -78,47 +68,45 @@ public class ThemeController {
         String newPassword = request.getParameter("newpasswd");
         String confirmPassword = request.getParameter("surepasswd");
         if (!newPassword.equals(confirmPassword)) {
-            msg = "new password and comfirm password is not same. please check your new passwod and confirm password";
+            String msg = "new password and comfirm password is not same. please check your new passwod and confirm password";
             response.setStatus(421);
             logger.info(msg);
             return Hret.error(421, msg, null);
         }
 
         if (newPassword == null || newPassword.length() < 6) {
-            msg = "new password length must greater than 6 and can not be empty.";
+            String msg = "new password length must greater than 6 and can not be empty.";
             response.setStatus(421);
             logger.info(msg);
             return Hret.error(421, msg, null);
         }
 
         if (newPassword.length() > 30) {
-            msg = "new password length must less than 30";
+            String msg = "new password length must less than 30";
             response.setStatus(421);
             logger.info(msg);
             return Hret.error(421, msg, null);
         }
 
-        oldPassword = CryptoAES.aesEncrypt(oldPassword);
-        newPassword = CryptoAES.aesEncrypt(newPassword);
+        oldPassword = CryptoAES.getInstance().aesEncrypt(oldPassword);
+        newPassword = CryptoAES.getInstance().aesEncrypt(newPassword);
 
-        int code = jdbcTemplate.update(sqlText.getSql("sys_rdbms_014"), newPassword, userId, oldPassword);
-        if (1 == code) {
-            response.setStatus(200);
+        RetMsg retMsg = userDetailsService.changePassword(newPassword, userId, oldPassword);
+        if (retMsg.checkCode()) {
             logger.info("modify user password successfully, user id is :" + username);
-            return Hret.success(200, msg, null);
-        } else {
-            response.setStatus(421);
-            logger.debug("user id is not exists or old password is not right.");
-            return Hret.error(421, msg, null);
+            return Hret.success(retMsg);
         }
+
+        response.setStatus(retMsg.getCode());
+        logger.debug("user id is not exists or old password is not right.");
+        return Hret.error(retMsg);
+
     }
 
     @RequestMapping(value = "/v1/auth/user/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public UserDetailsEntity getUserDetailsInfo(HttpServletRequest request) {
-        Authentication authentication = JwtService
-                .getAuthentication((HttpServletRequest) request);
-        String username = authentication.getName();
+        String username = JwtService.getConnUser(request).getUserId();
         logger.debug("check user details info. user id is : " + username);
         return userDetailsService.findById(username);
     }

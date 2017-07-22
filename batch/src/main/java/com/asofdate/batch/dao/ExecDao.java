@@ -13,5 +13,5 @@ public interface ExecDao {
 
     List<ExecLogEntity> query(String id, String jobId);
 
-    int init(BatchRunConfDto confDto);
+    void init(BatchRunConfDto confDto);
 }

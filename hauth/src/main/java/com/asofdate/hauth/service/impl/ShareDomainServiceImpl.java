@@ -74,4 +74,14 @@ public class ShareDomainServiceImpl implements ShareDomainService {
             return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, "更新信息失败，参数不符合要求，请联系管理员", null);
         }
     }
+
+    @Override
+    public int getAuthLevel(String domainId, String userDomainId) {
+        try {
+            return shareDomainDao.getAuthLevel(domainId,userDomainId);
+        } catch (DataAccessException e) {
+            logger.info("异常消息是；{}", e.getMessage());
+            return -1;
+        }
+    }
 }

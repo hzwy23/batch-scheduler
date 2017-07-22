@@ -18,4 +18,6 @@ public interface ShareDomainService {
     RetMsg delete(List<ShareDomainEntity> list);
 
     RetMsg update(ShareDomainEntity shareDomainEntity);
+
+    int getAuthLevel(String domainId, String userDomainId);
 }

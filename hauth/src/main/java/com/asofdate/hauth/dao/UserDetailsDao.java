@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface UserDetailsDao {
     List findById(String userId);
+    int changePasswd(String newPasswd, String userId, String oldPasswd);
 }

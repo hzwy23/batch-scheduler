@@ -10,6 +10,7 @@ import com.asofdate.utils.factory.RetMsgFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,12 +50,9 @@ public class ExecServiceImpl implements ExecService {
     @Override
     public RetMsg init(BatchRunConfDto confDto) {
         try {
-            int size = execDao.init(confDto);
-            if (1 == size) {
-                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
-            }
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "初始化执行记录表失败，请联系管理员", null);
-        } catch (Exception e) {
+            execDao.init(confDto);
+            return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
+        } catch (DataAccessException e) {
             return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), confDto.getBatchId());
         }
     }
