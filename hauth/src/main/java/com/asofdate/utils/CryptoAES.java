@@ -1,8 +1,9 @@
 package com.asofdate.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
  * Created by hzwy23 on 2017/5/16.
  */
 public class CryptoAES {
+    private final Logger logger = LoggerFactory.getLogger(CryptoAES.class);
+
     private final String PASSWORD_KEY = "hzwy23@hustwb09y";
 
     private static CryptoAES INSTANCE = new CryptoAES();
@@ -65,7 +68,7 @@ public class CryptoAES {
             return new BASE64Encoder().encode(encrypted);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("aesEncrypt failure ,error message is:{}",e.getMessage());
         }
         return null;
     }
@@ -93,7 +96,7 @@ public class CryptoAES {
             int ch = originalString.charAt(length - 1);
             return originalString.substring(0, length - ch);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("aesDecrypt failure ,error message is:{}",e.getMessage());
         }
         return null;
     }
@@ -121,25 +124,10 @@ public class CryptoAES {
             }
             return new String(buf);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error("gen sha1 failure. message is:{}",e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("gen sha1 failure. message is:{}",e.getMessage());
         }
         return String.valueOf(System.currentTimeMillis());
     }
-
-//    public static void main(String []args){
-//        String content = "123456";
-//        System.out.println("加密之前：" + content);
-//
-//        // 加密
-//        String encrypt = aesEncrypt(content);
-//        System.out.println("加密后的内容：" + encrypt);
-//        // u9KHSP2NtcTkCklrKJctlg==
-//        // MOmj8rUH7WtHjJiOuJI0wQ==
-//        // 解密
-//        String decrypt = aesDecrypt(encrypt);
-//        System.out.println("解密后的内容：" + decrypt);
-//        System.out.println("解密后的内容长度是：" + decrypt.length());
-//    }
 }

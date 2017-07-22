@@ -1,5 +1,8 @@
 package com.asofdate.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +11,8 @@ import java.util.Date;
  * Created by hzwy23 on 2017/7/10.
  */
 public class TimeFormat {
+
+    private static final Logger logger = LoggerFactory.getLogger(TimeFormat.class);
 
     public static String formatTime(String as_of_date) {
         SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -19,7 +24,7 @@ public class TimeFormat {
             Date date = sdfTime.parse(as_of_date);
             return sdfTime.format(date);
         } catch (ParseException e) {
-            System.out.println("as_of_date type is not yyyy-MM-dd HH:mm:ss," + as_of_date + "," + e.getMessage());
+            logger.warn("date【{}】 format is not yyyy-MM-dd HH:mm:ss",as_of_date);
             return as_of_date;
         }
     }
@@ -34,7 +39,7 @@ public class TimeFormat {
             Date date = sdfDate.parse(as_of_date);
             return sdfDate.format(date);
         } catch (ParseException e) {
-            System.out.println("as_of_date type is not yyyy-MM-dd," + as_of_date + "," + e.getMessage());
+            logger.warn("date【{}】 format is not yyyy-MM-dd",as_of_date);
             return as_of_date;
         }
     }
