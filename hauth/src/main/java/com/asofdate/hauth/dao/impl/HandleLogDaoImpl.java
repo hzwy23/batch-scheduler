@@ -24,17 +24,17 @@ public class HandleLogDaoImpl implements HandleLogDao {
     @Override
     public List<HandleLogEntity> findAll(String domainId) {
         RowMapper<HandleLogEntity> rowMapper = new BeanPropertyRowMapper<>(HandleLogEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_012"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys012"), rowMapper, domainId);
     }
 
     @Override
     public List<HandleLogEntity> findAll(String domainId, Integer offset, Integer limit) {
         RowMapper<HandleLogEntity> rowMapper = new BeanPropertyRowMapper<>(HandleLogEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_029"), rowMapper, domainId, offset, limit);
+        return jdbcTemplate.query(sqlText.getSql("sys029"), rowMapper, domainId, offset, limit);
     }
 
     @Override
     public Integer getTotal(String domainId) {
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_030"), Integer.class, domainId);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys030"), Integer.class, domainId);
     }
 }

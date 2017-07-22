@@ -25,20 +25,20 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public List<DomainEntity> findAll() {
         RowMapper<DomainEntity> rowMapper = new BeanPropertyRowMapper<>(DomainEntity.class);
-        List<DomainEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_118"), rowMapper);
+        List<DomainEntity> list = jdbcTemplate.query(sqlText.getSql("sys118"), rowMapper);
         return list;
     }
 
     @Override
     public List<DomainEntity> getAll() {
         RowMapper<DomainEntity> rowMapper = new BeanPropertyRowMapper<>(DomainEntity.class);
-        List<DomainEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_025"), rowMapper);
+        List<DomainEntity> list = jdbcTemplate.query(sqlText.getSql("sys025"), rowMapper);
         return list;
     }
 
     @Override
     public int update(DomainEntity domainEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_038"),
+        return jdbcTemplate.update(sqlText.getSql("sys038"),
                 domainEntity.getDomainDesc(),
                 domainEntity.getDomainStatusId(),
                 domainEntity.getDomainModifyUser(),
@@ -49,14 +49,14 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public int delete(List<DomainEntity> list) {
         for (DomainEntity m : list) {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_037"), m.getDomainId());
+            jdbcTemplate.update(sqlText.getSql("sys037"), m.getDomainId());
         }
         return 1;
     }
 
     @Override
     public int add(DomainEntity domainEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_036"),
+        return jdbcTemplate.update(sqlText.getSql("sys036"),
                 domainEntity.getDomainId(),
                 domainEntity.getDomainDesc(),
                 domainEntity.getDomainStatusId(),
@@ -67,6 +67,6 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public DomainEntity getDomainDetails(String domainId) {
         BeanPropertyRowMapper<DomainEntity> rowMapper = BeanPropertyRowMapper.newInstance(DomainEntity.class);
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_084"), rowMapper, domainId);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys084"), rowMapper, domainId);
     }
 }

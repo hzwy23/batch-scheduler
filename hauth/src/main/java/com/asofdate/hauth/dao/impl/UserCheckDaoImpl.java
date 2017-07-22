@@ -24,7 +24,7 @@ public class UserCheckDaoImpl implements UserCheckDao {
 
     @Override
     public List findByUserId(String user_id) {
-        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_001"), new RowMapper() {
+        List list = jdbcTemplate.query(sqlText.getSql("sys001"), new RowMapper() {
             @Override
             public Object mapRow(ResultSet resultSet, int i) throws SQLException {
                 UserLoginEntity uc = new UserLoginEntity();

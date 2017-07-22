@@ -24,12 +24,12 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
     @Override
     public List findById(String userId) {
         RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
-        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_023"), rowMapper, userId);
+        List list = jdbcTemplate.query(sqlText.getSql("sys023"), rowMapper, userId);
         return list;
     }
 
     @Override
     public int changePasswd(String newPasswd, String userId, String oldPasswd) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_014"), newPasswd, userId, oldPasswd);
+        return jdbcTemplate.update(sqlText.getSql("sys014"), newPasswd, userId, oldPasswd);
     }
 }

@@ -24,7 +24,7 @@ public class ThemeResourceDaoImpl implements ThemeResourceDao {
     @Override
     public List findByThemeId(String themeId) {
         RowMapper<ThemeResourceEntity> rowMapper = new BeanPropertyRowMapper<ThemeResourceEntity>(ThemeResourceEntity.class);
-        List<ThemeResourceEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_101"), rowMapper, themeId);
+        List<ThemeResourceEntity> list = jdbcTemplate.query(sqlText.getSql("sys101"), rowMapper, themeId);
         return list;
     }
 }

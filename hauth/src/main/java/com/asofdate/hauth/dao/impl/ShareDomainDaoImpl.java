@@ -31,18 +31,18 @@ public class ShareDomainDaoImpl implements ShareDomainDao {
     @Override
     public List<ShareDomainEntity> findAll(String domainId) {
         RowMapper<ShareDomainEntity> rowMapper = new BeanPropertyRowMapper<>(ShareDomainEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_083"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys083"), rowMapper, domainId);
     }
 
     @Override
     public List<ShareDomainEntity> unShareTarget(String domainId) {
         RowMapper<ShareDomainEntity> rowMapper = new BeanPropertyRowMapper<>(ShareDomainEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_085"), rowMapper, domainId, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys085"), rowMapper, domainId, domainId);
     }
 
     @Override
     public int add(ShareDomainEntity shareDomainEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_086"),
+        return jdbcTemplate.update(sqlText.getSql("sys086"),
                 shareDomainEntity.getDomain_id(),
                 shareDomainEntity.getTarget_domain_id(),
                 shareDomainEntity.getAuthorization_level(),
@@ -54,14 +54,14 @@ public class ShareDomainDaoImpl implements ShareDomainDao {
     @Override
     public int delete(List<ShareDomainEntity> list) {
         for (ShareDomainEntity m : list) {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_087"), m.getUuid());
+            jdbcTemplate.update(sqlText.getSql("sys087"), m.getUuid());
         }
         return 1;
     }
 
     @Override
     public int update(ShareDomainEntity shareDomainEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_088"),
+        return jdbcTemplate.update(sqlText.getSql("sys088"),
                 shareDomainEntity.getAuthorization_level(),
                 shareDomainEntity.getModify_user(),
                 shareDomainEntity.getUuid());
@@ -69,19 +69,19 @@ public class ShareDomainDaoImpl implements ShareDomainDao {
 
     @Override
     public int getAuthLevel(String domainId, String userDomainId) {
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_010"), Integer.class, domainId, userDomainId);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys010"), Integer.class, domainId, userDomainId);
     }
 
     @Override
     public List<DomainShareEntity> findShareTo(String domainId) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_117"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys117"), rowMapper, domainId);
     }
 
     @Override
     public Set<String> findShareDomain(String targetDomainId) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        List<DomainShareEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_116"), rowMapper, targetDomainId);
+        List<DomainShareEntity> list = jdbcTemplate.query(sqlText.getSql("sys116"), rowMapper, targetDomainId);
 
         Set<String> set = new HashSet<>();
         set.add(targetDomainId);

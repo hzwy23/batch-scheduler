@@ -99,11 +99,11 @@ public class HomeMenuDaoImpl implements HomeMenuDao {
 
     @Override
     public String getSubSystemUrl(String username, String resId) {
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_011"), String.class, username, resId);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys011"), String.class, username, resId);
     }
 
     @Override
     public String getHomeUrl(String username) {
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_078"), String.class, username);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys078"), String.class, username);
     }
 }

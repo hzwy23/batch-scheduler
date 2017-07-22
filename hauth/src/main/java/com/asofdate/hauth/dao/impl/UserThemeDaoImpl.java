@@ -18,12 +18,12 @@ public class UserThemeDaoImpl implements UserThemeDao {
 
     @Override
     public String findById(String userId) {
-        String themeId = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_103"), String.class, userId);
+        String themeId = jdbcTemplate.queryForObject(sqlText.getSql("sys103"), String.class, userId);
         return themeId;
     }
 
     @Override
     public int changeTheme(String themeId, String username) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_024"), themeId, username);
+        return jdbcTemplate.update(sqlText.getSql("sys024"), themeId, username);
     }
 }

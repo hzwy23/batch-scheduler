@@ -68,7 +68,7 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     @Override
     public int add(UserEntity userEntity) {
-        jdbcTemplate.update(sqlText.getSql("sys_rdbms_018"),
+        jdbcTemplate.update(sqlText.getSql("sys018"),
                 userEntity.getUserId(),
                 userEntity.getUserName(),
                 userEntity.getCreateUser(),
@@ -77,7 +77,7 @@ public class UserDaoImpl implements UserDao {
                 userEntity.getOrgUnitId(),
                 userEntity.getModifyUser());
         String password = CryptoAES.getInstance().aesEncrypt(userEntity.getUserPasswd());
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_019"),
+        return jdbcTemplate.update(sqlText.getSql("sys019"),
                 userEntity.getUserId(), password, 0);
     }
 
@@ -85,7 +85,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int delete(List<UserEntity> list) {
         for (UserEntity m : list) {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_007"),
+            jdbcTemplate.update(sqlText.getSql("sys007"),
                     m.getUserId(),
                     m.getOrgUnitId());
         }
@@ -94,7 +94,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int update(UserEntity userEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_021"),
+        return jdbcTemplate.update(sqlText.getSql("sys021"),
                 userEntity.getUserName(),
                 userEntity.getUserPhone(),
                 userEntity.getUserEmail(),
@@ -108,12 +108,12 @@ public class UserDaoImpl implements UserDao {
         String userId = m.getUserId();
         String newPd = m.getNewPasswd();
         String passwd = CryptoAES.getInstance().aesEncrypt(newPd);
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_015"),
+        return jdbcTemplate.update(sqlText.getSql("sys015"),
                 passwd, userId);
     }
 
     @Override
     public int changeStatus(String userId, String status) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_016"), status, userId);
+        return jdbcTemplate.update(sqlText.getSql("sys016"), status, userId);
     }
 }

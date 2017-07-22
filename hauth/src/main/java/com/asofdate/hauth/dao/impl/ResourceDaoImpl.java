@@ -25,7 +25,7 @@ public class ResourceDaoImpl implements ResourceDao {
     @Override
     public List findAll() {
         RowMapper<ResourceEntity> rowMapper = new BeanPropertyRowMapper<ResourceEntity>(ResourceEntity.class);
-        List list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_071"), rowMapper);
+        List list = jdbcTemplate.query(sqlText.getSql("sys071"), rowMapper);
         return list;
     }
 

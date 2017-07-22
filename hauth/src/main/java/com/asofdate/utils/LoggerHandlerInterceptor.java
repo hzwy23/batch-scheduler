@@ -49,7 +49,7 @@ public class LoggerHandlerInterceptor implements HandlerInterceptor {
         Map<String, String[]> map = httpServletRequest.getParameterMap();
         Map<String, String> dt = parseJSON(map);
         String dtvalue = new GsonBuilder().create().toJson(dt);
-        jdbcTemplate.update(sqlText.getSql("sys_rdbms_207"), userId, clientIp, statuCd, method, uri, dtvalue, domainId);
+        jdbcTemplate.update(sqlText.getSql("sys207"), userId, clientIp, statuCd, method, uri, dtvalue, domainId);
     }
 
     private Map<String, String> parseJSON(Map<String, String[]> map) {

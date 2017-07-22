@@ -25,7 +25,7 @@ public class UserResourceDaoImpl implements UserResourceDao {
     @Override
     public Set<String> findAll(String userId) {
         Set<String> set = new HashSet<>();
-        jdbcTemplate.query(sqlText.getSql("sys_rdbms_115"), new RowCallbackHandler() {
+        jdbcTemplate.query(sqlText.getSql("sys115"), new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet resultSet) throws SQLException {
                 set.add(resultSet.getString("res_id"));

@@ -30,25 +30,25 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public List<RoleEntity> findAll(String domainId) {
         RowMapper<RoleEntity> rowMapper = new BeanPropertyRowMapper<>(RoleEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_028"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys028"), rowMapper, domainId);
     }
 
     @Override
     public RoleEntity getDetails(String roleId) {
         RowMapper<RoleEntity> rowMapper = BeanPropertyRowMapper.newInstance(RoleEntity.class);
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_208"), rowMapper, roleId);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys208"), rowMapper, roleId);
     }
 
     @Override
     public List<RoleEntity> getOther(String userId) {
         RowMapper<RoleEntity> rowMapper = new BeanPropertyRowMapper<>(RoleEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_095"), rowMapper, userId);
+        return jdbcTemplate.query(sqlText.getSql("sys095"), rowMapper, userId);
     }
 
     @Override
     public List<RoleEntity> getOwner(String userId) {
         RowMapper<RoleEntity> rowMapper = new BeanPropertyRowMapper<>(RoleEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_094"), rowMapper, userId);
+        return jdbcTemplate.query(sqlText.getSql("sys094"), rowMapper, userId);
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class RoleDaoImpl implements RoleDao {
             String userId = m.getUserId();
             String roleId = m.getRoleId();
             String uuid = JoinCode.join(userId, roleId);
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_096"), uuid, roleId, userId, modifyUserId);
+            jdbcTemplate.update(sqlText.getSql("sys096"), uuid, roleId, userId, modifyUserId);
         }
         return 1;
     }
@@ -71,7 +71,7 @@ public class RoleDaoImpl implements RoleDao {
             String roleId = m.getRoleId();
             String uuid = JoinCode.join(userId, roleId);
             try {
-                jdbcTemplate.update(sqlText.getSql("sys_rdbms_096"), uuid, roleId, userId, modifyUserId);
+                jdbcTemplate.update(sqlText.getSql("sys096"), uuid, roleId, userId, modifyUserId);
             } catch (Exception e) {
                 logger.info("用户[{}]已经拥有了角色[{}],无需重复授权", userId, roleId);
                 logger.info(e.getMessage());
@@ -87,14 +87,14 @@ public class RoleDaoImpl implements RoleDao {
             String userId = m.getUserId();
             String roleId = m.getRoleId();
             String uuid = JoinCode.join(userId, roleId);
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_097"), uuid);
+            jdbcTemplate.update(sqlText.getSql("sys097"), uuid);
         }
         return 1;
     }
 
     @Override
     public int add(RoleEntity roleEntity) {
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_026"),
+        return jdbcTemplate.update(sqlText.getSql("sys026"),
                 roleEntity.getRole_id(),
                 roleEntity.getRole_name(),
                 roleEntity.getCreate_user(),
@@ -109,7 +109,7 @@ public class RoleDaoImpl implements RoleDao {
         for (RoleEntity m : list) {
             String roleId = m.getRole_id();
             String domainId = m.getDomain_id();
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_027"), roleId, domainId);
+            jdbcTemplate.update(sqlText.getSql("sys027"), roleId, domainId);
         }
         return 1;
     }
@@ -121,7 +121,7 @@ public class RoleDaoImpl implements RoleDao {
                 roleEntity.getRole_status_code(),
                 roleEntity.getModify_user(),
                 roleEntity.getRole_id());
-        return jdbcTemplate.update(sqlText.getSql("sys_rdbms_050"),
+        return jdbcTemplate.update(sqlText.getSql("sys050"),
                 roleEntity.getRole_name(),
                 roleEntity.getRole_status_code(),
                 roleEntity.getModify_user(),

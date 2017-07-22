@@ -34,13 +34,13 @@ public class MenuDaoImpl implements MenuDao {
     @Override
     public List<MenuEntity> findAll() {
         RowMapper<MenuEntity> rowMapper = new BeanPropertyRowMapper<>(MenuEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_071"), rowMapper);
+        return jdbcTemplate.query(sqlText.getSql("sys071"), rowMapper);
     }
 
     @Override
     public MenuEntity getDetails(String resId) {
         RowMapper<MenuEntity> rowMapper = new BeanPropertyRowMapper<>(MenuEntity.class);
-        List<MenuEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_089"), rowMapper, resId);
+        List<MenuEntity> list = jdbcTemplate.query(sqlText.getSql("sys089"), rowMapper, resId);
         if (list.size() == 1) {
             return list.get(0);
         }
@@ -51,7 +51,7 @@ public class MenuDaoImpl implements MenuDao {
     @Override
     public String add(ThemeValueEntity themeValueEntity) {
         try {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_072"),
+            jdbcTemplate.update(sqlText.getSql("sys072"),
                     themeValueEntity.getRes_id(),
                     themeValueEntity.getRes_name(),
                     themeValueEntity.getRes_attr(),
@@ -60,7 +60,7 @@ public class MenuDaoImpl implements MenuDao {
 
             String resType = themeValueEntity.getRes_type();
             if ("0".equals(resType) || "1".equals(resType) || "2".equals(resType)) {
-                jdbcTemplate.update(sqlText.getSql("sys_rdbms_008"),
+                jdbcTemplate.update(sqlText.getSql("sys008"),
                         themeValueEntity.getTheme_id(),
                         themeValueEntity.getRes_id(),
                         themeValueEntity.getRes_url(),
@@ -84,9 +84,9 @@ public class MenuDaoImpl implements MenuDao {
     public String delete(String resId) {
         List<ResourceEntity> list = resourceDao.findSubByUpId(resId);
         try {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_077"), resId);
+            jdbcTemplate.update(sqlText.getSql("sys077"), resId);
             for (ResourceEntity m : list) {
-                jdbcTemplate.update(sqlText.getSql("sys_rdbms_077"), m.getRes_id());
+                jdbcTemplate.update(sqlText.getSql("sys077"), m.getRes_id());
             }
             return "success";
         } catch (Exception e) {
@@ -97,14 +97,14 @@ public class MenuDaoImpl implements MenuDao {
 
     @Override
     public String update(String resId, String resDesc, String resUpId) {
-        jdbcTemplate.update(sqlText.getSql("sys_rdbms_005"), resDesc, resUpId, resId);
+        jdbcTemplate.update(sqlText.getSql("sys005"), resDesc, resUpId, resId);
         return "success";
     }
 
     @Override
     public ThemeValueEntity getThemeDetails(String themeId, String resId) {
         RowMapper<ThemeValueEntity> rowMapper = new BeanPropertyRowMapper<>(ThemeValueEntity.class);
-        List<ThemeValueEntity> list = jdbcTemplate.query(sqlText.getSql("sys_rdbms_070"), rowMapper, themeId, resId);
+        List<ThemeValueEntity> list = jdbcTemplate.query(sqlText.getSql("sys070"), rowMapper, themeId, resId);
         if (list.size() == 1) {
             return list.get(0);
         }
@@ -115,10 +115,10 @@ public class MenuDaoImpl implements MenuDao {
     public String updateTheme(ThemeValueEntity themeValueEntity) {
         String resId = themeValueEntity.getRes_id();
         String themeId = themeValueEntity.getTheme_id();
-        Integer cnt = jdbcTemplate.queryForObject(sqlText.getSql("sys_rdbms_006"), Integer.class, themeId, resId);
+        Integer cnt = jdbcTemplate.queryForObject(sqlText.getSql("sys006"), Integer.class, themeId, resId);
         if (cnt == 0) {
             try {
-                jdbcTemplate.update(sqlText.getSql("sys_rdbms_008"),
+                jdbcTemplate.update(sqlText.getSql("sys008"),
                         themeValueEntity.getTheme_id(),
                         themeValueEntity.getRes_id(),
                         themeValueEntity.getRes_url(),
@@ -135,7 +135,7 @@ public class MenuDaoImpl implements MenuDao {
             }
         }
         try {
-            jdbcTemplate.update(sqlText.getSql("sys_rdbms_009"),
+            jdbcTemplate.update(sqlText.getSql("sys009"),
                     themeValueEntity.getRes_url(),
                     themeValueEntity.getRes_bg_color(),
                     themeValueEntity.getRes_class(),
