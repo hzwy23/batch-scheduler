@@ -2,7 +2,7 @@ package com.asofdate.hauth.authentication;
 
 import com.asofdate.hauth.dto.RequestUserDto;
 import com.asofdate.hauth.entity.UserDetailsEntity;
-import com.asofdate.hauth.service.UserDetailsService;
+import com.asofdate.hauth.service.UserService;
 import com.asofdate.utils.Hret;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,7 +38,7 @@ public class JwtService {
     private static String JWT_ROLES = "ROLE_ADMIN,AUTH_WRITE,ACTUATOR";
 
     @Autowired
-    public UserDetailsService userDetailsService;
+    public UserService userDetailsService;
 
     private static String getTokenFromCookis(HttpServletRequest request) {
         Cookie[] cookie = request.getCookies();

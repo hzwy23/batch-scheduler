@@ -2,6 +2,7 @@ package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.dto.UserDTO;
+import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.entity.UserEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.UserService;
@@ -9,9 +10,12 @@ import com.asofdate.utils.Hret;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +29,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/auth/user")
 @Api("用户信息管理")
 public class UserController {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -125,6 +130,14 @@ public class UserController {
             return Hret.error(421, "新增用户失败,账号已存在", null);
         }
         return Hret.success(200, "success", null);
+    }
+
+    @RequestMapping(value = "/query", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public UserDetailsEntity getUserDetailsInfo(HttpServletRequest request) {
+        String username = JwtService.getConnUser(request).getUserId();
+        logger.debug("check user details info. user id is : " + username);
+        return userService.findById(username);
     }
 
     private UserEntity parse(HttpServletRequest request) {

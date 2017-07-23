@@ -1,6 +1,7 @@
 package com.asofdate.hauth.dao;
 
 import com.asofdate.hauth.dto.UserDTO;
+import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.entity.UserEntity;
 
 import java.util.List;
@@ -22,4 +23,8 @@ public interface UserDao {
     int changePassword(UserDTO m);
 
     int changeStatus(String userId, String status);
+
+    UserDetailsEntity findById(String userId);
+
+    int changePasswd(String newPasswd, String userId, String oldPasswd);
 }

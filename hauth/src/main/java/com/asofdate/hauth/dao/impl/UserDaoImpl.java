@@ -4,6 +4,7 @@ import com.asofdate.hauth.dao.OrgDao;
 import com.asofdate.hauth.dao.UserDao;
 import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.OrgEntity;
+import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.entity.UserEntity;
 import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.CryptoAES;
@@ -34,7 +35,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<UserEntity> findAll(String domainid) {
         RowMapper<UserEntity> rowMapper = new BeanPropertyRowMapper<>(UserEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys_rdbms_017"), rowMapper, domainid);
+        return jdbcTemplate.query(sqlText.getSql("sys017"), rowMapper, domainid);
     }
 
     @Override
@@ -115,5 +116,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int changeStatus(String userId, String status) {
         return jdbcTemplate.update(sqlText.getSql("sys016"), status, userId);
+    }
+
+    @Override
+    public UserDetailsEntity findById(String userId) {
+        RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys023"), rowMapper, userId);
+    }
+
+    @Override
+    public int changePasswd(String newPasswd, String userId, String oldPasswd) {
+        return jdbcTemplate.update(sqlText.getSql("sys014"), newPasswd, userId, oldPasswd);
     }
 }
