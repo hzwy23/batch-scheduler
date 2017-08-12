@@ -53,19 +53,19 @@ public class IdentifyController {
 
         boolean flag = JwtService.identify(token);
         if (flag){
-            try {
-                logger.info("token验证通过，客户端地址：{}",request.getRemoteAddr());
-                response.sendRedirect("/HomePage");
+//            try {
+                logger.info("token验证通过，客户端地址：{}", request.getRemoteAddr());
+                //response.sendRedirect("/HomePage");
                 response.setHeader(HEADER_STRING, token);
                 response.addCookie(new Cookie(HEADER_STRING, token));
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-                try {
-                    response.getOutputStream().println("重定向到【/HomePage】失败");
-                } catch (IOException e1) {
-                    logger.error(e.getMessage());
-                }
-            }
+//            } catch (IOException e) {
+//                logger.error(e.getMessage());
+//                try {
+//                    response.getOutputStream().println("重定向到【/HomePage】失败");
+//                } catch (IOException e1) {
+//                    logger.error(e.getMessage());
+//                }
+//            }
         } else {
             logger.info("token无效");
             try {
