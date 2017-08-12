@@ -34,13 +34,12 @@ public class ArgumentController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<ArgumentDefineEntity> getArgumentDefine(HttpServletRequest request) {
+    public List<ArgumentDefineEntity> getArgumentDefine(HttpServletResponse response,HttpServletRequest request) {
         String domainId = request.getParameter("domain_id");
         if (domainId == null) {
             domainId = JwtService.getConnUser(request).getDomainID();
         }
-        List<ArgumentDefineEntity> list = argumentService.findAll(domainId);
-        return list;
+        return argumentService.findAll(domainId);
     }
 
     @RequestMapping(method = RequestMethod.POST)

@@ -4,9 +4,7 @@ import com.asofdate.hauth.dto.RequestUserDto;
 import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.service.UserService;
 import com.asofdate.utils.Hret;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class JwtService {
     @Autowired
     public UserService userDetailsService;
 
-    private static String getTokenFromCookis(HttpServletRequest request) {
+    public static String getTokenFromCookis(HttpServletRequest request) {
         Cookie[] cookie = request.getCookies();
         if (cookie != null) {
             for (int i = 0; i < cookie.length; i++) {
@@ -117,6 +115,21 @@ public class JwtService {
             return user != null ? new UsernamePasswordAuthenticationToken(user, null, authorities) : null;
         }
         return null;
+    }
+
+    public static boolean identify(String token){
+        if (token != null) {
+            // 解析 Token
+            try {
+                Jwts.parser().setSigningKey(SECRET)
+                        .parseClaimsJws(token);
+                return true;
+            }catch (ExpiredJwtException| UnsupportedJwtException| MalformedJwtException| SignatureException| IllegalArgumentException e){
+                logger.error(e.getMessage());
+                return false;
+            }
+        }
+        return false;
     }
 
     public static RequestUserDto getConnUser(HttpServletRequest request) {

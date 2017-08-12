@@ -27,12 +27,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 关闭csrf验证
         http.csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
+                //.headers().frameOptions().disable()
+                //.and()
                 // 对请求进行认证
                 .authorizeRequests()
                 // 所有 / 的所有请求 都放行
                 .antMatchers("/").permitAll()
+                .antMatchers("/v1/batch/identify").permitAll()
                 .antMatchers("/bootstrap-3.3.7-dist/**", "/bootstrap-switch-master/**").permitAll()
                 .antMatchers("/bootstrap-table/**", "/Font-Awesome-3.2.1/**", "/favicon.ico").permitAll()
                 .antMatchers("/images/**", "/css/**", "/js/**", "/laydate/**", "/nprogress/**").permitAll()
