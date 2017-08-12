@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +19,7 @@ import java.io.IOException;
 /**
  * Created by hzwy23 on 2017/5/16.
  */
-@RestController
+@Controller
 @Api("安全退出管理")
 public class IdentifyController {
     private final Logger logger = LoggerFactory.getLogger(IdentifyController.class);
@@ -36,8 +37,7 @@ public class IdentifyController {
 
 
     @RequestMapping(value = "/v1/batch/identify")
-    @ResponseBody
-    public void identify(HttpServletResponse response, HttpServletRequest request){
+    public String identify(HttpServletResponse response, HttpServletRequest request){
         String token = request.getParameter("token");
         if (token == null || token.isEmpty()){
             token = request.getHeader(HEADER_STRING);
@@ -49,27 +49,20 @@ public class IdentifyController {
                     } catch (IOException e) {
                         logger.error(e.getMessage());
                     }
-                    return;
+                    return "";
                 }
             }
         }
 
         boolean flag = JwtService.identify(token);
         if (flag){
-            try {
-                logger.info("token验证通过，客户端地址：{}", request.getRemoteAddr());
-                //response.sendRedirect("/HomePage");
-                response.setHeader(HEADER_STRING, token);
-                response.addCookie(new Cookie(HEADER_STRING, token));
-                response.getOutputStream().println("<html><script>window.location.href='/HomePage'</script></html>");
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-                try {
-                    response.getOutputStream().println("重定向到【/HomePage】失败");
-                } catch (IOException e1) {
-                    logger.error(e.getMessage());
-                }
-            }
+
+            logger.info("token验证通过，客户端地址：{}", request.getRemoteAddr());
+            //response.sendRedirect("/HomePage");
+            response.setHeader(HEADER_STRING, token);
+            response.addCookie(new Cookie(HEADER_STRING, token));
+            return "redirect";
+
         } else {
             logger.info("token无效");
             try {
@@ -77,6 +70,7 @@ public class IdentifyController {
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
+            return "";
         }
     }
 }
