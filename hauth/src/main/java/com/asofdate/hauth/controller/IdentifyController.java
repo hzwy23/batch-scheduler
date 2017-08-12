@@ -61,7 +61,7 @@ public class IdentifyController {
                 //response.sendRedirect("/HomePage");
                 response.setHeader(HEADER_STRING, token);
                 response.addCookie(new Cookie(HEADER_STRING, token));
-                response.getOutputStream().println("<htmL<script>window.location.href='/HomePage'</script></html>");
+                response.getOutputStream().println("<html><script>window.location.href='/HomePage'</script></html>");
             } catch (IOException e) {
                 logger.error(e.getMessage());
                 try {
