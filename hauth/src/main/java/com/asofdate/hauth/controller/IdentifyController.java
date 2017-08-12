@@ -55,6 +55,9 @@ public class IdentifyController {
         if (flag){
             try {
                 logger.info("token验证通过，客户端地址：{}",request.getRemoteAddr());
+                response.setHeader(HEADER_STRING, token);
+                response.addCookie(new Cookie(HEADER_STRING, token));
+
                 response.sendRedirect("/HomePage");
             } catch (IOException e) {
                 logger.error(e.getMessage());
