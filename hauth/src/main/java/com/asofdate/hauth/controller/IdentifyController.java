@@ -61,7 +61,7 @@ public class IdentifyController {
             try {
                 response.setHeader(HEADER_STRING, token);
                 Cookie cookie = new Cookie(HEADER_STRING, token);
-                cookie.setMaxAge(65536);
+                cookie.setMaxAge(-1);
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 response.sendRedirect("/HomePage");
