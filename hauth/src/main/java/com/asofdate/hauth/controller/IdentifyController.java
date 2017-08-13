@@ -39,7 +39,7 @@ public class IdentifyController {
     @RequestMapping(value = "/v1/batch/identify")
     @ResponseBody
     public void identify(HttpServletResponse response, HttpServletRequest request){
-        String token = request.getParameter("token");
+        String token = request.getParameter("ticket");
         if (token == null || token.isEmpty()){
             token = request.getHeader(HEADER_STRING);
             if (token == null || token.isEmpty()) {
