@@ -37,7 +37,8 @@ public class IdentifyController {
 
 
     @RequestMapping(value = "/v1/batch/identify")
-    public String identify(HttpServletResponse response, HttpServletRequest request){
+    @ResponseBody
+    public void identify(HttpServletResponse response, HttpServletRequest request){
         String token = request.getParameter("token");
         if (token == null || token.isEmpty()){
             token = request.getHeader(HEADER_STRING);
@@ -49,7 +50,7 @@ public class IdentifyController {
                     } catch (IOException e) {
                         logger.error(e.getMessage());
                     }
-                    return "";
+                    return;
                 }
             }
         }
@@ -57,13 +58,17 @@ public class IdentifyController {
         boolean flag = JwtService.identify(token);
         if (flag){
             logger.info("token验证通过，客户端地址：{}", request.getRemoteAddr());
-            //response.sendRedirect("/HomePage");
-            response.setHeader(HEADER_STRING, token);
-            Cookie cookie = new Cookie(HEADER_STRING, token);
-            cookie.setMaxAge(65536);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-            return "redirect";
+            try {
+                response.sendRedirect("/HomePage");
+                response.setHeader(HEADER_STRING, token);
+                Cookie cookie = new Cookie(HEADER_STRING, token);
+                cookie.setMaxAge(-1);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+            return;
 
         } else {
             logger.info("token无效");
@@ -72,7 +77,7 @@ public class IdentifyController {
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
-            return "";
+            return ;
         }
     }
 }
