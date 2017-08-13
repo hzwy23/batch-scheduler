@@ -59,12 +59,12 @@ public class IdentifyController {
         if (flag){
             logger.info("token验证通过，客户端地址：{}", request.getRemoteAddr());
             try {
-                response.sendRedirect("/HomePage");
                 response.setHeader(HEADER_STRING, token);
                 Cookie cookie = new Cookie(HEADER_STRING, token);
                 cookie.setMaxAge(65536);
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                response.sendRedirect("/HomePage");
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
