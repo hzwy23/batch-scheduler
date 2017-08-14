@@ -69,7 +69,6 @@ public class IdentifyController {
                 logger.error(e.getMessage());
             }
             return;
-
         } else {
             logger.info("token无效");
             try {
