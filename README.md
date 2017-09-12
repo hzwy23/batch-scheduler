@@ -1,6 +1,6 @@
 [Wiki Page](https://github.com/hzwy23/asofdate-etl/wiki)
 
-[oschina 极速下载地址](http://git.oschina.net/mirrors/asofdate-etl)
+[oschina 托管地址](http://git.oschina.net/hzwy23/asofdate4etl)
 
 [github 托管地址](https://github.com/asofdate/batch-scheduler)
 
@@ -66,9 +66,9 @@ mysql -uroot -p dbname < mysql_init.sql
 
 spring-boot参数配置文件在application.properties中.请按照spring的规范配置.
 
-默认启动端口号是: 80
+默认启动端口号是: 8023
 
-项目启动后,在浏览器中输入: http://localhost
+项目启动后,在浏览器中输入: http://localhost:8023
 
 登录用户名: admin
 
@@ -78,7 +78,6 @@ spring-boot参数配置文件在application.properties中.请按照spring的规�
 
 密码: 123456
 
-如果没有权限开启80端口, 请修改配置文件,将端口替换成1024以上的端口号.
 
 **编译项目，请确保您能够连接maven仓库**
 ```shell
@@ -88,3 +87,6 @@ mvn clean package -DskipTests=true
 e-mail: hzwy23@163.com
 
 QQ群：118183812
+
+## 修改历史：
+2017-09-12 修改默认端口为8023，关闭https，使用http协议。如需开启https，请修改配置
