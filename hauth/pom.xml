@@ -16,7 +16,7 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>RELEASE</version>
+        	<version>1.5.9</version>
         </dependency>
     </dependencies>
 
