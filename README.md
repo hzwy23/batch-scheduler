@@ -5,6 +5,8 @@
 [github 托管地址](https://github.com/asofdate/batch-scheduler)
 
 
+**新版本开发中，主要涉及到图形化任务流程配置，fork后，请保持联系，随时会有代码更新，老版本请在release中下载。**
+
 **在下Java水平有限,项目中出现错误和不规范的地方,请不吝赐教,感激不尽**
 
 ## Java版本
@@ -101,5 +103,6 @@ e-mail: hzwy23@163.com
 QQ群：118183812
 
 ## 修改历史：
+2017-11-29 添加图形化任务流程配置功能，正在开发中...
 2017-11-02 移除项目中sun.misc.BASE64Encoder和sun.misc.BASE64Decoder，替换成apache的commons-codec
 2017-09-12 修改默认端口为8023，关闭https，使用http协议。如需开启https，请修改配置
