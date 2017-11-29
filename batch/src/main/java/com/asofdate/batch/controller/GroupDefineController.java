@@ -1,6 +1,7 @@
 package com.asofdate.batch.controller;
 
 import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.dto.GroupTaskDto;
 import com.asofdate.batch.entity.GroupDefineEntity;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskArgumentEntity;
@@ -19,10 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -141,10 +139,11 @@ public class GroupDefineController {
     @ResponseBody
     public String addGroupTask(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
+        String groupId = request.getParameter("groupId");
 
         List<TaskDependencyEntity> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<TaskDependencyEntity>>() {
         }.getType());
-        RetMsg retMsg = groupTaskService.addTaskDependency(list);
+        RetMsg retMsg = groupTaskService.addTaskDependency(list,groupId);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
@@ -226,6 +225,20 @@ public class GroupDefineController {
         return Hret.error(retMsg);
     }
 
+    @RequestMapping(value = "/task/update",method = RequestMethod.PUT)
+    @ResponseBody
+    public String updateTask(HttpServletResponse response, HttpServletRequest request) {
+        String json = request.getParameter("JSON");
+        List<GroupTaskDto> list = new GsonBuilder().create().fromJson(json,
+                new TypeToken<List<GroupTaskDto>>() {
+                }.getType());
+        RetMsg retMsg = groupTaskService.updateTaskLocation(list);
+        if (retMsg.checkCode()){
+            return Hret.error(retMsg);
+        }
+        return Hret.success(retMsg);
+    }
+
     @RequestMapping(value = "/task/add", method = RequestMethod.POST)
     @ResponseBody
     public String addTask(HttpServletResponse response, HttpServletRequest request) {
@@ -233,7 +246,11 @@ public class GroupDefineController {
         String task_id = request.getParameter("task_id");
         String domain_id = request.getParameter("domain_id");
         String arg_list = request.getParameter("arg_list");
-        String id = UUID.randomUUID().toString();
+        String id = request.getParameter("uuid");
+
+        if (id.isEmpty()) {
+            UUID.randomUUID().toString();
+        }
 
         RetMsg retMsg = groupTaskService.addTask(id, group_id, task_id, domain_id);
         if (!retMsg.checkCode()) {

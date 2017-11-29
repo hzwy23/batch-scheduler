@@ -401,8 +401,9 @@
                 })
             } else {
                 $.getJSON("/v1/dispatch/config/scripts",{
-                    domain_id:$("#h-dispatch-task-define-domain-list").val(),
+                    domain_id:$("#h-dispatch-task-define-domain-list").val()
                 },function (data) {
+                    console.log(data);
                     var arr = new Array();
                     $(data).each(function (index, element) {
                         var e = {};

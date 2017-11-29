@@ -110,7 +110,7 @@ public class SysConfigController {
     private void getChild(List<ScriptListDto> list, String filePath, String basePath) {
         File file = new File(filePath);
         File[] fileList = file.listFiles();
-        if (fileList.length == 0) {
+        if (fileList == null || fileList.length == 0) {
             return;
         }
         for (File f : fileList) {

@@ -1,9 +1,8 @@
 package com.asofdate.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -63,9 +62,9 @@ public class CryptoAES {
             IvParameterSpec ivspec = new IvParameterSpec(PASSWORD_KEY.getBytes());
 
             cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
-            byte[] encrypted = cipher.doFinal(plaintext);
 
-            return new BASE64Encoder().encode(encrypted);
+            return Base64.encodeBase64String(cipher.doFinal(plaintext));
+//            return new BASE64Encoder().encode(encrypted);
 
         } catch (Exception e) {
             logger.error("aesEncrypt failure ,error message is:{}",e.getMessage());
@@ -83,7 +82,9 @@ public class CryptoAES {
     public String aesDecrypt(String content) {
         try {
 
-            byte[] encrypted1 = new BASE64Decoder().decodeBuffer(content);
+            byte[] encrypted1 = Base64.decodeBase64(content);
+
+//            byte[] encrypted1 = new BASE64Decoder().decodeBuffer(content);
 
             Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             SecretKeySpec keyspec = new SecretKeySpec(PASSWORD_KEY.getBytes(), "AES");

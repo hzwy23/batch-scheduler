@@ -20,6 +20,10 @@ public class GroupTaskEntity {
 
     private String jobKey;
 
+    private int posLeft;
+
+    private int posTop;
+
     @JsonProperty("code_number")
     private String code_number;
 
@@ -31,6 +35,21 @@ public class GroupTaskEntity {
     @JsonProperty("task_type_desc")
     private String task_type_desc;
 
+    public int getPosLeft() {
+        return posLeft;
+    }
+
+    public void setPosLeft(int posLeft) {
+        this.posLeft = posLeft;
+    }
+
+    public int getPosTop() {
+        return posTop;
+    }
+
+    public void setPosTop(int posTop) {
+        this.posTop = posTop;
+    }
 
     public String getTaskType() {
         return task_type;
@@ -107,11 +126,13 @@ public class GroupTaskEntity {
     @Override
     public String toString() {
         return "GroupTaskEntity{" +
-                ", group_id='" + group_id + '\'' +
+                "group_id='" + group_id + '\'' +
                 ", task_id='" + task_id + '\'' +
                 ", domain_id='" + domain_id + '\'' +
                 ", task_desc='" + task_desc + '\'' +
                 ", jobKey='" + jobKey + '\'' +
+                ", posLeft=" + posLeft +
+                ", posTop=" + posTop +
                 ", code_number='" + code_number + '\'' +
                 ", upJobKey='" + upJobKey + '\'' +
                 ", task_type='" + task_type + '\'' +

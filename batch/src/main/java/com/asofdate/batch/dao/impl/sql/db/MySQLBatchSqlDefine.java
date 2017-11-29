@@ -38,7 +38,7 @@ public class MySQLBatchSqlDefine implements SQLFactory {
     private final String sys_rdbms_130 = "update dispatch_batch_define set batch_desc = ?, as_of_date = ? , complete_date = ?,pagging_freq = ?, pagging_freq_mult = ? where batch_id = ? and domain_id = ?";
     private final String sys_rdbms_131 = "select batch_status from dispatch_batch_define where batch_id = ?";
     private final String sys_rdbms_132 = "select t.uuid,t.task_id,t.arg_id,t.arg_value,t.sort_id,t.domain_id,d.arg_type,a.arg_type_desc,d.arg_desc,d.code_number,d.arg_value as fixed_arg_value from dispatch_task_argument_rel t inner join dispatch_argument_define d on t.arg_id = d.arg_id inner join dispatch_argument_type_attr a on d.arg_type = a.arg_type where t.task_id = ? order by sort_id asc";
-    private final String sys_rdbms_133 = "select t.job_key,t.group_id,t.task_id,t.domain_id,d.task_desc,d.task_type,a.task_type_desc,d.code_number from dispatch_group_task_relation t inner join dispatch_task_define d on t.task_id = d.task_id inner join dispatch_task_type_attr a on d.task_type = a.task_type where t.group_id = ?";
+    private final String sys_rdbms_133 = "select t.job_key,t.group_id,t.task_id,t.domain_id,d.task_desc,d.task_type,a.task_type_desc,d.code_number,t.pos_left,t.pos_top from dispatch_group_task_relation t inner join dispatch_task_define d on t.task_id = d.task_id inner join dispatch_task_type_attr a on d.task_type = a.task_type where t.group_id = ?";
     private final String sys_rdbms_134 = "select t.uuid,t.job_key,t.up_job_key,t.domain_id,r.group_id,r.task_id,d.task_desc,d.code_number from dispatch_task_dependency t inner join dispatch_group_task_relation r on t.up_job_key = r.job_key inner join dispatch_task_define d on r.task_id = d.task_id where t.job_Key = ?";
     private final String sys_rdbms_135 = "select t.job_key,t.arg_id,t.arg_value,t.domain_id,r.group_id,r.task_id from dispatch_group_argument_rel t inner join dispatch_group_task_relation r on t.job_key = r.job_key where t.job_key = ?";
     private final String sys_rdbms_136 = "select t.task_id from dispatch_group_task_relation t where t.job_key = ?";
@@ -56,7 +56,7 @@ public class MySQLBatchSqlDefine implements SQLFactory {
     private final String sys_rdbms_148 = "insert into dispatch_group_task_relation(job_key,group_id,task_id,domain_id) values(?,?,?,?)";
     private final String sys_rdbms_149 = "insert into dispatch_group_argument_rel(uuid,job_key,arg_id,arg_value,domain_id) values(uuid(),?,?,?,?)";
     private final String sys_rdbms_150 = "select t.job_key,t.group_id,t.task_id,d.task_desc,t.domain_id from dispatch_group_task_relation t inner join dispatch_task_define d on t.task_id = d.task_id where t.group_id = ?";
-    private final String sys_rdbms_151 = "insert into dispatch_task_dependency(uuid,job_key,up_job_key,domain_id) values(uuid(),?,?,?)";
+    private final String sys_rdbms_151 = "insert into dispatch_task_dependency(uuid,job_key,up_job_key,domain_id) values(?,?,?,?)";
     private final String sys_rdbms_152 = "delete from dispatch_task_dependency where uuid = ?";
     private final String sys_rdbms_153 = "delete from dispatch_group_dependency where uuid = ?";
     private final String sys_rdbms_154 = "insert into dispatch_batch_group_relation(suite_key,batch_id,group_id,domain_id) values(?,?,?,?)";
@@ -119,6 +119,8 @@ public class MySQLBatchSqlDefine implements SQLFactory {
     private final String sys_rdbms_214 = "select job_id,message,exec_time,sort_id,sid,batch_id from dispatch_job_execute_history where job_id = ? and sid = ?";
     private final String sys_rdbms_215 = "select t.suite_key,r.job_key,d.up_job_key from dispatch_batch_group_relation t inner join dispatch_group_task_relation r on t.group_id = r.group_id inner join dispatch_task_dependency d on r.job_key = d.job_key where t.domain_id = ? and t.batch_id = ?";
     private final String sys_rdbms_216 = "select t.db as procName,t.name as procDesc,t.name as procUpId from mysql.proc t";
+    private final String sys_rdbms_217 = "update dispatch_group_task_relation set pos_left = ?, pos_top = ? where job_key = ?";
+    private final String sys_rdbms_218 = "delete dispatch_task_dependency from dispatch_group_task_relation left join dispatch_task_dependency on dispatch_task_dependency.job_key = dispatch_group_task_relation.job_key where dispatch_group_task_relation.group_id = ?";
 
     @Override
     public String getSqlText(String id) throws NoSuchFieldException, IllegalAccessException {

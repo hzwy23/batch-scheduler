@@ -6,7 +6,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Set;
 
 /**
@@ -28,7 +27,7 @@ public class RunGroupThread extends Thread {
 
     @Override
     public void run() {
-        /*
+        /**
         * 将任务组设置成运行中
         * 根据任务组中的任务之间的依赖关系
         * 挨个执行这个任务组中的任务

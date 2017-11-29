@@ -1,6 +1,7 @@
 package com.asofdate.batch.service;
 
 import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.dto.GroupTaskDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskArgumentEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
@@ -90,7 +91,7 @@ public interface GroupTaskService {
      *
      * @param list
      */
-    RetMsg addTaskDependency(List<TaskDependencyEntity> list);
+    RetMsg addTaskDependency(List<TaskDependencyEntity> list,String groupId);
 
     /**
      * 删除任务依赖
@@ -99,4 +100,11 @@ public interface GroupTaskService {
      */
     RetMsg deleteTaskDependency(String uuid);
 
+
+    /**
+     * 更新任务的坐标
+     *
+     * @param list 任务组
+     * */
+    RetMsg updateTaskLocation(List<GroupTaskDto> list);
 }

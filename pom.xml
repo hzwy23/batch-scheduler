@@ -7,7 +7,7 @@
 	<artifactId>asofdate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<modules>
-		<module>hauth</module>
+		<module>auth-core</module>
 		<module>admin</module>
 		<module>batch</module>
 	</modules>
@@ -19,14 +19,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>1.5.9.RELEASE</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>9</java.version>
 		<org.mapstruct.version>1.1.0.Final</org.mapstruct.version>
 	</properties>
 
@@ -130,6 +129,18 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId> <!-- use mapstruct-jdk8 for Java 8 or higher -->
 			<version>${org.mapstruct.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 	</dependencies>
 </project>

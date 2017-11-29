@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hauth</artifactId>
+    <artifactId>auth-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>hauth</name>
+    <name>auth-core</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

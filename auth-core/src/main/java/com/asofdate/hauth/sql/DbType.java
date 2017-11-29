@@ -39,7 +39,7 @@ public class DbType {
 
     @PostConstruct
     private void init() {
-        this.dbname = environment.getProperty("spring.jpa.database").toLowerCase();
+        this.dbname = environment.getProperty("spring.datasource.name").toLowerCase();
     }
 
 }

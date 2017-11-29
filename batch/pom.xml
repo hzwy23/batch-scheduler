@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>com.asofdate</groupId>
-            <artifactId>hauth</artifactId>
+            <artifactId>auth-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

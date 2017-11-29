@@ -3,17 +3,25 @@ package com.asofdate.batch.dao.impl;
 import com.asofdate.batch.dao.GroupTaskDao;
 import com.asofdate.batch.dao.impl.sql.BatchSqlText;
 import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.dto.GroupTaskDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
+import com.asofdate.utils.JoinCode;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,9 +46,25 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
 
     @Override
     public List<GroupTaskEntity> getJobList(String groupId) {
-        RowMapper<GroupTaskEntity> rowMapper = new BeanPropertyRowMapper<>(GroupTaskEntity.class);
-        List<GroupTaskEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_133"), rowMapper, groupId);
-        logger.debug("group id is:{}", groupId);
+        List<GroupTaskEntity> list = new ArrayList<>();
+        jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_133"), new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                GroupTaskEntity one = new GroupTaskEntity();
+                one.setCodeNumber(resultSet.getString("code_number"));
+                one.setDomainId(resultSet.getString("domain_id"));
+                one.setGroupId(resultSet.getString("group_id"));
+                one.setJobKey(resultSet.getString("job_key"));
+                one.setPosTop(resultSet.getInt("pos_top"));
+                one.setTaskId(resultSet.getString("task_id"));
+                one.setTaskType(resultSet.getString("task_type"));
+                one.setTaskTypeDesc(resultSet.getString("task_type_desc"));
+                one.setTaskDesc(resultSet.getString("task_type_desc"));
+                one.setPosLeft(resultSet.getInt("pos_left"));
+                list.add(one);
+            }
+        },groupId);
+        logger.debug("group id is:{},result is:{}", groupId,list);
         return list;
     }
 
@@ -148,15 +172,23 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
         return list;
     }
 
-    @Transactional
     @Override
-    public int addTaskDependency(List<TaskDependencyEntity> list) {
+    public int addTaskDependency(List<TaskDependencyEntity> list,String groupId) {
+        // 删除任务组内所有的连线信息
+        jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_218"),groupId);
+
         for (TaskDependencyEntity m : list) {
-            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_151"),
-                    m.getJobKey(),
-                    m.getUpJobKey(),
-                    m.getDomainId())) {
-                return -1;
+            try {
+                if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_151"),
+                        DigestUtils.sha1Hex(JoinCode.join(m.getJobKey(),m.getUpJobKey())),
+                        m.getJobKey(),
+                        m.getUpJobKey(),
+                        m.getDomainId())) {
+                    logger.warn("新增任务失败");
+                    return -1;
+                }
+            } catch (DuplicateKeyException e) {
+                logger.warn("任务已经存在，刷新成功，{}", m.getJobKey());
             }
         }
         return 1;
@@ -165,6 +197,18 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
     @Override
     public int deleteTaskDependency(String uuid) {
         return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_152"), uuid);
+    }
+
+    @Transactional
+    @Override
+    public int updateTaskLocation(List<GroupTaskDto> list) {
+        for(GroupTaskDto one:list) {
+            if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_217"),
+            one.getLeft(),one.getTop(),one.getId())){
+                return -1;
+            }
+        }
+        return 0;
     }
 
 }

@@ -4,6 +4,7 @@ import com.asofdate.batch.dao.GroupArgumentDao;
 import com.asofdate.batch.dao.GroupTaskDao;
 import com.asofdate.batch.dao.TaskArgumentDao;
 import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.dto.GroupTaskDto;
 import com.asofdate.batch.entity.*;
 import com.asofdate.batch.service.BatchGroupService;
 import com.asofdate.batch.service.GroupTaskService;
@@ -161,9 +162,9 @@ public class GroupTaskServiceImpl implements GroupTaskService {
 
 
     @Override
-    public RetMsg addTaskDependency(List<TaskDependencyEntity> list) {
+    public RetMsg addTaskDependency(List<TaskDependencyEntity> list,String groupId) {
         try {
-            int size = groupTaskDao.addTaskDependency(list);
+            int size = groupTaskDao.addTaskDependency(list,groupId);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -186,4 +187,16 @@ public class GroupTaskServiceImpl implements GroupTaskService {
         }
     }
 
+    @Override
+    public RetMsg updateTaskLocation(List<GroupTaskDto> list) {
+        try {
+            int flag = groupTaskDao.updateTaskLocation(list);
+            if (0 == flag) {
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE,"success",null);
+            }
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"保存失败，请联系管理员",null);
+        } catch (Exception e) {
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"保存失败，请联系管理员",null);
+        }
+    }
 }

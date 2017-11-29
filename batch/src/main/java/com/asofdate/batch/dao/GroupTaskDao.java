@@ -1,6 +1,7 @@
 package com.asofdate.batch.dao;
 
 import com.asofdate.batch.dto.GroupDefineDto;
+import com.asofdate.batch.dto.GroupTaskDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDependencyEntity;
 
@@ -30,7 +31,9 @@ public interface GroupTaskDao {
 
     List<GroupTaskEntity> getTaskDependency(String id);
 
-    int addTaskDependency(List<TaskDependencyEntity> list);
+    int addTaskDependency(List<TaskDependencyEntity> list,String groupId);
 
     int deleteTaskDependency(String uuid);
+
+    int updateTaskLocation(List<GroupTaskDto> list);
 }

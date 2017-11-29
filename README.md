@@ -7,7 +7,19 @@
 
 **在下Java水平有限,项目中出现错误和不规范的地方,请不吝赐教,感激不尽**
 
-项目主要功能图:
+## Java版本
+> **JDK1.8**
+
+如果jdk是1.9，请在pom.xml文件中加入下边的以来：
+```
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
+
+## 项目主要功能图:
 ![主菜单界面](./doc/homepage.jpg)
 ![调度主界面](./doc/batchpage.jpg)
 ![系统管理主界面](./doc/systemmanagepage.jpg)
@@ -89,4 +101,5 @@ e-mail: hzwy23@163.com
 QQ群：118183812
 
 ## 修改历史：
+2017-11-02 移除项目中sun.misc.BASE64Encoder和sun.misc.BASE64Decoder，替换成apache的commons-codec
 2017-09-12 修改默认端口为8023，关闭https，使用http协议。如需开启https，请修改配置
