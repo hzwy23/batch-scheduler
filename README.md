@@ -104,5 +104,7 @@ QQ群：118183812
 
 ## 修改历史：
 2017-11-29 添加图形化任务流程配置功能，正在开发中...
+
 2017-11-02 移除项目中sun.misc.BASE64Encoder和sun.misc.BASE64Decoder，替换成apache的commons-codec
+
 2017-09-12 修改默认端口为8023，关闭https，使用http协议。如需开启https，请修改配置
