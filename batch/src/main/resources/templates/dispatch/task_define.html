@@ -58,40 +58,40 @@
     var DispatchTaskDefineObj = {
         $table: $('#h-dispatch-task-define-info-table-details'),
         formatter: function (value, row, index) {
-            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchTaskDefineObj.getArgs(\'' + row.taskId + '\',\''+ row.taskDesc+'\')"> 参数管理</span>'
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchTaskDefineObj.getArgs(\'' + row.taskId + '\',\'' + row.taskDesc + '\')"> 参数管理</span>'
         },
-        formatterindex:function (value, row, index) {
-            return index+1;
+        formatterindex: function (value, row, index) {
+            return index + 1;
         },
-        formatterArg:function (value, row, index) {
+        formatterArg: function (value, row, index) {
             var uuid = row.uuid;
             return [
                 '<a class="remove" href="javascript:void(0)" title="Remove">',
-                '<i onclick="DispatchTaskDefineObj.deleteArg(\''+uuid+'\')" class="h-td-btn btn-danger btn-xs icon-trash"> 删除</i>',
+                '<i onclick="DispatchTaskDefineObj.deleteArg(\'' + uuid + '\')" class="h-td-btn btn-danger btn-xs icon-trash"> 删除</i>',
                 '</a>'
             ].join('');
         },
-        deleteArg:function (uuid) {
+        deleteArg: function (uuid) {
             $.HAjaxRequest({
-                url:"/v1/dispatch/task/define/argument/delete",
-                type:"POST",
-                data:{uuid:uuid},
-                success:function () {
-                    $("#h-dispatch-task-argument-relation-table").bootstrapTable('removeByUniqueId',uuid);
+                url: "/v1/dispatch/task/define/argument/delete",
+                type: "POST",
+                data: {uuid: uuid},
+                success: function () {
+                    $("#h-dispatch-task-argument-relation-table").bootstrapTable('removeByUniqueId', uuid);
                 }
             });
 
         },
-        addArgument:function (taskId,taskDesc) {
+        addArgument: function (taskId, taskDesc) {
             $.Hmodal({
-                header:"任务【"+taskDesc + "】参数管理",
+                header: "任务【" + taskDesc + "】参数管理",
                 height: "430px",
-                body:$("#h-dispatch-task-argument-add-src").html(),
-                preprocess:function () {
+                body: $("#h-dispatch-task-argument-add-src").html(),
+                preprocess: function () {
                     var domain_id = $("#h-dispatch-task-define-domain-list").val();
                     $("#h-dispatch-task-argument-add-form").find("input[name='domain_id']").val(domain_id);
                     $("#h-dispatch-task-argument-add-form").find("input[name='task_id']").val(taskId);
-                    $.getJSON("/v1/dispatch/argument/define",{domain_id:domain_id},function (data) {
+                    $.getJSON("/v1/dispatch/argument/define", {domain_id: domain_id}, function (data) {
                         var arr = new Array();
                         $(data).each(function (index, element) {
                             var e = {};
@@ -102,17 +102,17 @@
                         });
 
                         $("#h-dispatch-task-argument-add-form").find("select[name='arg_id']").Hselect({
-                            data:arr,
-                            height:"30px",
-                            onclick:function () {
+                            data: arr,
+                            height: "30px",
+                            onclick: function () {
                                 var argId = $("#h-dispatch-task-argument-add-form").find("select[name='arg_id']").val();
-                                $.getJSON("/v1/dispatch/task/define/argument/type",{arg_id:argId},function (argObj) {
-                                    if(argObj.arg_type == "2"){
-                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").attr("readonly",false).val("");
+                                $.getJSON("/v1/dispatch/task/define/argument/type", {arg_id: argId}, function (argObj) {
+                                    if (argObj.arg_type == "2") {
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").attr("readonly", false).val("");
                                         $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().show();
                                     } else if (argObj.arg_type == "1") {
                                         $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().show();
-                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").val(argObj.arg_value).attr("readonly","readonly");
+                                        $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").val(argObj.arg_value).attr("readonly", "readonly");
                                     } else {
                                         $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").val("");
                                         $("#h-dispatch-task-argument-add-form").find("input[name='arg_value']").parent().hide();
@@ -122,18 +122,18 @@
                         });
                     });
                 },
-                callback:function (newArg) {
+                callback: function (newArg) {
                     $.HAjaxRequest({
-                        url:"/v1/dispatch/task/define/argument/add",
-                        type:"POST",
-                        data:$("#h-dispatch-task-argument-add-form").serialize(),
-                        success:function () {
+                        url: "/v1/dispatch/task/define/argument/add",
+                        type: "POST",
+                        data: $("#h-dispatch-task-argument-add-form").serialize(),
+                        success: function () {
                             $(newArg).remove();
-                            $.getJSON("/v1/dispatch/task/define/argument",{task_id:taskId},function (data) {
-                                $("#h-dispatch-task-argument-relation-table").bootstrapTable('load',data);
+                            $.getJSON("/v1/dispatch/task/define/argument", {task_id: taskId}, function (data) {
+                                $("#h-dispatch-task-argument-relation-table").bootstrapTable('load', data);
                                 $("#h-dispatch-task-argument-relation-table").find("tbody tr").each(function (index, element) {
                                     var typeId = "1";
-                                    switch ($(element).find("td:eq(4)").html()){
+                                    switch ($(element).find("td:eq(4)").html()) {
                                         case "固定参数":
                                             break;
                                         case "任务参数":
@@ -145,11 +145,12 @@
                                         case "批次参数":
                                             typeId = "4";
                                             break;
-                                    };
-                                    if (typeId == "1"){
+                                    }
+                                    ;
+                                    if (typeId == "1") {
                                         var argValue = $(element).find("td:eq(2) a").attr("data-value");
                                         $(element).find("td:eq(2)").html(argValue);
-                                    } else if (typeId == "4" || typeId == "3"){
+                                    } else if (typeId == "4" || typeId == "3") {
                                         $(element).find("td:eq(2)").html("---");
                                     }
                                 });
@@ -159,24 +160,24 @@
                 },
             })
         },
-        getArgs: function (taskId,taskDesc) {
+        getArgs: function (taskId, taskDesc) {
             $.Hmodal({
-                header:"任务【"+taskDesc + "】参数管理",
+                header: "任务【" + taskDesc + "】参数管理",
                 height: "430px",
-                body:$("#h-dispatch-task-argument-relation-src").html(),
-                cancelBtn:false,
-                submitIcon:"icon-plus",
-                submitDesc:"新增",
-                callback:function (hmode) {
-                    DispatchTaskDefineObj.addArgument(taskId,taskDesc);
+                body: $("#h-dispatch-task-argument-relation-src").html(),
+                cancelBtn: false,
+                submitIcon: "icon-plus",
+                submitDesc: "新增",
+                callback: function (hmode) {
+                    DispatchTaskDefineObj.addArgument(taskId, taskDesc);
                 },
-                preprocess:function () {
+                preprocess: function () {
                     $("#h-dispatch-task-argument-relation-table").bootstrapTable();
-                    $.getJSON("/v1/dispatch/task/define/argument",{task_id:taskId},function (data) {
-                        $("#h-dispatch-task-argument-relation-table").bootstrapTable('load',data);
+                    $.getJSON("/v1/dispatch/task/define/argument", {task_id: taskId}, function (data) {
+                        $("#h-dispatch-task-argument-relation-table").bootstrapTable('load', data);
                         $("#h-dispatch-task-argument-relation-table").find("tbody tr").each(function (index, element) {
                             var typeId = "1";
-                            switch ($(element).find("td:eq(4)").html()){
+                            switch ($(element).find("td:eq(4)").html()) {
                                 case "固定参数":
                                     break;
                                 case "任务参数":
@@ -188,36 +189,37 @@
                                 case "批次参数":
                                     typeId = "4";
                                     break;
-                            };
-                            if (typeId == "1"){
+                            }
+                            ;
+                            if (typeId == "1") {
                                 var argValue = $(element).find("td:eq(2) a").attr("data-value");
                                 $(element).find("td:eq(2)").html(argValue);
-                            } else if (typeId == "4" || typeId == "3"){
+                            } else if (typeId == "4" || typeId == "3") {
                                 $(element).find("td:eq(2)").html("---");
                             }
                         });
 
-                        $("#h-dispatch-task-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
-                            if ( "sort_id" == field) {
+                        $("#h-dispatch-task-argument-relation-table").on("editable-save.bs.table", function (editable, field, row, oldValue, $el) {
+                            if ("sort_id" == field) {
                                 var sort_id = row.sort_id;
                                 var uuid = row.uuid;
                                 $.HAjaxRequest({
-                                    url:"/v1/dispatch/task/define/argument/sort",
-                                    type:"put",
-                                    data:{sort_id:sort_id,uuid:uuid},
+                                    url: "/v1/dispatch/task/define/argument/sort",
+                                    type: "put",
+                                    data: {sort_id: sort_id, uuid: uuid},
                                 })
-                            } else if ("arg_value" == field){
-                                if (row.arg_type == "2"){
+                            } else if ("arg_value" == field) {
+                                if (row.arg_type == "2") {
                                     $.HAjaxRequest({
-                                        url:"/v1/dispatch/task/define/argument/value",
-                                        type:"post",
-                                        data:{arg_value:row.arg_value,uuid:row.uuid},
+                                        url: "/v1/dispatch/task/define/argument/value",
+                                        type: "post",
+                                        data: {arg_value: row.arg_value, uuid: row.uuid},
                                     })
                                 } else {
                                     $.notifyClose()
                                     $.Notify({
-                                        message:"任务定义中,只能给参数类型为[任务参数]的参数赋值",
-                                        type:"warning",
+                                        message: "任务定义中,只能给参数类型为[任务参数]的参数赋值",
+                                        type: "warning",
                                     })
                                 }
                             }
@@ -254,7 +256,7 @@
                         height: "30px",
                         checkbox: false,
                         nodeSelect: false,
-                        onclick:function () {
+                        onclick: function () {
                             var id = $("#h-dispatch-task-define-form").find("select[name='taskType']").val();
                             DispatchTaskDefineObj.taskTypeClk(id);
                         }
@@ -265,10 +267,10 @@
                     $("#h-dispatch-task-define-form")
                         .find("select[name='scriptFile']")
                         .Hselect({
-                            height:"30px",
-                            checkbox:false,
-                            nodeSelect:false,
-                            autoAttr:false,
+                            height: "30px",
+                            checkbox: false,
+                            nodeSelect: false,
+                            autoAttr: false,
                         })
                 }
             })
@@ -312,20 +314,20 @@
                     var domain_id = $("#h-dispatch-task-define-domain-list").val();
                     // 初始化成本池
                     $("#h-dispatch-task-define-form").find("input[name='domainId']").val(domain_id);
-                    $("#h-dispatch-task-define-form").find("input[name='taskId']").val(row[0].codeNumber).attr("readonly","readonly");
+                    $("#h-dispatch-task-define-form").find("input[name='taskId']").val(row[0].codeNumber).attr("readonly", "readonly");
                     $("#h-dispatch-task-define-form").find("input[name='taskDesc']").val(row[0].taskDesc);
 
                     $("#h-dispatch-task-define-form").find("select[name='taskType']").Hselect({
-                        value:row[0].taskType,
-                        height:"30px",
-                        onclick:function () {
+                        value: row[0].taskType,
+                        height: "30px",
+                        onclick: function () {
                             var id = $("#h-dispatch-task-define-form").find("select[name='taskType']").val();
                             DispatchTaskDefineObj.taskTypeClk(id);
                         }
                     });
 
                     if (row[0].taskType == "2") {
-                        $.getJSON("/v1/dispatch/config/proc",function (data) {
+                        $.getJSON("/v1/dispatch/config/proc", function (data) {
                             var arr = new Array();
                             $(data).each(function (index, element) {
                                 var e = {};
@@ -339,18 +341,18 @@
                             $("#h-dispatch-task-define-form")
                                 .find("select[name='scriptFile']")
                                 .Hselect({
-                                    height:"30px",
-                                    checkbox:false,
-                                    nodeSelect:false,
-                                    autoAttr:false,
-                                    data:arr,
-                                    value:row[0].scriptFile,
+                                    height: "30px",
+                                    checkbox: false,
+                                    nodeSelect: false,
+                                    autoAttr: false,
+                                    data: arr,
+                                    value: row[0].scriptFile,
                                 })
                         })
                     } else {
-                        $.getJSON("/v1/dispatch/config/scripts",{
-                            domain_id:$("#h-dispatch-task-define-domain-list").val(),
-                        },function (data) {
+                        $.getJSON("/v1/dispatch/config/scripts", {
+                            domain_id: $("#h-dispatch-task-define-domain-list").val(),
+                        }, function (data) {
                             var arr = new Array();
                             $(data).each(function (index, element) {
                                 var e = {};
@@ -363,12 +365,12 @@
                             $("#h-dispatch-task-define-form")
                                 .find("select[name='scriptFile']")
                                 .Hselect({
-                                    height:"30px",
-                                    checkbox:false,
-                                    nodeSelect:false,
-                                    autoAttr:false,
-                                    data:arr,
-                                    value:row[0].scriptFile,
+                                    height: "30px",
+                                    checkbox: false,
+                                    nodeSelect: false,
+                                    autoAttr: false,
+                                    data: arr,
+                                    value: row[0].scriptFile,
                                 })
                         });
                     }
@@ -376,9 +378,9 @@
                 }
             })
         },
-        taskTypeClk:function (id) {
+        taskTypeClk: function (id) {
             if (id == "2") {
-                $.getJSON("/v1/dispatch/config/proc",function (data) {
+                $.getJSON("/v1/dispatch/config/proc", function (data) {
                     var arr = new Array();
                     $(data).each(function (index, element) {
                         var e = {};
@@ -392,17 +394,17 @@
                     $("#h-dispatch-task-define-form")
                         .find("select[name='scriptFile']")
                         .Hselect({
-                            height:"30px",
-                            checkbox:false,
-                            nodeSelect:false,
-                            autoAttr:false,
-                            data:arr,
+                            height: "30px",
+                            checkbox: false,
+                            nodeSelect: false,
+                            autoAttr: false,
+                            data: arr,
                         })
                 })
             } else {
-                $.getJSON("/v1/dispatch/config/scripts",{
-                    domain_id:$("#h-dispatch-task-define-domain-list").val()
-                },function (data) {
+                $.getJSON("/v1/dispatch/config/scripts", {
+                    domain_id: $("#h-dispatch-task-define-domain-list").val()
+                }, function (data) {
                     console.log(data);
                     var arr = new Array();
                     $(data).each(function (index, element) {
@@ -416,11 +418,11 @@
                     $("#h-dispatch-task-define-form")
                         .find("select[name='scriptFile']")
                         .Hselect({
-                            height:"30px",
-                            checkbox:false,
-                            nodeSelect:false,
-                            autoAttr:false,
-                            data:arr,
+                            height: "30px",
+                            checkbox: false,
+                            nodeSelect: false,
+                            autoAttr: false,
+                            data: arr,
                         })
                 });
             }
@@ -499,7 +501,8 @@
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
                 <span>任务描述:</span>
-                <input name="taskDesc" placeholder="任务详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+                <input name="taskDesc" placeholder="任务详细描述信息" class="form-control"
+                       style="height: 30px; line-height: 30px; width: 100%;"/>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
                 <span>任务类型:</span>
@@ -537,7 +540,7 @@
             <th data-align="left" data-field="arg_desc">参数名称</th>
             <th data-align="right" data-field="arg_value" data-editable="true">参数设定值</th>
             <th data-align="center" data-field="sort_id" data-editable="true">序号</th>
-            <th data-align="center" data-field="arg_type_desc" >参数类型</th>
+            <th data-align="center" data-field="arg_type_desc">参数类型</th>
             <th data-align="center" data-formatter="DispatchTaskDefineObj.formatterArg">操作</th>
         </tr>
         </thead>

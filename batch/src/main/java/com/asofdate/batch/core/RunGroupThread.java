@@ -6,6 +6,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Set;
 
 /**
@@ -28,11 +29,11 @@ public class RunGroupThread extends Thread {
     @Override
     public void run() {
         /**
-        * 将任务组设置成运行中
-        * 根据任务组中的任务之间的依赖关系
-        * 挨个执行这个任务组中的任务
-        * 当这个任务组中的所有任务执行完成之后,设置任务组为完成状态
-        * */
+         * 将任务组设置成运行中
+         * 根据任务组中的任务之间的依赖关系
+         * 挨个执行这个任务组中的任务
+         * 当这个任务组中的所有任务执行完成之后,设置任务组为完成状态
+         * */
         while (true) {
             Set<String> jobKeySet = drm.getRunnableJob(suiteKey);
 

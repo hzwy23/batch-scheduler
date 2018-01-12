@@ -20,7 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -143,7 +146,7 @@ public class GroupDefineController {
 
         List<TaskDependencyEntity> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<TaskDependencyEntity>>() {
         }.getType());
-        RetMsg retMsg = groupTaskService.addTaskDependency(list,groupId);
+        RetMsg retMsg = groupTaskService.addTaskDependency(list, groupId);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
             return Hret.error(retMsg);
@@ -225,7 +228,7 @@ public class GroupDefineController {
         return Hret.error(retMsg);
     }
 
-    @RequestMapping(value = "/task/update",method = RequestMethod.PUT)
+    @RequestMapping(value = "/task/update", method = RequestMethod.PUT)
     @ResponseBody
     public String updateTask(HttpServletResponse response, HttpServletRequest request) {
         String json = request.getParameter("JSON");
@@ -233,7 +236,7 @@ public class GroupDefineController {
                 new TypeToken<List<GroupTaskDto>>() {
                 }.getType());
         RetMsg retMsg = groupTaskService.updateTaskLocation(list);
-        if (retMsg.checkCode()){
+        if (retMsg.checkCode()) {
             return Hret.error(retMsg);
         }
         return Hret.success(retMsg);

@@ -9,7 +9,8 @@
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
               class="pull-left">&nbsp;批次名称 = <span th:text="${batchDesc}"></span></span>
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span th:text="${groupDesc}"></span></span>
+              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span
+                th:text="${groupDesc}"></span></span>
         <span id="h-dispatch-batch-job-running-batchId" style="display: none;" th:text="${batchId}"></span>
         <span id="h-dispatch-batch-job-running-gid" style="display: none;" th:text="${suiteKey}"></span>
         <span id="h-dispatch-batch-job-running-asofdate" style="display: none;" th:text="${asOfDate}"></span>
@@ -40,7 +41,9 @@
                 <th data-sortable="true" data-align="center" data-field="statusDesc">任务状态</th>
                 <th data-sortable="true" data-align="center" data-field="startTime">开始日期</th>
                 <th data-sortable="true" data-align="center" data-field="endTime">结束时间</th>
-                <th data-sortable="true" data-align="center" data-field="costTime" data-formatter="BatchJobHistoryObj.calcCost">运行时长</th>
+                <th data-sortable="true" data-align="center" data-field="costTime"
+                    data-formatter="BatchJobHistoryObj.calcCost">运行时长
+                </th>
             </tr>
             </thead>
         </table>
@@ -48,42 +51,42 @@
 </div>
 <script type="text/javascript">
     var BatchJobHistoryObj = {
-        formatterindex:function (value, row, index) {
-            return index+1;
+        formatterindex: function (value, row, index) {
+            return index + 1;
         },
-        formatter:function (value, row, index) {
+        formatter: function (value, row, index) {
             return Hutils.getLast(value);
         },
-        calcCost:function (value, row, index) {
+        calcCost: function (value, row, index) {
             /*<![CDATA[*/
-            if (row.startTime == null || row.startTime == ""){
+            if (row.startTime == null || row.startTime == "") {
                 return "-"
             }
-            var start = new Date(row.startTime.substr(0,19));
+            var start = new Date(row.startTime.substr(0, 19));
             var end = new Date();
-            if (row.endTime != null && row.endTime != ""){
-                end = new Date(row.endTime.substr(0,19));
+            if (row.endTime != null && row.endTime != "") {
+                end = new Date(row.endTime.substr(0, 19));
             }
 
-            var diff = (end - start)/1000;
-            if (diff < 0){
+            var diff = (end - start) / 1000;
+            if (diff < 0) {
                 diff = 0;
             }
-            var costTime = diff+"s";
-            if (diff >= 60){
-                if (diff % 60 != 0){
+            var costTime = diff + "s";
+            if (diff >= 60) {
+                if (diff % 60 != 0) {
                     costTime = (diff % 60 ).toFixed(0) + "s";
                 }
                 // 转换成分钟
                 diff = (diff / 60).toFixed(0);
                 if (diff >= 60) {
-                    if (diff % 60 != 0){
+                    if (diff % 60 != 0) {
                         costTime = (diff % 60).toFixed(0) + "m " + costTime;
                     }
                     // 转换成小时
                     diff = (diff / 24).toFixed();
-                    if (diff >= 24){
-                        if (diff % 24 != 0){
+                    if (diff >= 24) {
+                        if (diff % 24 != 0) {
                             costTime = (diff % 60).toFixed(0) + "h " + costTime;
                         }
                         costTime = (diff % 24).toFixed(0) + "d" + costTime;
@@ -91,7 +94,7 @@
                         costTime = diff + "h " + costTime;
                     }
                 } else {
-                    costTime = diff + "m "+ costTime;
+                    costTime = diff + "m " + costTime;
                 }
             }
             /*]]>*/
@@ -105,11 +108,11 @@
         var batchId = $("#h-dispatch-batch-job-running-batchId").html();
         var suiteKey = $("#h-dispatch-batch-job-running-gid").html();
         var asOfDate = $("#h-dispatch-batch-job-running-asofdate").html();
-        var token = Math.random()*1000000;
+        var token = Math.random() * 1000000;
         $("#h-dispatch-batch-job-running-token").html(token);
         $("#h-dispatch-batch-job-monitoring-table").bootstrapTable({
             height: hwindow - 139,
-            queryParams:function (params) {
+            queryParams: function (params) {
                 params.batch_id = batchId;
                 params.suiteKey = suiteKey;
                 params.as_of_date = asOfDate;
@@ -119,28 +122,28 @@
 
         var timer = setInterval(function () {
             if (document.getElementById("h-dispatch-batch-job-running-gid") == null ||
-                token != document.getElementById("h-dispatch-batch-job-running-token").innerHTML){
+                token != document.getElementById("h-dispatch-batch-job-running-token").innerHTML) {
                 clearInterval(timer);
             }
 
-            $.getJSON("/v1/dispatch/batch/job/running",{
-                batch_id:batchId,
-                suiteKey:suiteKey,
-                as_of_date:asOfDate,
-            },function (data) {
+            $.getJSON("/v1/dispatch/batch/job/running", {
+                batch_id: batchId,
+                suiteKey: suiteKey,
+                as_of_date: asOfDate,
+            }, function (data) {
                 $(data).each(function (index, element) {
-                    $("#h-dispatch-batch-job-monitoring-table").bootstrapTable("updateByUniqueId",{
-                        id:element.jobKey,
-                        row:{
-                            statusDesc:element.statusDesc,
-                            startTime:element.startTime,
-                            endTime:element.endTime,
-                            costTime:BatchJobHistoryObj.calcCost("",element,""),
+                    $("#h-dispatch-batch-job-monitoring-table").bootstrapTable("updateByUniqueId", {
+                        id: element.jobKey,
+                        row: {
+                            statusDesc: element.statusDesc,
+                            startTime: element.startTime,
+                            endTime: element.endTime,
+                            costTime: BatchJobHistoryObj.calcCost("", element, ""),
                         }
                     });
                 })
             })
-        },3000)
+        }, 3000)
     });
 </script>
 </html>

@@ -44,7 +44,9 @@
                 <th data-sortable="true" data-field="arg_desc">参数描述</th>
                 <th data-sortable="true" data-align="center" data-field="arg_type_desc">参数类型</th>
                 <th data-sortable="true" data-align="right" data-field="arg_value">参数初始值</th>
-                <th data-sortable="true" data-align="right" data-field="bind_as_of_date" data-formatter="DispatchArgumentDefineObj.formatter">是否绑定批次日期</th>
+                <th data-sortable="true" data-align="right" data-field="bind_as_of_date"
+                    data-formatter="DispatchArgumentDefineObj.formatter">是否绑定批次日期
+                </th>
                 <th data-align="center" data-field="create_user">创建人</th>
                 <th data-align="center" data-field="create_date">创建时间</th>
                 <th data-align="center" data-field="modify_user">修改人</th>
@@ -58,9 +60,9 @@
 <script type="text/javascript">
     var DispatchArgumentDefineObj = {
         $table: $('#h-dispatch-argument-define-info-table-details'),
-        formatter:function (value, row, index) {
-            if (row.arg_type == 4){
-                if (value == "0"){
+        formatter: function (value, row, index) {
+            if (row.arg_type == 4) {
+                if (value == "0") {
                     return "不绑定";
                 } else {
                     return "绑定";
@@ -93,35 +95,35 @@
                     var domain_id = $("#h-dispatch-argument-define-domain-list").val();
                     var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                     $bind.Hselect({
-                        height:"30px",
+                        height: "30px",
                     });
 
                     $("#h-dispatch-argument-define-form").find("select[name='arg_type']").Hselect({
                         height: "30px",
                         checkbox: false,
                         nodeSelect: false,
-                        onclick:function () {
+                        onclick: function () {
                             var argType = $("#h-dispatch-argument-define-form").find("select[name='arg_type']").val();
-                            switch (argType){
+                            switch (argType) {
                                 case "1":
                                     var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                                     $bind.parent().hide();
-                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly",false);
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", false);
                                     break;
                                 case "2":
                                     var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                                     $bind.parent().hide();
-                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                                     break;
                                 case "3":
                                     var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                                     $bind.parent().hide();
-                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                                     break;
                                 case "4":
                                     var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                                     $bind.parent().show();
-                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                                    $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                                     break
                             }
                         }
@@ -175,33 +177,33 @@
                     $("#h-dispatch-argument-define-form").find("select[name='arg_type']").Hselect({
                         value: row[0].arg_type,
                         height: "30px",
-                        disabled:true,
+                        disabled: true,
                     });
 
-                    switch (row[0].arg_type){
+                    switch (row[0].arg_type) {
                         case "1":
                             var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                             $bind.parent().hide();
-                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly",false);
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", false);
                             break;
                         case "2":
                             var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                             $bind.parent().hide();
-                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                             break;
                         case "3":
                             var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                             $bind.parent().hide();
-                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                             break;
                         case "4":
                             var $bind = $("#h-dispatch-argument-define-form").find("select[name='bind_as_of_date']");
                             $bind.parent().show();
                             $bind.Hselect({
-                                height:"30px",
-                                value:row[0].bind_as_of_date,
+                                height: "30px",
+                                value: row[0].bind_as_of_date,
                             });
-                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly","readonly").val("");
+                            $("#h-dispatch-argument-define-form").find("input[name='arg_value']").attr("readonly", "readonly").val("");
                             break
                     }
                 }

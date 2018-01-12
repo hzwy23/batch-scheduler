@@ -31,7 +31,7 @@ public interface GroupTaskDao {
 
     List<GroupTaskEntity> getTaskDependency(String id);
 
-    int addTaskDependency(List<TaskDependencyEntity> list,String groupId);
+    int addTaskDependency(List<TaskDependencyEntity> list, String groupId);
 
     int deleteTaskDependency(String uuid);
 

@@ -91,7 +91,7 @@ public interface GroupTaskService {
      *
      * @param list
      */
-    RetMsg addTaskDependency(List<TaskDependencyEntity> list,String groupId);
+    RetMsg addTaskDependency(List<TaskDependencyEntity> list, String groupId);
 
     /**
      * 删除任务依赖
@@ -105,6 +105,6 @@ public interface GroupTaskService {
      * 更新任务的坐标
      *
      * @param list 任务组
-     * */
+     */
     RetMsg updateTaskLocation(List<GroupTaskDto> list);
 }

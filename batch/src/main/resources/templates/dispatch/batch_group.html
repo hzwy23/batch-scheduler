@@ -1,8 +1,8 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <div class="row subsystem-header">
     <div class="pull-left">
         <span>任务组配置管理</span>
-        <i  id="h-batch-group-batch-jobKey" style="display: none;" th:text="${batchId}"></i>
+        <i id="h-batch-group-batch-jobKey" style="display: none;" th:text="${batchId}"></i>
         <i id="h-batch-group-domain-jobKey" style="display: none;" th:text="${domainId}"></i>
     </div>
 </div>
@@ -50,8 +50,8 @@
         var batchId = $("#h-batch-group-batch-jobKey").html();
 
         $("#h-dispatch-batch-group-relation-table").bootstrapTable({
-            height:hwindow-130,
-            queryParams:function (params) {
+            height: hwindow - 130,
+            queryParams: function (params) {
                 params.batch_id = batchId;
                 return params;
             }
@@ -62,36 +62,36 @@
     });
 
     var DispatchBatchGroupObj = {
-        formatterindex:function (value, row, index) {
-            return index+1;
+        formatterindex: function (value, row, index) {
+            return index + 1;
         },
-        formatterDependency:function (value, row, index) {
-            return '<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteDependency(\'' + row.uuid + '\',\''+row.suiteKey+'\')"><i class="icon-trash"> 删除</i></span>'
+        formatterDependency: function (value, row, index) {
+            return '<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteDependency(\'' + row.uuid + '\',\'' + row.suiteKey + '\')"><i class="icon-trash"> 删除</i></span>'
         },
         formatterGroup: function (value, row, index) {
-            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchGroupObj.getDependency(\'' + row.suiteKey + '\',\''+row.group_desc+'\')"><i class="icon-circle-arrow-up"> 查询依赖</i></span>'+
-                 '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteGroup(\'' + row.suiteKey + '\')"><i class="icon-trash"> 删除</i></span>';
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchGroupObj.getDependency(\'' + row.suiteKey + '\',\'' + row.group_desc + '\')"><i class="icon-circle-arrow-up"> 查询依赖</i></span>' +
+                '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DispatchBatchGroupObj.deleteGroup(\'' + row.suiteKey + '\')"><i class="icon-trash"> 删除</i></span>';
         },
-        addDependency:function (id,groupDesc) {
+        addDependency: function (id, groupDesc) {
             var batchId = $("#h-batch-group-batch-jobKey").html();
             $.Hmodal({
-                body:$("#h-dispatch-batch-group-add-dependency-src").html(),
-                header:"任务组【"+groupDesc+ "】添加依赖任务组",
-                height:"430px",
-                preprocess:function () {
+                body: $("#h-dispatch-batch-group-add-dependency-src").html(),
+                header: "任务组【" + groupDesc + "】添加依赖任务组",
+                height: "430px",
+                preprocess: function () {
                     $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable({
-                        height:280,
-                        queryParams:function (params) {
+                        height: 280,
+                        queryParams: function (params) {
                             params.batch_id = batchId;
                             params.id = id;
                             return params;
                         },
-                        onPostBody:function () {
-                            $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable('removeByUniqueId',id);
+                        onPostBody: function () {
+                            $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable('removeByUniqueId', id);
                         }
                     });
                 },
-                callback:function (hmode) {
+                callback: function (hmode) {
                     var rows = $("#h-dispatch-batch-group-dependency-add-table").bootstrapTable('getSelections')
                     var arg = new Array();
                     $(rows).each(function (index, element) {
@@ -103,58 +103,58 @@
                     });
 
                     $.HAjaxRequest({
-                        url:"/v1/dispatch/batch/define/group/dependency",
-                        type:"POST",
-                        data:{JSON:JSON.stringify(arg)},
-                        success:function () {
+                        url: "/v1/dispatch/batch/define/group/dependency",
+                        type: "POST",
+                        data: {JSON: JSON.stringify(arg)},
+                        success: function () {
                             $(hmode).remove();
-                            $.getJSON("/v1/dispatch/batch/define/group/dependency",{suiteKey:id},function (data) {
-                                $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load',data);
+                            $.getJSON("/v1/dispatch/batch/define/group/dependency", {suiteKey: id}, function (data) {
+                                $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load', data);
                             });
                         }
                     })
                 },
             })
         },
-        deleteDependency:function (uuid,id) {
+        deleteDependency: function (uuid, id) {
             $.HAjaxRequest({
-                url:"/v1/dispatch/batch/define/group/dependency/delete",
-                type:"post",
-                data:{uuid:uuid},
-                success:function () {
-                    $.getJSON("/v1/dispatch/batch/define/group/dependency",{suiteKey:id},function (data) {
-                        $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load',data);
+                url: "/v1/dispatch/batch/define/group/dependency/delete",
+                type: "post",
+                data: {uuid: uuid},
+                success: function () {
+                    $.getJSON("/v1/dispatch/batch/define/group/dependency", {suiteKey: id}, function (data) {
+                        $("#h-dispatch-batch-group-dependency-table").bootstrapTable('load', data);
                     });
                 }
             })
         },
-        getDependency:function (id,desc) {
+        getDependency: function (id, desc) {
             $.Hmodal({
-                header:desc,
-                body:$("#h-dispatch-batch-group-dependency-src").html(),
-                height:"430px",
-                submitDesc:"新增任务组依赖",
-                submitIcon:"icon-plus",
-                preprocess:function () {
+                header: desc,
+                body: $("#h-dispatch-batch-group-dependency-src").html(),
+                height: "430px",
+                submitDesc: "新增任务组依赖",
+                submitIcon: "icon-plus",
+                preprocess: function () {
                     $("#h-dispatch-batch-group-dependency-table").bootstrapTable({
-                        height:290,
-                        url:"/v1/dispatch/batch/define/group/dependency",
-                        queryParams:function (params) {
+                        height: 290,
+                        url: "/v1/dispatch/batch/define/group/dependency",
+                        queryParams: function (params) {
                             params.suiteKey = id;
                             return params;
                         }
                     });
                     $("#h-dispatch-group-task-current-id").html(id);
                 },
-                callback:function () {
-                    DispatchBatchGroupObj.addDependency(id,desc);
+                callback: function () {
+                    DispatchBatchGroupObj.addDependency(id, desc);
                 }
             })
         },
-        refresh:function () {
+        refresh: function () {
             $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh');
         },
-        delete:function () {
+        delete: function () {
             var rows = $("#h-dispatch-batch-group-relation-table").bootstrapTable('getSelections');
             var arr = new Array();
             $(rows).each(function (index, element) {
@@ -163,36 +163,36 @@
                 arr.push(e);
             })
             $.HAjaxRequest({
-                url:"/v1/dispatch/batch/define/group/list/delete",
-                type:"POST",
-                data:{JSON:JSON.stringify(arr)},
-                success:function () {
+                url: "/v1/dispatch/batch/define/group/list/delete",
+                type: "POST",
+                data: {JSON: JSON.stringify(arr)},
+                success: function () {
                     $.Notify({
-                        message:"删除批次中配置的任务信息成功",
-                        type:"success",
+                        message: "删除批次中配置的任务信息成功",
+                        type: "success",
                     });
                     DispatchBatchGroupObj.refresh();
                 }
             })
         },
-        deleteGroup:function (id) {
+        deleteGroup: function (id) {
             $.HAjaxRequest({
-                url:"/v1/dispatch/batch/define/group/delete",
-                type:"POST",
-                data:{id:id},
-                success:function () {
+                url: "/v1/dispatch/batch/define/group/delete",
+                type: "POST",
+                data: {id: id},
+                success: function () {
                     $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh')
                 }
             })
         },
-        addGroup:function () {
+        addGroup: function () {
             var batchId = $("#h-batch-group-batch-jobKey").html();
             var domain_id = $("#h-batch-group-domain-jobKey").html();
             $.Hmodal({
-                body:$("#h-dispatch-batch-group-add-src").html(),
-                height:"430px",
-                header:"添加任务组",
-                preprocess:function () {
+                body: $("#h-dispatch-batch-group-add-src").html(),
+                height: "430px",
+                header: "添加任务组",
+                preprocess: function () {
                     $("#h-dispatch-batch-group-add-table").bootstrapTable({
                         height: 290,
                         queryParams: function (params) {
@@ -201,13 +201,13 @@
                         }
                     });
                 },
-                callback:function (hmode) {
+                callback: function (hmode) {
                     var rows = $("#h-dispatch-batch-group-add-table").bootstrapTable('getSelections')
                     $.HAjaxRequest({
-                        url:"/v1/dispatch/batch/define/group",
-                        type:"POST",
-                        data:{JSON:JSON.stringify(rows),domain_id:domain_id,batch_id:batchId},
-                        success:function () {
+                        url: "/v1/dispatch/batch/define/group",
+                        type: "POST",
+                        data: {JSON: JSON.stringify(rows), domain_id: domain_id, batch_id: batchId},
+                        success: function () {
                             $(hmode).remove();
                             $("#h-dispatch-batch-group-relation-table").bootstrapTable('refresh')
                         }

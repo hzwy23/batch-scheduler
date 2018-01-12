@@ -7,26 +7,27 @@
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-history-batch-desc" th:text="${batchDesc}"></span></span>
+              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-history-batch-desc"
+                                                   th:text="${batchDesc}"></span></span>
         <span id="h-dispatch-batch-history-uuid" style="display: none;" th:text="${uuid}"></span>
     </div>
 </div>
 <div class="row" id="h-dispatch-batch-group-monitoring-content" style="padding-top: 6px;overflow-y: auto;"></div>
 <script type="text/javascript">
     var BatchGroupHistoryObj = {
-        getJobHistory:function (gid,group_desc) {
+        getJobHistory: function (gid, group_desc) {
             var uuid = $("#h-dispatch-batch-history-uuid").html();
             var batch_desc = $("#h-dispatch-batch-group-history-batch-desc").html();
             Hutils.openTab({
-                url:"/v1/dispatch/batch/job/monitoring/page",
-                id:"hzwy23##jobhistory",
-                title:group_desc+" 任务运行历史",
-                data:{gid:gid,uuid:uuid,batch_desc:batch_desc,group_desc:group_desc}
+                url: "/v1/dispatch/batch/job/monitoring/page",
+                id: "hzwy23##jobhistory",
+                title: group_desc + " 任务运行历史",
+                data: {gid: gid, uuid: uuid, batch_desc: batch_desc, group_desc: group_desc}
             })
         },
-        init:function (uuid) {
+        init: function (uuid) {
             $("#h-dispatch-batch-group-monitoring-content").html("");
-            $.getJSON("/v1/dispatch/batch/group/history",{uuid:uuid},function (data) {
+            $.getJSON("/v1/dispatch/batch/group/history", {uuid: uuid}, function (data) {
                 $(data).each(function (index, element) {
                     var pdiv = document.createElement("div");
                     pdiv.className = "col-sm-6 col-md-3";
@@ -63,9 +64,9 @@
 
                     var pbtn = document.createElement("button");
                     pbtn.className = "btn btn-info";
-                    pbtn.setAttribute("role","button");
+                    pbtn.setAttribute("role", "button");
                     pbtn.innerHTML = "任务详情";
-                    pbtn.setAttribute("onclick","BatchGroupHistoryObj.getJobHistory('"+element.suiteKey+"','"+element.groupDesc+"')");
+                    pbtn.setAttribute("onclick", "BatchGroupHistoryObj.getJobHistory('" + element.suiteKey + "','" + element.groupDesc + "')");
 
                     var pbatchDesc = document.createElement("h3");
                     pbatchDesc.innerHTML = element.groupDesc;
@@ -96,7 +97,7 @@
                     var myChart = echarts.init(chartdiv);
                     var radio = 0;
                     if (element.status != "0") {
-                        if (element.totalJobsCnt == 0){
+                        if (element.totalJobsCnt == 0) {
                             radio = 100;
                         } else {
                             radio = (element.completeJobsCnt / element.totalJobsCnt * 100).toFixed(0);
@@ -104,14 +105,14 @@
                     }
                     /*]]>*/
                     myChart.setOption(option = {
-                        tooltip : {
+                        tooltip: {
                             formatter: "{a} <br/>{b} : {c}%"
                         },
                         series: [
                             {
                                 name: '任务组中job完成比例',
                                 type: 'gauge',
-                                detail: {formatter:'{value}%'},
+                                detail: {formatter: '{value}%'},
                                 data: [{value: radio, name: '完成率'}]
                             }
                         ]

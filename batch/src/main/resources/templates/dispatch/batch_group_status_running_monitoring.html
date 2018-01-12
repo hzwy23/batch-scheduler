@@ -7,7 +7,8 @@
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-running-batch-desc" th:text="${batchDesc}"></span></span>
+              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-running-batch-desc"
+                                                   th:text="${batchDesc}"></span></span>
         <span id="h-dispatch-batch-running-uuid" style="display: none;" th:text="${batchId}"></span>
         <span id="h-dispatch-batch-running-asofdate" style="display: none;" th:text="${asOfDate}"></span>
     </div>
@@ -22,26 +23,26 @@
 </div>
 <script type="text/javascript">
     var BatchGroupRunningObj = {
-        getJobRunning:function (suiteKey,group_desc) {
+        getJobRunning: function (suiteKey, group_desc) {
             var batch_id = $("#h-dispatch-batch-running-uuid").html();
             var batch_desc = $("#h-dispatch-batch-group-running-batch-desc").html();
             var as_of_date = $("#h-dispatch-batch-running-asofdate").html();
             Hutils.openTab({
-                url:"/v1/dispatch/batch/job/running/monitoring/page",
-                id:"hzwy23##jobhistory",
-                title:group_desc+" 任务运行监控",
-                data:{
-                    suiteKey:suiteKey,
-                    batch_id:batch_id,
-                    batch_desc:batch_desc,
-                    group_desc:group_desc,
-                    as_of_date:as_of_date,
+                url: "/v1/dispatch/batch/job/running/monitoring/page",
+                id: "hzwy23##jobhistory",
+                title: group_desc + " 任务运行监控",
+                data: {
+                    suiteKey: suiteKey,
+                    batch_id: batch_id,
+                    batch_desc: batch_desc,
+                    group_desc: group_desc,
+                    as_of_date: as_of_date,
                 }
             })
         },
-        init:function (batchId) {
+        init: function (batchId) {
             var as_of_date = $("#h-dispatch-batch-running-asofdate").html();
-            $.getJSON("/v1/dispatch/batch/group/running",{batch_id:batchId, as_of_date:as_of_date},function (data) {
+            $.getJSON("/v1/dispatch/batch/group/running", {batch_id: batchId, as_of_date: as_of_date}, function (data) {
                 $(data).each(function (index, element) {
 
                     var pdiv = document.createElement("div");
@@ -78,9 +79,9 @@
 
                     var pbtn = document.createElement("button");
                     pbtn.className = "btn btn-info";
-                    pbtn.setAttribute("role","button");
+                    pbtn.setAttribute("role", "button");
                     pbtn.innerHTML = "任务详情";
-                    pbtn.setAttribute("onclick","BatchGroupRunningObj.getJobRunning('"+element.suiteKey+"','"+element.groupDesc+"')");
+                    pbtn.setAttribute("onclick", "BatchGroupRunningObj.getJobRunning('" + element.suiteKey + "','" + element.groupDesc + "')");
 
                     var pbatchDesc = document.createElement("h3");
                     pbatchDesc.innerHTML = element.groupDesc;
@@ -105,9 +106,9 @@
                     pdiv2.appendChild(pdiv3);
                     pdiv.appendChild(pdiv2);
 
-                    if (element.status == "1"){
+                    if (element.status == "1") {
                         document.getElementById("h-dispatch-batch-group-running-monitoring-content-running").appendChild(pdiv);
-                    } else if (element.status == "0"){
+                    } else if (element.status == "0") {
                         document.getElementById("h-dispatch-batch-group-running-monitoring-content-init").appendChild(pdiv);
                     } else {
                         document.getElementById("h-dispatch-batch-group-running-monitoring-content-end").appendChild(pdiv);
@@ -117,8 +118,8 @@
                     var myChart = echarts.init(chartdiv);
                     var radio = 0;
                     if (element.status != "0") {
-                        if (element.totalJobsCnt == 0){
-                            if (element.status == "2"){
+                        if (element.totalJobsCnt == 0) {
+                            if (element.status == "2") {
                                 radio == 100;
                             }
                         } else {
@@ -126,23 +127,27 @@
                         }
                     }
                     myChart.setOption(option = {
-                        tooltip : {
+                        tooltip: {
                             formatter: "{a} <br/>{b} : {c}%"
                         },
                         series: [
                             {
                                 name: '任务组中job完成比例',
                                 type: 'gauge',
-                                detail: {formatter:'{value}%'},
+                                detail: {formatter: '{value}%'},
                                 data: [{value: radio, name: '完成率'}]
                             }
                         ]
                     });
 
                     var timer = setInterval(function () {
-                        $.getJSON("/v1/dispatch/batch/group/running/details",{batch_id:batchId,suiteKey:element.suiteKey,as_of_date:as_of_date}).done(function (data) {
+                        $.getJSON("/v1/dispatch/batch/group/running/details", {
+                            batch_id: batchId,
+                            suiteKey: element.suiteKey,
+                            as_of_date: as_of_date
+                        }).done(function (data) {
 
-                            if (data.status != "0" && data.status != "1"){
+                            if (data.status != "0" && data.status != "1") {
                                 clearInterval(timer);
                             }
                             ppvalue.innerHTML = data.startTime;
@@ -150,25 +155,25 @@
                             ph3.innerHTML = data.statusDesc;
 
 
-                            if (document.getElementById("h-dispatch-batch-group-running-monitoring-content") == null){
+                            if (document.getElementById("h-dispatch-batch-group-running-monitoring-content") == null) {
                                 clearInterval(timer);
                             }
 
                             myChart.setOption(option = {
-                                tooltip : {
+                                tooltip: {
                                     formatter: "{a} <br/>{b} : {c}%"
                                 },
                                 series: [
                                     {
                                         name: '任务组中job完成比例',
                                         type: 'gauge',
-                                        detail: {formatter:'{value}%'},
+                                        detail: {formatter: '{value}%'},
                                         data: [{value: data.ratio, name: '完成率'}]
                                     }
                                 ]
                             });
                         });
-                    },1000);
+                    }, 1000);
                     /*]]>*/
                 })
             })

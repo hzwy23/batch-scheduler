@@ -18,23 +18,23 @@
 </div>
 <script type="text/javascript">
     var BatchSysConfigObj = {
-        onclick:function (configId,configVal,domainId,configDesc) {
-            console.log(configId,configVal,domainId);
+        onclick: function (configId, configVal, domainId, configDesc) {
+            console.log(configId, configVal, domainId);
             $.Hmodal({
-                header:"修改 [ " +configDesc +" ] 参数值",
-                height:"300px",
-                body:$("#h-dispatch-batch-config-src").html(),
-                preprocess:function () {
+                header: "修改 [ " + configDesc + " ] 参数值",
+                height: "300px",
+                body: $("#h-dispatch-batch-config-src").html(),
+                preprocess: function () {
                     $("#h-dispatch-batch-config-form").find("input[name='config_value']").val(configVal);
                     $("#h-dispatch-batch-config-form").find("input[name='domain_id']").val(domainId);
                     $("#h-dispatch-batch-config-form").find("input[name='config_id']").val(configId);
                 },
-                callback:function (hmode) {
+                callback: function (hmode) {
                     $.HAjaxRequest({
-                        url:"/v1/dispatch/config/user",
-                        type:"post",
-                        data:$("#h-dispatch-batch-config-form").serialize(),
-                        success:function () {
+                        url: "/v1/dispatch/config/user",
+                        type: "post",
+                        data: $("#h-dispatch-batch-config-form").serialize(),
+                        success: function () {
                             $(hmode).remove();
                             BatchSysConfigObj.init(domainId);
                         }
@@ -42,10 +42,10 @@
                 }
             })
         },
-        init:function (domainId) {
+        init: function (domainId) {
             $("#h-dispatch-batch-config-content").html("");
 
-            $.getJSON("/v1/dispatch/config/sys",{domain_id:domainId},function (data) {
+            $.getJSON("/v1/dispatch/config/sys", {domain_id: domainId}, function (data) {
                 $(data).each(function (index, element) {
                     var pdiv = document.createElement("div");
                     pdiv.className = "col-sm-6 col-md-3";
@@ -54,7 +54,7 @@
                     pdiv2.className = "thumbnail";
 
                     var pimg = document.createElement("img");
-                    pimg.setAttribute("src",element.image);
+                    pimg.setAttribute("src", element.image);
                     pimg.style.height = "128px";
                     pimg.style.width = "128px";
 
@@ -85,9 +85,9 @@
 
                     var pbtn = document.createElement("button");
                     pbtn.className = "btn btn-info";
-                    pbtn.setAttribute("role","button");
+                    pbtn.setAttribute("role", "button");
                     pbtn.innerHTML = "编辑";
-                    pbtn.setAttribute("onclick","BatchSysConfigObj.onclick('"+element.configId+"','"+element.configValue+"','"+domainId+"','"+element.configDesc+"')");
+                    pbtn.setAttribute("onclick", "BatchSysConfigObj.onclick('" + element.configId + "','" + element.configValue + "','" + domainId + "','" + element.configDesc + "')");
 
                     pdiv3.appendChild(ph3);
                     pdiv3.appendChild(pp);

@@ -162,9 +162,9 @@ public class GroupTaskServiceImpl implements GroupTaskService {
 
 
     @Override
-    public RetMsg addTaskDependency(List<TaskDependencyEntity> list,String groupId) {
+    public RetMsg addTaskDependency(List<TaskDependencyEntity> list, String groupId) {
         try {
-            int size = groupTaskDao.addTaskDependency(list,groupId);
+            int size = groupTaskDao.addTaskDependency(list, groupId);
             if (1 == size) {
                 return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
@@ -192,11 +192,11 @@ public class GroupTaskServiceImpl implements GroupTaskService {
         try {
             int flag = groupTaskDao.updateTaskLocation(list);
             if (0 == flag) {
-                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE,"success",null);
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"保存失败，请联系管理员",null);
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "保存失败，请联系管理员", null);
         } catch (Exception e) {
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE,"保存失败，请联系管理员",null);
+            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "保存失败，请联系管理员", null);
         }
     }
 }

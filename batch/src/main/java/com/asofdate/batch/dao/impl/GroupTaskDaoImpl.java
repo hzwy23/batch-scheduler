@@ -63,8 +63,8 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
                 one.setPosLeft(resultSet.getInt("pos_left"));
                 list.add(one);
             }
-        },groupId);
-        logger.debug("group id is:{},result is:{}", groupId,list);
+        }, groupId);
+        logger.debug("group id is:{},result is:{}", groupId, list);
         return list;
     }
 
@@ -173,14 +173,14 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
     }
 
     @Override
-    public int addTaskDependency(List<TaskDependencyEntity> list,String groupId) {
+    public int addTaskDependency(List<TaskDependencyEntity> list, String groupId) {
         // 删除任务组内所有的连线信息
-        jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_218"),groupId);
+        jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_218"), groupId);
 
         for (TaskDependencyEntity m : list) {
             try {
                 if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_151"),
-                        DigestUtils.sha1Hex(JoinCode.join(m.getJobKey(),m.getUpJobKey())),
+                        DigestUtils.sha1Hex(JoinCode.join(m.getJobKey(), m.getUpJobKey())),
                         m.getJobKey(),
                         m.getUpJobKey(),
                         m.getDomainId())) {
@@ -202,9 +202,9 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
     @Transactional
     @Override
     public int updateTaskLocation(List<GroupTaskDto> list) {
-        for(GroupTaskDto one:list) {
+        for (GroupTaskDto one : list) {
             if (1 != jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_217"),
-            one.getLeft(),one.getTop(),one.getId())){
+                    one.getLeft(), one.getTop(), one.getId())) {
                 return -1;
             }
         }

@@ -9,7 +9,8 @@
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
               class="pull-left">&nbsp;批次名称 = <span th:text="${batchDesc}"></span></span>
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span th:text="${groupDesc}"></span></span>
+              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span
+                th:text="${groupDesc}"></span></span>
         <span id="h-dispatch-batch-job-history-uuid" style="display: none;" th:text="${uuid}"></span>
         <span id="h-dispatch-batch-job-history-gid" style="display: none;" th:text="${gid}"></span>
     </div>
@@ -47,38 +48,38 @@
 </div>
 <script type="text/javascript">
     var BatchJobHistoryObj = {
-        formatterindex:function (value, row, index) {
-            return index+1;
+        formatterindex: function (value, row, index) {
+            return index + 1;
         },
-        formatter:function (value, row, index) {
-           return Hutils.getLast(value);
+        formatter: function (value, row, index) {
+            return Hutils.getLast(value);
         },
-        calcCost:function (value, row, index) {
+        calcCost: function (value, row, index) {
             /*<![CDATA[*/
-            var start = new Date(row.startTime.substr(0,19));
-            var end = new Date(row.endTime.substr(0,19));
+            var start = new Date(row.startTime.substr(0, 19));
+            var end = new Date(row.endTime.substr(0, 19));
 
-            var diff = (end - start)/1000;
+            var diff = (end - start) / 1000;
 
-            if (diff < 0){
+            if (diff < 0) {
                 diff = 0;
             }
-            var costTime = diff+"s";
+            var costTime = diff + "s";
 
-            if (diff >= 60){
-                if (diff % 60 != 0){
+            if (diff >= 60) {
+                if (diff % 60 != 0) {
                     costTime = (diff % 60 ).toFixed(0) + "s";
                 }
                 // 转换成分钟
                 diff = (diff / 60).toFixed(0);
                 if (diff >= 60) {
-                    if (diff % 60 != 0){
+                    if (diff % 60 != 0) {
                         costTime = (diff % 60).toFixed(0) + "m " + costTime;
                     }
                     // 转换成小时
                     diff = (diff / 24).toFixed();
-                    if (diff >= 24){
-                        if (diff % 24 != 0){
+                    if (diff >= 24) {
+                        if (diff % 24 != 0) {
                             costTime = (diff % 60).toFixed(0) + "h " + costTime;
                         }
                         costTime = (diff % 24).toFixed(0) + "d" + costTime;
@@ -86,26 +87,26 @@
                         costTime = diff + "h " + costTime;
                     }
                 } else {
-                    costTime = diff + "m "+ costTime;
+                    costTime = diff + "m " + costTime;
                 }
             }
             /*]]>*/
             return costTime;
         },
-        execLog:function (value, row, index) {
+        execLog: function (value, row, index) {
             return '<span class="h-td-btn btn-success btn-xs" onclick="BatchJobHistoryObj.getLogs(\'' + row.jobId + '\')">查看日志</span>';
         },
-        getLogs:function (jobId) {
+        getLogs: function (jobId) {
             var uuid = $("#h-dispatch-batch-job-history-uuid").html();
             $.Hmodal({
-                header:"日志信息",
-                submitBtn:false,
-                height:"500",
-                body:$("#h-dispatch-batch-job-monitoring-logs-src").html(),
-                preprocess:function () {
+                header: "日志信息",
+                submitBtn: false,
+                height: "500",
+                body: $("#h-dispatch-batch-job-monitoring-logs-src").html(),
+                preprocess: function () {
                     $("#h-dispatch-batch-job-monitoring-logs-table").bootstrapTable({
-                        height:360,
-                        queryParams:function (params) {
+                        height: 360,
+                        queryParams: function (params) {
                             params.id = uuid;
                             params.job = jobId;
                             return params;
@@ -121,8 +122,8 @@
         $("#h-dispatch-batch-job-monitoring-content").height(hwindow - 139);
 
         $("#h-dispatch-batch-job-monitoring-table").bootstrapTable({
-            height:hwindow-139,
-            queryParams:function (params) {
+            height: hwindow - 139,
+            queryParams: function (params) {
                 params.uuid = $("#h-dispatch-batch-job-history-uuid").html();
                 params.gid = $("#h-dispatch-batch-job-history-gid").html();
                 return params;
@@ -145,7 +146,9 @@
         <thead>
         <tr>
             <th data-width="46px" data-align="center" data-valign="middle" data-field="sortId">序号</th>
-            <th data-sortable="true" data-width="150px" data-valign="middle" data-align="center" data-field="execTime" >执行时间</th>
+            <th data-sortable="true" data-width="150px" data-valign="middle" data-align="center" data-field="execTime">
+                执行时间
+            </th>
             <th data-sortable="true" data-field="message">输出信息</th>
         </tr>
         </thead>

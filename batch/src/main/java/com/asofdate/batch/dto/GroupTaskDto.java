@@ -1,7 +1,5 @@
 package com.asofdate.batch.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class GroupTaskDto {
     private String id;
     private String left;

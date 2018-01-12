@@ -65,14 +65,14 @@
 <script type="text/javascript">
     var DispatchBatchDefineObj = {
         $table: $('#h-dispatch-batch-manage-info-table-details'),
-        freqFormat:function (value, row, index) {
-            return row.pagging_freq+" "+row.pagging_freq_mult_desc;
+        freqFormat: function (value, row, index) {
+            return row.pagging_freq + " " + row.pagging_freq_mult_desc;
         },
         formatter: function (value, row, index) {
-            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchDefineObj.getGroups(\'' + row.batch_id + '\',\''+row.batch_desc+'\')">任务组</span>'+
-                '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchDefineObj.getBatchArg(\'' + row.batch_id + '\',\''+row.batch_desc+'\')"> 参数</span>';
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DispatchBatchDefineObj.getGroups(\'' + row.batch_id + '\',\'' + row.batch_desc + '\')">任务组</span>' +
+                '&nbsp;&nbsp;<span class="h-td-btn btn-warning btn-xs" onclick="DispatchBatchDefineObj.getBatchArg(\'' + row.batch_id + '\',\'' + row.batch_desc + '\')"> 参数</span>';
         },
-        start:function () {
+        start: function () {
             var rows = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
             if (rows.length == 0) {
                 $.Notify({
@@ -89,20 +89,20 @@
             }
 
             $.Hmodal({
-                header:"["+rows[0].batch_desc + "] 设置批次启动参数",
+                header: "[" + rows[0].batch_desc + "] 设置批次启动参数",
                 height: "430px",
-                body:$("#h-dispatch-batch-argument-relation-src").html(),
-                submitDesc:"启动批次",
-                preprocess:function () {
+                body: $("#h-dispatch-batch-argument-relation-src").html(),
+                submitDesc: "启动批次",
+                preprocess: function () {
                     $("#h-dispatch-batch-argument-relation-table").bootstrapTable({
-                        height:290,
-                        queryParams:function (params) {
+                        height: 290,
+                        queryParams: function (params) {
                             params.batch_id = rows[0].batch_id;
                             return params;
                         }
                     });
 
-                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
+                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table", function (editable, field, row, oldValue, $el) {
                         if (row.bind_as_of_date == "0") {
                             // 批次非绑定日期变量
                             var arr = new Array();
@@ -116,29 +116,29 @@
                             $.HAjaxRequest({
                                 url: "/v1/dispatch/batch/define/argument",
                                 type: "post",
-                                data: {JSON:JSON.stringify(arr)},
+                                data: {JSON: JSON.stringify(arr)},
                             })
                         } else {
                             // 绑定批次日期变量
                             $.HAjaxRequest({
                                 url: "/v1/dispatch/batch/define/asofdate",
                                 type: "PUT",
-                                data: {batch_id:row.batch_id,as_of_date:row.arg_value},
+                                data: {batch_id: row.batch_id, as_of_date: row.arg_value},
                             })
                         }
 
                         $("#h-dispatch-batch-argument-relation-table").bootstrapTable('refresh')
                     });
                 },
-                callback:function (hmode) {
+                callback: function (hmode) {
                     $.HAjaxRequest({
-                        url:"/v1/dispatch/start",
-                        type:"get",
-                        data:{domain_id:rows[0].domain_id,batch_id:rows[0].batch_id},
-                        success:function () {
+                        url: "/v1/dispatch/start",
+                        type: "get",
+                        data: {domain_id: rows[0].domain_id, batch_id: rows[0].batch_id},
+                        success: function () {
                             $.Notify({
-                                message:"批次启动成功",
-                                type:"success",
+                                message: "批次启动成功",
+                                type: "success",
                             });
                             DispatchBatchDefineObj.refresh();
                             $(hmode).remove();
@@ -147,7 +147,7 @@
                 }
             })
         },
-        stop:function () {
+        stop: function () {
             var row = $("#h-dispatch-batch-manage-info-table-details").bootstrapTable('getSelections');
             if (row.length == 0) {
                 $.Notify({
@@ -164,38 +164,38 @@
             }
 
             $.HAjaxRequest({
-                url:"/v1/dispatch/batch/define/stop",
-                type:"POST",
-                data:{batch_id:row[0].batch_id},
-                success:function () {
+                url: "/v1/dispatch/batch/define/stop",
+                type: "POST",
+                data: {batch_id: row[0].batch_id},
+                success: function () {
                     $.Notify({
-                        message:"停止批次成功",
-                        type:"success",
+                        message: "停止批次成功",
+                        type: "success",
                     });
                     DispatchBatchDefineObj.refresh();
                 }
             })
         },
-        refresh:function () {
+        refresh: function () {
             $("#h-dispatch-batch-manage-info-table-details").bootstrapTable("refresh");
         },
-        getBatchArg:function (batchId, batchDesc) {
+        getBatchArg: function (batchId, batchDesc) {
             $.Hmodal({
-                header:"["+batchDesc + "]参数列表",
+                header: "[" + batchDesc + "]参数列表",
                 height: "430px",
-                body:$("#h-dispatch-batch-argument-relation-src").html(),
-                submitBtn:false,
-                preprocess:function () {
+                body: $("#h-dispatch-batch-argument-relation-src").html(),
+                submitBtn: false,
+                preprocess: function () {
                     $("#h-dispatch-batch-argument-relation-table").bootstrapTable({
-                        height:290,
-                        queryParams:function (params) {
+                        height: 290,
+                        queryParams: function (params) {
                             params.batch_id = batchId;
                             return params;
                         }
                     });
 
 
-                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table",function (editable, field, row, oldValue, $el) {
+                    $("#h-dispatch-batch-argument-relation-table").on("editable-save.bs.table", function (editable, field, row, oldValue, $el) {
                         if (row.bind_as_of_date == "0") {
                             // 批次非绑定日期变量
                             var arr = new Array();
@@ -209,14 +209,14 @@
                             $.HAjaxRequest({
                                 url: "/v1/dispatch/batch/define/argument",
                                 type: "post",
-                                data: {JSON:JSON.stringify(arr)},
+                                data: {JSON: JSON.stringify(arr)},
                             })
                         } else {
                             // 绑定批次日期变量
                             $.HAjaxRequest({
                                 url: "/v1/dispatch/batch/define/asofdate",
                                 type: "PUT",
-                                data: {batch_id:row.batch_id,as_of_date:row.arg_value},
+                                data: {batch_id: row.batch_id, as_of_date: row.arg_value},
                             })
                         }
 
@@ -225,19 +225,19 @@
                 }
             })
         },
-        getGroups: function (batchId,batchDesc) {
+        getGroups: function (batchId, batchDesc) {
             /*<![CDATA[*/
-            var name = batchDesc+"中任务组配置";
+            var name = batchDesc + "中任务组配置";
             Hutils.openTab({
-                url:"/v1/dispatch/batchAndGroup/page",
-                id:"batchGroup1989",
-                data:{batchId:batchId,batchDesc:batchDesc},
-                title:name,
-                error:function (m) {
+                url: "/v1/dispatch/batchAndGroup/page",
+                id: "batchGroup1989",
+                data: {batchId: batchId, batchDesc: batchDesc},
+                title: name,
+                error: function (m) {
                     $.Notify({
-                        title:"温馨提示：",
-                        message:"您没有被授权访问这个域。",
-                        type:"info",
+                        title: "温馨提示：",
+                        message: "您没有被授权访问这个域。",
+                        type: "info",
                     })
                 }
             });
@@ -267,15 +267,15 @@
                     var domain_id = $("#h-dispatch-batch-domain-list").val();
 
                     $("#h-dispatch-batch-define-form").find("select[name='pagging_freq_mult']").Hselect({
-                        height:"30px",
+                        height: "30px",
                     });
 
                     $("#h-dispatch-batch-define-form").find("select[name='batch_status']").Hselect({
                         height: "30px",
                         checkbox: false,
                         nodeSelect: false,
-                        disabled:true,
-                        value:0,
+                        disabled: true,
+                        value: 0,
                     });
                     $("#h-dispatch-batch-define-form").find("select[name='batch_status']").parent().hide();
                     $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id)
@@ -286,7 +286,7 @@
                         max: laydate.now(),
                         istime: true,
                         istoday: false,
-                        choose: function(datas){
+                        choose: function (datas) {
                             end.min = datas;
                         }
                     };
@@ -348,15 +348,15 @@
                     // 初始化成本池
                     $("#h-dispatch-batch-define-form").find("select[name='batch_status']").val(row[0].batch_status);
                     $("#h-dispatch-batch-define-form").find("input[name='domain_id']").val(domain_id);
-                    $("#h-dispatch-batch-define-form").find("input[name='batch_id']").val(row[0].code_number).attr("readonly","readonly");
+                    $("#h-dispatch-batch-define-form").find("input[name='batch_id']").val(row[0].code_number).attr("readonly", "readonly");
                     $("#h-dispatch-batch-define-form").find("input[name='batch_desc']").val(row[0].batch_desc);
 
                     $("#h-dispatch-batch-define-form").find("input[name='as_of_date']").val(row[0].as_of_date);
                     $("#h-dispatch-batch-define-form").find("input[name='complete_date']").val(row[0].complete_date);
                     $("#h-dispatch-batch-define-form").find("input[name='pagging_freq']").val(row[0].pagging_freq);
                     $("#h-dispatch-batch-define-form").find("select[name='pagging_freq_mult']").Hselect({
-                        height:"30px",
-                        value:row[0].pagging_freq_mult,
+                        height: "30px",
+                        value: row[0].pagging_freq_mult,
                     });
 
                     var start = {
@@ -365,7 +365,7 @@
                         max: laydate.now(),
                         istime: true,
                         istoday: false,
-                        choose: function(datas){
+                        choose: function (datas) {
                             end.min = datas;
                         }
                     };
@@ -481,11 +481,12 @@
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <span>批次名称：</span>
-            <input name="batch_desc" placeholder="批次详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+            <input name="batch_desc" placeholder="批次详细描述信息" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
             <span>批次日期：</span>
-            <input id="h-batch-define-asofdate" name="as_of_date"  placeholder="批次运行日期" class="form-control"
+            <input id="h-batch-define-asofdate" name="as_of_date" placeholder="批次运行日期" class="form-control"
                    style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
@@ -505,7 +506,8 @@
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
             <span>执行频率：</span>
-            <input name="pagging_freq" placeholder="批次详细描述信息" class="form-control" style="height: 30px; line-height: 30px; width: 100%;" />
+            <input name="pagging_freq" placeholder="批次详细描述信息" class="form-control"
+                   style="height: 30px; line-height: 30px; width: 100%;"/>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
             <span>执行披绿单位：</span>
