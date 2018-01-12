@@ -337,7 +337,7 @@
                                 e.attr = element.procAttr;
                                 arr.push(e)
                             });
-                            console.log(arr)
+                            console.debug(arr)
                             $("#h-dispatch-task-define-form")
                                 .find("select[name='scriptFile']")
                                 .Hselect({
@@ -390,7 +390,7 @@
                         e.attr = element.procAttr;
                         arr.push(e)
                     });
-                    console.log(arr)
+                    console.debug(arr)
                     $("#h-dispatch-task-define-form")
                         .find("select[name='scriptFile']")
                         .Hselect({
@@ -405,7 +405,7 @@
                 $.getJSON("/v1/dispatch/config/scripts", {
                     domain_id: $("#h-dispatch-task-define-domain-list").val()
                 }, function (data) {
-                    console.log(data);
+                    console.debug(data);
                     var arr = new Array();
                     $(data).each(function (index, element) {
                         var e = {};

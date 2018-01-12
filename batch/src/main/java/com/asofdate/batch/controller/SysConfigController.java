@@ -40,10 +40,12 @@ public class SysConfigController {
     @ApiImplicitParam(required = true, name = "domain_id", value = "域编码")
     @RequestMapping(value = "/v1/dispatch/config/sys", method = RequestMethod.GET)
     public List getALL(HttpServletRequest request) {
+
         String domainId = request.getParameter("domain_id");
         if (domainId == null || domainId.isEmpty()) {
             domainId = JwtService.getConnUser(request).getDomainID();
         }
+
         return sysConfigService.findAll(domainId);
     }
 

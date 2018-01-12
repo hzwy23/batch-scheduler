@@ -7,7 +7,7 @@ public class JoinCode {
     private final static String SPLIT_STRING = "__hzwy23__";
 
     public static String join(String str1, String str2) {
-        return str1 + SPLIT_STRING + str2;
+        return str1.concat(SPLIT_STRING).concat(str2);
     }
 
     public static String getTaskCode(String str) {

@@ -48,11 +48,15 @@ public class SysConfigDaoImpl implements SysConfigDao {
 
     @Override
     public int setValue(String domainId, String configId, String configValue) {
+
         String uuid = JoinCode.join(domainId, configId);
+
         if (isExists(domainId, configId)) {
             return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_185"), configValue, uuid);
         }
-        return jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_186"), configId, configValue, domainId, uuid);
+        return jdbcTemplate.update(
+                batchSqlText.getSql("sys_rdbms_186"),
+                configId, configValue, domainId, uuid);
     }
 
     @Override

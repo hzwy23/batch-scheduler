@@ -19,15 +19,16 @@
 <script type="text/javascript">
     var BatchSysConfigObj = {
         onclick: function (configId, configVal, domainId, configDesc) {
-            console.log(configId, configVal, domainId);
+            console.debug(configId, configVal, domainId);
             $.Hmodal({
                 header: "修改 [ " + configDesc + " ] 参数值",
                 height: "300px",
                 body: $("#h-dispatch-batch-config-src").html(),
                 preprocess: function () {
-                    $("#h-dispatch-batch-config-form").find("input[name='config_value']").val(configVal);
-                    $("#h-dispatch-batch-config-form").find("input[name='domain_id']").val(domainId);
-                    $("#h-dispatch-batch-config-form").find("input[name='config_id']").val(configId);
+                    let dispatchObj = $("#h-dispatch-batch-config-form");
+                    dispatchObj.find("input[name='config_value']").val(configVal);
+                    dispatchObj.find("input[name='domain_id']").val(domainId);
+                    dispatchObj.find("input[name='config_id']").val(configId);
                 },
                 callback: function (hmode) {
                     $.HAjaxRequest({
@@ -102,14 +103,15 @@
                     document.getElementById("h-dispatch-batch-config-content").appendChild(pdiv);
                 })
             })
-        },
-    }
+        }
+    };
+
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
         $("#h-dispatch-batch-config-content").height(hwindow - 139);
 
         $.getJSON("/v1/auth/domain/self/owner", function (data) {
-            var arr = new Array()
+            var arr = new Array();
             $(data.owner_list).each(function (index, element) {
                 var ijs = {};
                 ijs.id = element.domain_id
@@ -125,7 +127,7 @@
                 value: data.domain_id,
                 onclick: function () {
                     //todo
-                },
+                }
             });
 
             BatchSysConfigObj.init(data.domain_id);
