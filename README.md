@@ -1,6 +1,6 @@
 [Wiki Page](https://github.com/hzwy23/asofdate-etl/wiki)
 
-[oschina 托管地址](http://git.oschina.net/hzwy23/asofdate4etl)
+[国内码云 托管地址](https://gitee.com/hzwy23/asofdate4etl)
 
 [github 托管地址](https://github.com/asofdate/batch-scheduler)
 
