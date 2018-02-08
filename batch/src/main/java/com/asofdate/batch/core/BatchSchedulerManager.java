@@ -20,11 +20,11 @@ import java.util.Set;
  */
 @Component
 @Scope("prototype")
-public class BatchSchedulerSrv extends Thread {
+public class BatchSchedulerManager extends Thread {
     private final String BATCH_SUCCESS_MSG = "success";
     private final String BATCH_ERROR_MSG = "Running error";
     private final String BATCH_STOPPED_MSG = "stopped";
-    private final Logger logger = LoggerFactory.getLogger(BatchSchedulerSrv.class);
+    private final Logger logger = LoggerFactory.getLogger(BatchSchedulerManager.class);
     @Autowired
     public BatchSchedulerConfig batchSchedulerConfig;
     @Autowired

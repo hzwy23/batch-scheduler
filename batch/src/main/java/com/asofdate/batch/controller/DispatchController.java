@@ -1,6 +1,6 @@
 package com.asofdate.batch.controller;
 
-import com.asofdate.batch.core.BatchSchedulerSrv;
+import com.asofdate.batch.core.BatchSchedulerManager;
 import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.service.BatchDefineService;
 import com.asofdate.batch.service.ExecService;
@@ -34,7 +34,7 @@ public class DispatchController {
     private final Logger logger = LoggerFactory.getLogger(DispatchController.class);
 
     @Autowired
-    private BatchSchedulerSrv batchSchedulerSrv;
+    private BatchSchedulerManager batchSchedulerManager;
     @Autowired
     private BatchDefineService batchDefineService;
     @Autowired
@@ -86,7 +86,7 @@ public class DispatchController {
         // 进度调度依赖关系管理
         // 根据依赖关系,开启任务触发器
         try {
-            batchSchedulerSrv.createJobSchedulerService(bconf);
+            batchSchedulerManager.createJobSchedulerService(bconf);
         } catch (Exception e) {
             e.printStackTrace();
             batchDefineService.setStatus(batchId, BatchStatus.BATCH_STATUS_ERROR);
@@ -94,7 +94,7 @@ public class DispatchController {
         }
         logger.info("【{}】创建调度器成功", batchId);
 
-        batchSchedulerSrv.start();
+        batchSchedulerManager.start();
 
         logger.info("batch started, batch_id is:{},domain_id is:{}", batchId, domainId);
         return Hret.success(SysStatus.SUCCESS_CODE, "start batch successfully. batch id is :" + batchId, null);

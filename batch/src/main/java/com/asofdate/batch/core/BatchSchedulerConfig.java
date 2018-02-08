@@ -24,7 +24,6 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,17 +69,13 @@ public class BatchSchedulerConfig {
         schedulerFactoryBean.setAutoStartup(false);
 
         // 获取指定批次的所有任务Job
-        ArrayList<SimpleTrigger> arrayList = new ArrayList<SimpleTrigger>();
+        SimpleTrigger[] simpleTriggers = new SimpleTrigger[jobKeyStatusService.getAllJob().size()];
+        int i = 0;
         for (String jobId : jobKeyStatusService.getAllJob().keySet()) {
             SimpleTrigger simpleTrigger = createSimpleTrigger(jobId);
-            schedulerFactoryBean.setTriggers(simpleTrigger);
-            arrayList.add(simpleTrigger);
+            simpleTriggers[i++] = simpleTrigger;
         }
 
-        SimpleTrigger[] simpleTriggers = new SimpleTrigger[arrayList.size()];
-        for (int i = 0; i < arrayList.size(); i++) {
-            simpleTriggers[i] = arrayList.get(i);
-        }
         schedulerFactoryBean.setTriggers(simpleTriggers);
         schedulerFactoryBean.afterPropertiesSet();
         schedulerFactoryBean.getScheduler().pauseAll();
