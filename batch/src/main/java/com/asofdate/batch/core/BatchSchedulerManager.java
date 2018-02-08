@@ -26,7 +26,7 @@ public class BatchSchedulerManager extends Thread {
     private final String BATCH_STOPPED_MSG = "stopped";
     private final Logger logger = LoggerFactory.getLogger(BatchSchedulerManager.class);
     @Autowired
-    public BatchSchedulerConfig batchSchedulerConfig;
+    public QuartzSchedulerConfig quartzSchedulerConfig;
     @Autowired
     private BatchDefineService batchDefineService;
     @Autowired
@@ -44,7 +44,7 @@ public class BatchSchedulerManager extends Thread {
 
         // 由于初始化时关闭了所有的触发器
         // 所以,调度开启后,并不会有任务执行
-        this.scheduler = batchSchedulerConfig.createSchedulerFactoryBean(conf, drm);
+        this.scheduler = quartzSchedulerConfig.createSchedulerFactoryBean(conf, drm);
     }
 
 
@@ -139,7 +139,7 @@ public class BatchSchedulerManager extends Thread {
         conf = batchDefineService.initConf(conf.getBatchId(), conf.getDomainId());
         drm.afterPropertiesSet(conf);
         try {
-            scheduler = batchSchedulerConfig.createSchedulerFactoryBean(conf, drm);
+            scheduler = quartzSchedulerConfig.createSchedulerFactoryBean(conf, drm);
         } catch (Exception e) {
             e.printStackTrace();
             return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, "初始化调度器失败", null);

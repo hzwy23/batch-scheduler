@@ -31,8 +31,8 @@ import java.util.Map;
 @Configuration
 @EnableBatchProcessing
 @Scope("prototype")
-public class BatchSchedulerConfig {
-    private final Logger logger = LoggerFactory.getLogger(BatchSchedulerConfig.class);
+public class QuartzSchedulerConfig {
+    private final Logger logger = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
     @Autowired
     private TaskletConfig taskletConfig;
     @Autowired
