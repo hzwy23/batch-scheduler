@@ -55,9 +55,9 @@ public class SuiteKeyStatusServiceImpl implements SuiteKeyStatusService {
     }
 
     /*
-    * 设置任务组运行中
-    * @param String gid 表示任务组id
-    * */
+     * 设置任务组运行中
+     * @param String gid 表示任务组id
+     * */
     public void setSuiteRunning(String suiteKey) {
         // 修改任务组在内存中的状态
         suiteKeyStatus.put(suiteKey, GroupStatus.SUITE_KEY_STATUS_RUNNING);
@@ -66,9 +66,9 @@ public class SuiteKeyStatusServiceImpl implements SuiteKeyStatusService {
     }
 
     /*
-    * 设置任务组已经运行完成
-    * @param String gid 表示任务组id
-    * */
+     * 设置任务组已经运行完成
+     * @param String gid 表示任务组id
+     * */
     public void setSuiteCompleted(String suiteKey) {
         suiteKeyStatus.put(suiteKey, GroupStatus.SUITE_KEY_STATUS_COMPLETED);
         batchGroupStatusDao.setGroupEnd(conf, suiteKey, GroupStatus.SUITE_KEY_STATUS_COMPLETED);

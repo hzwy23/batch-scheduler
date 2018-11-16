@@ -94,8 +94,8 @@ public class ArgumentController {
     }
 
     /*
-    * 更新参数定义信息
-    * */
+     * 更新参数定义信息
+     * */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public String putArgumentDefine(HttpServletResponse response, HttpServletRequest request) {
@@ -134,9 +134,9 @@ public class ArgumentController {
     }
 
     /*
-    * 从客户单请求中,获取参数
-    * 并转换成ArgumentDefineModel对象
-    * */
+     * 从客户单请求中,获取参数
+     * 并转换成ArgumentDefineModel对象
+     * */
     private ArgumentDefineEntity parse(HttpServletRequest request) {
         ArgumentDefineEntity argumentDefineEntity = new ArgumentDefineEntity();
         argumentDefineEntity.setArgId(request.getParameter("arg_id"));

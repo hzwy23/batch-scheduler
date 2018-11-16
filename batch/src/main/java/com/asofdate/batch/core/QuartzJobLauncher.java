@@ -8,13 +8,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.List;
@@ -25,40 +20,40 @@ import java.util.UUID;
  */
 public class QuartzJobLauncher extends QuartzJobBean {
     private final Logger logger = LoggerFactory.getLogger(QuartzJobLauncher.class);
-    private JobLauncher jobLauncher;
-    private JobRegistry jobRegistry;
+
     private JobKeyStatusService jobKeyStatusService;
     private ArgumentService argumentService;
     private String jobName;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        try {
-            Job job = jobRegistry.getJob(jobName);
-            JobExecution jobExecution = jobLauncher.run(job, getJobParameters());
-            if (ExitStatus.COMPLETED.getExitCode().equals(jobExecution.getExitStatus().getExitCode())) {
-                jobKeyStatusService.setJobCompleted(jobName);
-            } else {
-                jobKeyStatusService.setJobError(jobName);
-            }
-        } catch (NoSuchJobException e) {
-            jobKeyStatusService.setJobError(jobName);
-            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "NoSuchJobException");
-        } catch (JobInstanceAlreadyCompleteException e) {
-            jobKeyStatusService.setJobError(jobName);
-            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobInstanceAlreadyCompleteException");
-        } catch (JobExecutionAlreadyRunningException e) {
-            jobKeyStatusService.setJobError(jobName);
-            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobExecutionAlreadyRunningException");
-        } catch (JobParametersInvalidException e) {
-            jobKeyStatusService.setJobError(jobName);
-            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobParametersInvalidException");
-        } catch (JobRestartException e) {
-            jobKeyStatusService.setJobError(jobName);
-            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobRestartException");
-        } finally {
-            jobRegistry.unregister(jobName);
-        }
+//        try {
+        jobKeyStatusService.setJobCompleted(jobName);
+//            Job job = jobRegistry.getJob(jobName);
+//            JobExecution jobExecution = jobLauncher.run(job, getJobParameters());
+//            if (ExitStatus.COMPLETED.getExitCode().equals(jobExecution.getExitStatus().getExitCode())) {
+//                jobKeyStatusService.setJobCompleted(jobName);
+//            } else {
+//                jobKeyStatusService.setJobError(jobName);
+//            }
+//        } catch (NoSuchJobException e) {
+//            jobKeyStatusService.setJobError(jobName);
+//            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "NoSuchJobException");
+//        } catch (JobInstanceAlreadyCompleteException e) {
+//            jobKeyStatusService.setJobError(jobName);
+//            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobInstanceAlreadyCompleteException");
+//        } catch (JobExecutionAlreadyRunningException e) {
+//            jobKeyStatusService.setJobError(jobName);
+//            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobExecutionAlreadyRunningException");
+//        } catch (JobParametersInvalidException e) {
+//            jobKeyStatusService.setJobError(jobName);
+//            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobParametersInvalidException");
+//        } catch (JobRestartException e) {
+//            jobKeyStatusService.setJobError(jobName);
+//            logger.error("{}执行失败，失败原因是：{},异常类：{}", jobName, e.getMessage(), "JobRestartException");
+//        } finally {
+////            jobRegistry.unregister(jobName);
+//        }
     }
 
     public JobParameters getJobParameters() {
@@ -81,22 +76,6 @@ public class QuartzJobLauncher extends QuartzJobBean {
         builder.addString("JobParameters", jobParameters.trim());
         builder.addString("uuid", UUID.randomUUID().toString());
         return builder.toJobParameters();
-    }
-
-    public JobLauncher getJobLauncher() {
-        return jobLauncher;
-    }
-
-    public void setJobLauncher(JobLauncher jobLauncher) {
-        this.jobLauncher = jobLauncher;
-    }
-
-    public JobRegistry getJobRegistry() {
-        return jobRegistry;
-    }
-
-    public void setJobRegistry(JobRegistry jobRegistry) {
-        this.jobRegistry = jobRegistry;
     }
 
     public JobKeyStatusService getJobKeyStatusService() {

@@ -20,9 +20,9 @@ public class JobKeyDependenceServiceImpl implements JobKeyDependenceService {
     @Autowired
     private TaskDependencyDao taskDependencyDao;
     /*
-    * key: 任务编码
-    * value: 所有依赖的任务
-    * */
+     * key: 任务编码
+     * value: 所有依赖的任务
+     * */
     private Map<String, Set<String>> jobKeyDep;
 
     public void afterPropertiesSet(BatchRunConfDto conf) {
@@ -30,8 +30,8 @@ public class JobKeyDependenceServiceImpl implements JobKeyDependenceService {
         List<JobKeyDepDto> taskList = findById(conf.getDomainId(), conf.getBatchId());
 
         /*
-        * 初始化任务组中的任务依赖关系
-        * */
+         * 初始化任务组中的任务依赖关系
+         * */
         for (JobKeyDepDto m : taskList) {
             String id = JoinCode.join(m.getSuiteKey(), m.getJobKey());
             String upId = JoinCode.join(m.getSuiteKey(), m.getUpJobKey());

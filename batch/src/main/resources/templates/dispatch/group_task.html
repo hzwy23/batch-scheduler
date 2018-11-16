@@ -1,10 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
-<link rel="stylesheet" href="/css/flowchart.css"/>
-<script type="text/javascript" src="/js/flowchart.js"></script>
-<script type="text/javascript" src="/js/jsplumb.min.js"></script>
 <div class="row subsystem-header">
     <div class="pull-left">
-        <span>任务组内任务配置管理</span>
+        <span>任务配置管理</span>
         <i id="h-group-task-group-jobKey" style="display: none;" th:text="${groupId}"></i>
     </div>
 </div>
@@ -13,174 +10,65 @@
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
               class="pull-left">&nbsp;任务组描述 = <span th:text="${groupDesc}"></span></span>
     </div>
+
     <div id="h-dispatch-group-task-toolbar-listt" class="pull-right">
         <button onclick="DispatchGroupTaskObj.addTask()" class="btn btn-info btn-sm" title="新增配置任务">
             <span class="icon-plus"> 添加任务</span>
         </button>
-        <button class="btn btn-info btn-sm" type="button" onclick="addSize()"><i
-                class="glyphicon glyphicon-resize-vertical"></i> 扩展画布
-        </button>
-        <button id="h-drawer-delete" class="btn btn-danger btn-sm" type="button"><i
-                class="glyphicon glyphicon-trash"></i> 删除结点
-        </button>
-        <button id="h-drawer-save" class="btn btn-success btn-sm" type="button"><i
-                class="glyphicon glyphicon-saved"></i> 保存配置
+        <button onclick="DispatchGroupTaskObj.delete()" class="btn btn-danger btn-sm" title="删除配置任务">
+            <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
-<div>
-    <div class="hzwy23-drawer-area">
-        <div class="hzwy23-flowchart-workspace">
-            <div id="drawer-task-handle" class="pull-right"
-                 style="right:-300px; width: 300px; position: fixed; z-index: 8192;background-color: #fdfdfd">
-                <table class="table table-responsive table-bordered">
-                    <tr>
-                        <th>属性</th>
-                        <th>值</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div id="canvas" style="overflow: hidden; position: relative;">
-            </div>
-        </div>
+<div class="row" style="margin-top:6px;">
+    <div id="h-dispatch-group-task-table-info"
+         class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-dispatch-group-task-relation-table"
+               data-toggle="table"
+               data-striped="true"
+               data-unique-id="taskId"
+               data-url="/v1/dispatch/group/define/task"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-search="false">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-align="center" data-width="46px" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
+                <th data-field="jobKey" data-align="center" data-width="280px">JobKey</th>
+                <th data-align="center" data-field="code_number">任务编码</th>
+                <th data-align="left" data-field="task_desc">任务名称</th>
+                <th data-align="center" data-field="task_type_desc">任务类型</th>
+                <th data-align="center" data-formatter="DispatchGroupDefineObj.formatterTask">操作</th>
+            </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
+        var groupId = $("#h-group-task-group-jobKey").html();
+        $("#h-dispatch-group-task-relation-table").bootstrapTable({
+            height: hwindow - 130,
+            queryParams: function (params) {
+                params.group_id = groupId;
+                return params;
+            }
+        });
+
         $("#h-dispatch-group-task-button-list").height(hwindow - 130);
         $("#h-dispatch-group-task-dependency-info").height(hwindow - 130);
     });
 
     var DispatchGroupTaskObj = {
-        jsp: {},
         formatterindex: function (value, row, index) {
             return index + 1;
         },
         addTask: function () {
             var groupId = $("#h-group-task-group-jobKey").html();
-            var domain_id = $("#h-dispatch-group-define-domain-list").val();
-
-            $.Hmodal({
-                height: "430px",
-                body: $("#h-dispatch-group-task-add-src").html(),
-                header: "新增任务",
-                callback: function (newArg) {
-                    var flag = false;
-                    var task_id = $("#h-dispatch-group-task-add-form").find("select[name='task_id']").val();
-                    var rows = $("#h-dispatch-task-argument-relation-table").bootstrapTable('getData');
-                    var arg_list = new Array();
-
-                    $(rows).each(function (index, element) {
-                        var argType = element.arg_type;
-                        var argValue = element.arg_value;
-                        var argId = element.arg_id;
-                        /*<![CDATA[*/
-                        if (argType == "3") {
-                            if (argValue == "-") {
-                                $.Notify({
-                                    message: "这个任务含有【任务组参数】参数类型，请填写参数值",
-                                    type: "danger"
-                                });
-                                flag = true;
-                                return false;
-                            } else {
-                                var e = {};
-                                e.arg_id = argId;
-                                e.arg_value = argValue;
-                                arg_list.push(e);
-                            }
-                        }
-                        /*]]>*/
-                    });
-                    if (flag) {
-                        return
-                    }
-                    var uuid = jsPlumbUtil.uuid();
-                    $.HAjaxRequest({
-                        url: "/v1/dispatch/group/define/task/add",
-                        type: "POST",
-                        data: {
-                            uuid: uuid,
-                            task_id: task_id,
-                            domain_id: domain_id,
-                            group_id: groupId,
-                            arg_list: JSON.stringify(arg_list)
-                        },
-                        success: function () {
-                            $(newArg).remove();
-                            $("#h-dispatch-group-task-relation-table").bootstrapTable('refresh');
-                            DispatchGroupTaskObj.jsp.newNode({
-                                id: uuid
-                            });
-                        }
-                    });
-                },
-                preprocess: function () {
-
-                    $.getJSON("/v1/dispatch/task/define", {domain_id: domain_id}, function (data) {
-                        var arr = new Array();
-                        $(data).each(function (index, element) {
-                            var e = {};
-                            e.id = element.taskId;
-                            e.text = element.taskDesc;
-                            e.upId = "##hzwy23##";
-                            arr.push(e);
-                        });
-
-                        $("#h-dispatch-group-task-add-form").find("select[name='task_id']").Hselect({
-                            height: "30px",
-                            data: arr,
-                            onclick: function () {
-                                var taskId = $("#h-dispatch-group-task-add-form").find("select[name='task_id']").val();
-                                $.getJSON("/v1/dispatch/task/define/argument", {task_id: taskId}, function (rst) {
-                                    $("#h-dispatch-task-argument-relation-table").bootstrapTable('load', rst);
-                                    $("#h-dispatch-task-argument-relation-table").find("tbody tr").each(function (index, element) {
-                                        var typeId = rst[index].arg_type;
-                                        if (typeId == "1" || typeId == "2") {
-                                            var argValue = $(element).find("td:eq(2) a").attr("data-value");
-                                            $(element).find("td:eq(2)").html(argValue);
-                                        } else if (typeId == "4") {
-                                            $(element).find("td:eq(2)").html("---");
-                                        } else {
-                                            $(element).find("td:eq(2) a").html('<span style="color: blue">-请输入参数值-</span>');
-                                        }
-                                    });
-                                });
-                            }
-                        });
-
-                        $("#h-dispatch-task-argument-relation-table").bootstrapTable({
-                            height: 200,
-                        });
-                    });
-                }
-            })
+            DispatchGroupDefineObj.addTask(groupId);
         },
         refresh: function () {
             $("#h-dispatch-group-task-relation-table").bootstrapTable('refresh');
@@ -201,128 +89,13 @@
                 success: function () {
                     $.Notify({
                         message: "删除任务组中配置任务成功",
-                        type: "success"
+                        type: "success",
                     });
                     DispatchGroupTaskObj.refresh();
                 }
             });
-        }
+        },
     }
-</script>
-
-<script>
-    /*<![CDATA[*/
-    var addSize = function () {
-        $("#canvas").css("height", "+=100");
-    };
-
-    $(document).ready(function () {
-        var height = $(window).height() - 118;
-        $("#canvas").height(height);
-        $(".hzwy23-flowchart-workspace").height(height).on('click', function () {
-            var rightValue = $("#drawer-task-handle").css("right");
-            if (rightValue == "0px") {
-                $("#drawer-task-handle").animate({
-                    right: "-300px",
-                    opacity: '0',
-                })
-            }
-        });
-
-        $("#drawer-task-handle").height(height).click(function () {
-            // 取消后续事件
-            if (window.event != undefined) {
-                window.event.cancelBubble = true;
-            } else {
-                var event = getEvent();
-                event.stopPropagation()
-            }
-        });
-        DispatchGroupTaskObj.jsp = new wisrcStatemachine({
-            addId: "#h-drawer-add",
-            deleteId: "#h-drawer-delete",
-            save: {
-                id: "#h-drawer-save",
-                success: function (connections, elements) {
-                    var groupId = $("#h-group-task-group-jobKey").html();
-                    var domain_id = Hutils.getFrist(groupId);
-
-                    var args = new Array();
-                    $(connections).each(function (index, element) {
-                        var e = {};
-                        e.domainId = domain_id;
-                        e.jobKey = element.target;
-                        e.upJobKey = element.source;
-                        args.push(e);
-                    });
-
-                    $.HAjaxRequest({
-                        url: "/v1/dispatch/group/define/group/task/dependency",
-                        type: "POST",
-                        data: {groupId: groupId, JSON: JSON.stringify(args)},
-                        success: function () {
-                            $.Notify({
-                                message: "保存连接信息成功",
-                                type: "success"
-                            })
-                        }
-                    });
-                    //刷新任务坐标信息
-                    $.HAjaxRequest({
-                        url: "/v1/dispatch/group/define/task/update",
-                        type: "PUT",
-                        data: {JSON: JSON.stringify(elements)},
-                        success: function (data) {
-                            console.log(data);
-                        }
-                    })
-                }
-            }
-        });
-
-        var groupId = $("#h-group-task-group-jobKey").html();
-        $.HAjaxRequest({
-            url: "/v1/dispatch/group/define/task",
-            type: "GET",
-            data: {group_id: groupId},
-            success: function (data) {
-                // 初始化任务
-                var tops = new Array();
-                $(data).each(function (index, element) {
-                    tops.push(element.jobKey);
-
-                    DispatchGroupTaskObj.jsp.newNode({
-                        id: element.jobKey,
-                        left: element.posLeft,
-                        top: element.posTop,
-                        text: element.taskDesc,
-                        btnAdd: false
-                    });
-                });
-                // 初始化链接信息
-                $(tops).each(function (index, element) {
-                    $.getJSON("/v1/dispatch/group/define/task/dependency", {id: element}, function (dt) {
-                        $(dt).each(function (i, e) {
-                            DispatchGroupTaskObj.jsp.getInstance().connect({
-                                source: e.upJobKey,
-                                target: e.jobKey,
-                                type: "basic"
-                            });
-                        })
-                    })
-                })
-            }
-        });
-    });
-    window.onresize = function () {
-        var height = $(window).height() - 118;
-        $("#drawer-task-handle").height(height);
-        if ($("#canvas").height() < height) {
-            $("#canvas").height(height);
-        }
-        $(".hzwy23-flowchart-workspace").height(height);
-    }
-    /*]]>*/
 </script>
 
 <script id="h-dispatch-group-task-dependency-src" type="text/html">

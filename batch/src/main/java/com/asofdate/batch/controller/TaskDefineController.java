@@ -39,10 +39,10 @@ public class TaskDefineController {
     private TaskDefineService taskDefineService;
 
     /*
-    * http GET /v1/dispatch/task/define
-    * 查询指定域中的所有任务定义信息
-    * 如果指定域为空,则返回请求用户所属域的任务定义信息
-    * */
+     * http GET /v1/dispatch/task/define
+     * 查询指定域中的所有任务定义信息
+     * 如果指定域为空,则返回请求用户所属域的任务定义信息
+     * */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "查询指定域中的所有已经定义的任务信息", notes = "如果请求查询的参数为空，则返回用户所在域中定义的任务信息")
@@ -56,8 +56,8 @@ public class TaskDefineController {
     }
 
     /*
-    * 新增任务组
-    * */
+     * 新增任务组
+     * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "新增任务信息", notes = "向系统中添加新的任务，任务必须是存储过程，shell脚本，cmd脚本，可执行jar包，二进制文件中的一种")
@@ -79,8 +79,8 @@ public class TaskDefineController {
     }
 
     /*
-    * 删除任务组
-    * */
+     * 删除任务组
+     * */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletResponse response, HttpServletRequest request) {
@@ -99,8 +99,8 @@ public class TaskDefineController {
 
 
     /*
-    * 更新任务组
-    * */
+     * 更新任务组
+     * */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public String update(@Validated TaskDefineEntity taskDefineEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
@@ -162,9 +162,9 @@ public class TaskDefineController {
     }
 
     /*
-    * 更新任务参数的值，在任务定义过程中，只能更新参数类型为任务类型的参数
-    *
-    * */
+     * 更新任务参数的值，在任务定义过程中，只能更新参数类型为任务类型的参数
+     *
+     * */
     @RequestMapping(value = "/argument/value", method = RequestMethod.POST)
     @ResponseBody
     public String updateArgValue(HttpServletResponse response, HttpServletRequest request) {

@@ -43,11 +43,11 @@ public class HomeMenuDaoImpl implements HomeMenuDao {
     }
 
     /*
-    * 将菜单资源树转从List转换成Map类型
-    * 方便后边的匹配操作
-    * key : res_id
-    * value: ResourceEntity
-    * */
+     * 将菜单资源树转从List转换成Map类型
+     * 方便后边的匹配操作
+     * key : res_id
+     * value: ResourceEntity
+     * */
     private Map<String, ResourceEntity> list2Map(List<ResourceEntity> list, String typeId) {
         Map<String, ResourceEntity> map = new HashMap<String, ResourceEntity>();
         for (ResourceEntity m : list) {

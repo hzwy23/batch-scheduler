@@ -67,18 +67,18 @@ public class ResourceManagement {
     }
 
     /*
-    * @return: Map<Key,Value>
-    *     key: 表示批次中配置的需要运行的任务组id, 这个id不是任务组编码,而是配置任务组依赖关系时,生成的随机唯一性编码
-    *     value: 是任务组的详细信息,包括任务组编码,所属域等等
-    * */
+     * @return: Map<Key,Value>
+     *     key: 表示批次中配置的需要运行的任务组id, 这个id不是任务组编码,而是配置任务组依赖关系时,生成的随机唯一性编码
+     *     value: 是任务组的详细信息,包括任务组编码,所属域等等
+     * */
     public Set<String> getRunnableSuite() {
         Set<String> set = new HashSet<>();
         for (BatchGroupEntity m : suiteKeyList) {
             set.remove(m.getSuiteKey());
             /*
-            * 如果任务组状态不是初始化值
-            * 表示任务组已经被启动, 则不允许在此加入预备运行状态中.
-            * */
+             * 如果任务组状态不是初始化值
+             * 表示任务组已经被启动, 则不允许在此加入预备运行状态中.
+             * */
             if (suiteKeyStatusService.getSuiteStatus(m.getSuiteKey()) != GroupStatus.SUITE_KEY_STATUS_INIT) {
                 continue;
             }

@@ -12,11 +12,18 @@
 
     <name>auth</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.asofdate</groupId>
+            <artifactId>asofdate</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>

@@ -52,8 +52,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     /*
-    * 验证成功后，调用这个方法
-    * */
+     * 验证成功后，调用这个方法
+     * */
     @Override
     protected void successfulAuthentication(
             HttpServletRequest req,
@@ -63,8 +63,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     /*
-    * 验证失败后，调用这个方法
-    * */
+     * 验证失败后，调用这个方法
+     * */
     @Override
     protected void unsuccessfulAuthentication(
             HttpServletRequest request,

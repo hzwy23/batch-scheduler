@@ -83,21 +83,21 @@ public class BatchGroupRunningDaoImpl implements BatchGroupRunningDao {
     }
 
     /*
-    * 查询批次中所有的job总量
-    * @param batchId   批次号
-    * @param gid  批次配置中,任务组的id
-    * @return 返回这个任务组中任务总量
-    * */
+     * 查询批次中所有的job总量
+     * @param batchId   批次号
+     * @param gid  批次配置中,任务组的id
+     * @return 返回这个任务组中任务总量
+     * */
     private Integer getTotalJobs(String batchId, String gid, String asOfDate) {
         return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_202"), Integer.class, batchId, gid, asOfDate);
     }
 
     /*
-    * 查询批次中已经完成的job总量
-    * @param batchId   批次号
-    * @param gid  批次配置中,任务组的id
-    * @return 返回这个任务组中已经完成的任务量
-    * */
+     * 查询批次中已经完成的job总量
+     * @param batchId   批次号
+     * @param gid  批次配置中,任务组的id
+     * @return 返回这个任务组中已经完成的任务量
+     * */
     private Integer getCompleteJobs(String uuid, String gid, String asOfDate) {
         return jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_203"), Integer.class, uuid, gid, asOfDate);
     }

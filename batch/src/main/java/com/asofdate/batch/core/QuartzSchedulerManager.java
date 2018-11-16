@@ -20,11 +20,11 @@ import java.util.Set;
  */
 @Component
 @Scope("prototype")
-public class BatchSchedulerManager extends Thread {
+public class QuartzSchedulerManager extends Thread {
     private final String BATCH_SUCCESS_MSG = "success";
     private final String BATCH_ERROR_MSG = "Running error";
     private final String BATCH_STOPPED_MSG = "stopped";
-    private final Logger logger = LoggerFactory.getLogger(BatchSchedulerManager.class);
+    private final Logger logger = LoggerFactory.getLogger(QuartzSchedulerManager.class);
     @Autowired
     public QuartzSchedulerConfig quartzSchedulerConfig;
     @Autowired
@@ -122,11 +122,15 @@ public class BatchSchedulerManager extends Thread {
         while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED) {
             RetMsg retMsg = batchPagging();
             if (!retMsg.checkCode()) {
-                logger.error(retMsg.getMessage());
+                if (SysStatus.COMPLETED.equals(retMsg.getCode())) {
+                    logger.info(retMsg.getMessage());
+                } else {
+                    logger.error(retMsg.getMessage());
+                }
                 return;
             }
         }
-        logger.error("批次停止运行");
+        logger.info("批次停止运行");
     }
 
     private RetMsg batchPagging() {

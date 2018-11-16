@@ -11,12 +11,6 @@ import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.configuration.DuplicateJobException;
-import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.support.ReferenceJobFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -29,18 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@EnableBatchProcessing
 @Scope("prototype")
 public class QuartzSchedulerConfig {
     private final Logger logger = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
     @Autowired
-    private TaskletConfig taskletConfig;
-    @Autowired
     private TaskDefineService taskDefineService;
-    @Autowired
-    private JobLauncher jobLauncher;
-    @Autowired
-    private JobRegistry jobRegistry;
 
     private BatchRunConfDto conf;
     private JobKeyStatusService jobKeyStatusService;
@@ -63,7 +50,6 @@ public class QuartzSchedulerConfig {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         // 配置DataSource后,将会出现异常
         // JobLauncher实例化对象无法序列化
-        // schedulerFactoryBean.setDataSource(dataSource);
         schedulerFactoryBean.setSchedulerName(conf.getBatchId());
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
         schedulerFactoryBean.setAutoStartup(false);
@@ -108,32 +94,22 @@ public class QuartzSchedulerConfig {
         }
     }
 
-    private Map<String, Object> registerJob(String jobName) throws DuplicateJobException {
+    private Map<String, Object> registerJob(String jobName) {
         String taskId = jobKeyMap.get(JoinCode.getTaskCode(jobName)).getTaskId();
         TaskDefineEntity tm = taskDefineMap.get(taskId);
-        Job job = taskletConfig.job(conf, jobName, tm.getTaskType(), tm.getScriptFile());
-        ReferenceJobFactory regJob = new ReferenceJobFactory(job);
-        try {
-            jobRegistry.register(regJob);
-        } catch (DuplicateJobException e) {
-            jobRegistry.unregister(jobName);
-            jobRegistry.register(regJob);
-        }
-        logger.debug("register job,job name is :{}", jobName);
+        logger.debug("register job, job name is :{}", jobName);
         Map<String, Object> map = new HashMap<>();
         map.put("jobName", jobName);
-        map.put("jobLauncher", jobLauncher);
-        map.put("jobRegistry", jobRegistry);
         map.put("jobKeyStatusService", jobKeyStatusService);
         map.put("argumentService", argumentService);
         return map;
     }
 
-    private JobDetailFactoryBean jobDetailFactoryBean(String jobName) throws DuplicateJobException {
+    private JobDetailFactoryBean jobDetailFactoryBean(String jobName) {
         JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
         jobDetailFactoryBean.setJobClass(QuartzJobLauncher.class);
         jobDetailFactoryBean.setDurability(true);
-        logger.debug("job name is:{}", jobName);
+        logger.debug("register job, job name is:{}", jobName);
         jobDetailFactoryBean.setName(jobName);
         // 注册Job
         Map<String, Object> map = registerJob(jobName);
@@ -148,7 +124,7 @@ public class QuartzSchedulerConfig {
      * 每一个任务，对应着一个触发器
      * 每一个触发器，也只对应一个任务
      */
-    private SimpleTrigger createSimpleTrigger(String jobName) throws DuplicateJobException {
+    private SimpleTrigger createSimpleTrigger(String jobName) {
         SimpleTriggerFactoryBean simpleTriggerFactoryBean = new SimpleTriggerFactoryBean();
         JobDetail job = jobDetailFactoryBean(jobName).getObject();
         simpleTriggerFactoryBean.setJobDetail(job);
@@ -159,5 +135,4 @@ public class QuartzSchedulerConfig {
         simpleTriggerFactoryBean.afterPropertiesSet();
         return simpleTriggerFactoryBean.getObject();
     }
-
 }

@@ -49,8 +49,8 @@ public class JobKeyStatusServiceImpl implements JobKeyStatusService {
         this.conf = confDto;
         jobKeyStatus = new HashMap<String, Integer>();
         /*
-        * 初始化全部任务组
-        * */
+         * 初始化全部任务组
+         * */
         for (BatchGroupEntity gl : suiteKeyList) {
             for (GroupTaskEntity tl : jobKeyList) {
                 String groupId = tl.getGroupId();
@@ -79,8 +79,8 @@ public class JobKeyStatusServiceImpl implements JobKeyStatusService {
 
 
     /*
-    * @param String uid 表示任务组id与任务id的组合,简称uid
-    * */
+     * @param String uid 表示任务组id与任务id的组合,简称uid
+     * */
     public int getJobStatus(String jobId) {
         if (jobKeyStatus.containsKey(jobId)) {
             return jobKeyStatus.get(jobId);
@@ -89,10 +89,10 @@ public class JobKeyStatusServiceImpl implements JobKeyStatusService {
     }
 
     /*
-    * 设置任务状态为已完成
-    * @param String gid 表示任务组id
-    * @param String id  表示任务id
-    * */
+     * 设置任务状态为已完成
+     * @param String gid 表示任务组id
+     * @param String id  表示任务id
+     * */
     @Override
     public void setJobCompleted(String uid) {
         jobKeyStatus.put(uid, JobStatus.Job_STATUS_COMPLETED);

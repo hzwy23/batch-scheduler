@@ -58,8 +58,8 @@ public class GroupDefineController {
     }
 
     /*
-    * 新增任务组
-    * */
+     * 新增任务组
+     * */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "新增任务组")
@@ -73,8 +73,8 @@ public class GroupDefineController {
     }
 
     /*
-    * 删除任务组
-    * */
+     * 删除任务组
+     * */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public String delete(HttpServletResponse response, HttpServletRequest request) {
@@ -93,8 +93,8 @@ public class GroupDefineController {
 
 
     /*
-    * 更新任务组
-    * */
+     * 更新任务组
+     * */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public String update(HttpServletResponse response, HttpServletRequest request) {
@@ -190,9 +190,9 @@ public class GroupDefineController {
     }
 
     /*
-    * 删除任务组中已经配置的任务信息
-    * @param id 是任务组中,任务的唯一id
-    * */
+     * 删除任务组中已经配置的任务信息
+     * @param id 是任务组中,任务的唯一id
+     * */
     @RequestMapping(value = "/task/delete", method = RequestMethod.POST)
     @ResponseBody
     public String deleteTask(HttpServletResponse response, HttpServletRequest request) {
@@ -249,11 +249,7 @@ public class GroupDefineController {
         String task_id = request.getParameter("task_id");
         String domain_id = request.getParameter("domain_id");
         String arg_list = request.getParameter("arg_list");
-        String id = request.getParameter("uuid");
-
-        if (id.isEmpty()) {
-            UUID.randomUUID().toString();
-        }
+        String id = UUID.randomUUID().toString();
 
         RetMsg retMsg = groupTaskService.addTask(id, group_id, task_id, domain_id);
         if (!retMsg.checkCode()) {

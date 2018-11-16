@@ -1,5 +1,6 @@
 package com.asofdate.hauth.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 

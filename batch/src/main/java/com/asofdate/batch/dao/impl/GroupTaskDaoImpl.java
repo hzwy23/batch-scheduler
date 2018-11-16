@@ -14,14 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,25 +42,9 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
 
     @Override
     public List<GroupTaskEntity> getJobList(String groupId) {
-        List<GroupTaskEntity> list = new ArrayList<>();
-        jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_133"), new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                GroupTaskEntity one = new GroupTaskEntity();
-                one.setCodeNumber(resultSet.getString("code_number"));
-                one.setDomainId(resultSet.getString("domain_id"));
-                one.setGroupId(resultSet.getString("group_id"));
-                one.setJobKey(resultSet.getString("job_key"));
-                one.setPosTop(resultSet.getInt("pos_top"));
-                one.setTaskId(resultSet.getString("task_id"));
-                one.setTaskType(resultSet.getString("task_type"));
-                one.setTaskTypeDesc(resultSet.getString("task_type_desc"));
-                one.setTaskDesc(resultSet.getString("task_type_desc"));
-                one.setPosLeft(resultSet.getInt("pos_left"));
-                list.add(one);
-            }
-        }, groupId);
-        logger.debug("group id is:{},result is:{}", groupId, list);
+        RowMapper<GroupTaskEntity> rowMapper = new BeanPropertyRowMapper<>(GroupTaskEntity.class);
+        List<GroupTaskEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_133"), rowMapper, groupId);
+        logger.debug("group id is:{}", groupId);
         return list;
     }
 
@@ -128,9 +108,9 @@ public class GroupTaskDaoImpl implements GroupTaskDao {
         }
 
         /*
-        * 在任务依赖选择项目中,删除已经存在的依赖,并删除当前job的下级任务
-        * 任务组内任务禁止产生闭环
-        * */
+         * 在任务依赖选择项目中,删除已经存在的依赖,并删除当前job的下级任务
+         * 任务组内任务禁止产生闭环
+         * */
         for (int i = 0; i < list.size(); i++) {
             String subid = list.get(i).getJobKey();
             if (set.contains(subid)) {

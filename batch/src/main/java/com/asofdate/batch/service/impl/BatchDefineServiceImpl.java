@@ -176,7 +176,7 @@ public class BatchDefineServiceImpl implements BatchDefineService {
         }
 
         if (completeDate.before(calendar.getTime())) {
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "批次运行到终止日期，批次调度正常退出服务", conf);
+            return RetMsgFactory.getRetMsg(SysStatus.COMPLETED, "批次运行到终止日期，批次调度正常退出服务", conf);
         }
 
         // 获取批次现在的状态信息

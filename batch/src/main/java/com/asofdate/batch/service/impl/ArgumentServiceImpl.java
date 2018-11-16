@@ -52,18 +52,18 @@ public class ArgumentServiceImpl implements ArgumentService {
     private Map<String, ArgumentDefineEntity> argDefineMap;
     private Map<String, List<TaskArgumentEntity>> taskArgMap;
     /*
-    *  任务组参数
-    *  key 是任务组中配置任务时生成的具有唯一性的id
-    *  alue 只这个id所绑定任务的参数列表,一个任务可以有多个参数
-    *  上述这个map中的每一行,表示了这个任务组中,某一个配置的任务,包含的任务组类型的参数,
-    *  如果没有任务类型的参数,则为空
-    * */
+     *  任务组参数
+     *  key 是任务组中配置任务时生成的具有唯一性的id
+     *  alue 只这个id所绑定任务的参数列表,一个任务可以有多个参数
+     *  上述这个map中的每一行,表示了这个任务组中,某一个配置的任务,包含的任务组类型的参数,
+     *  如果没有任务类型的参数,则为空
+     * */
     private Map<String, List<GroupArgumentEntity>> groupArgumentMap;
 
     /*
-    * 初始化参数管理服务
-    * 通过@Autowired自动注入这个类后,需要调用下边这个方法初始化类
-    * */
+     * 初始化参数管理服务
+     * 通过@Autowired自动注入这个类后,需要调用下边这个方法初始化类
+     * */
     public void afterPropertySet(BatchRunConfDto conf, List<GroupTaskEntity> jobKeyList) {
         groupTaskMap = new HashMap<>();
         List<ArgumentDefineEntity> argDefineList = argumentDefineDao.findAll(conf.getDomainId());
@@ -96,12 +96,12 @@ public class ArgumentServiceImpl implements ArgumentService {
 
 
     /*
-    * 根据任务组中任务唯一编码获取其需要的参数
-    * 参数分为三个级别
-    * 1: 批次参数
-    * 2: 任务组中配置任务的参数
-    * 3: 固定参数
-    * */
+     * 根据任务组中任务唯一编码获取其需要的参数
+     * 参数分为三个级别
+     * 1: 批次参数
+     * 2: 任务组中配置任务的参数
+     * 3: 固定参数
+     * */
     @Override
     public List<TaskArgumentEntity> queryArgument(String id) {
         String taskId = groupTaskMap.get(id).getTaskId();
@@ -150,11 +150,11 @@ public class ArgumentServiceImpl implements ArgumentService {
         String argValue = null;
 
         /*
-        * map中存放的全部是批次参数信息
-        * key :  arg_id
-        * value : BatchArgumentEntiry
-        * 同一个域中,批次编码唯一, 批次参数在这个批次中的值也是唯一
-        * */
+         * map中存放的全部是批次参数信息
+         * key :  arg_id
+         * value : BatchArgumentEntiry
+         * 同一个域中,批次编码唯一, 批次参数在这个批次中的值也是唯一
+         * */
         Map<String, BatchArgumentEntiry> map = new HashMap<>();
         for (BatchArgumentEntiry m : list) {
             map.put(m.getArgId(), m);
@@ -174,21 +174,21 @@ public class ArgumentServiceImpl implements ArgumentService {
             }
 
             /*
-            * 如果参数类型不是批次参数,
-            * 如果是固定参数,则固定参数值在参数定义中已经赋值
-            * 如果是任务参数或者任务组参数,则在后边进行赋值
-            * 这个函数中,只完成了固定参数,批次参数的赋值
-            * */
+             * 如果参数类型不是批次参数,
+             * 如果是固定参数,则固定参数值在参数定义中已经赋值
+             * 如果是任务参数或者任务组参数,则在后边进行赋值
+             * 这个函数中,只完成了固定参数,批次参数的赋值
+             * */
             argDefineMap.put(m.getArgId(), m);
         }
     }
 
     /*
-    * 初始化任务参数
-    * 任务参数的值与任务绑定,在参数定义中,同一个参数,如果类型是任务参数
-    * 这个参数,在不同的任务中,值可以不同,任务参数的key是task_id, value是一个List
-    * 一个任务,可以有多个参数,所以value是List
-    * */
+     * 初始化任务参数
+     * 任务参数的值与任务绑定,在参数定义中,同一个参数,如果类型是任务参数
+     * 这个参数,在不同的任务中,值可以不同,任务参数的key是task_id, value是一个List
+     * 一个任务,可以有多个参数,所以value是List
+     * */
     private void initTaskArgMap(List<TaskArgumentEntity> list) {
         taskArgMap = new HashMap<>();
         for (TaskArgumentEntity m : list) {

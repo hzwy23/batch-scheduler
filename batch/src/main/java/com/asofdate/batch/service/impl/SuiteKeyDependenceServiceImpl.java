@@ -19,15 +19,15 @@ public class SuiteKeyDependenceServiceImpl implements SuiteKeyDependenceService 
     @Autowired
     private GroupDependencyDao groupDependencyDao;
     /*
-    * key : 任务组
-    * value: 所有依赖的任务组
-    * */
+     * key : 任务组
+     * value: 所有依赖的任务组
+     * */
     private Map<String, Set<GroupDependencyEntity>> suiteKeyDep;
 
 
     /*
-    * 初始化任务组的依赖关系
-    * */
+     * 初始化任务组的依赖关系
+     * */
     @Override
     public void afterPropertiesSet(BatchRunConfDto conf) {
         suiteKeyDep = new HashMap<>();
