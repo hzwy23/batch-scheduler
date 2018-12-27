@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,8 @@ public class SysConfigController {
     @ApiOperation(value = "获取所有的系统参数配置信息", notes = "查询系统中已经定义的系统配置参数，不同的域可以对同一个参数定义不同的参数值")
     @ApiImplicitParam(required = true, name = "domain_id", value = "域编码")
     @RequestMapping(value = "/v1/dispatch/config/sys", method = RequestMethod.GET)
-    public List getALL(HttpServletRequest request) {
+    public List getALL(@RequestParam("domain_id") String domainId, HttpServletRequest request) {
 
-        String domainId = request.getParameter("domain_id");
         if (domainId == null || domainId.isEmpty()) {
             domainId = JwtService.getConnUser(request).getDomainID();
         }

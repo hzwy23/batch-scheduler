@@ -29,21 +29,21 @@ public class SysConfigDaoImpl implements SysConfigDao {
     @Override
     public List<SysConfigEntity> findAll(String domainId) {
         RowMapper<SysConfigEntity> rowMapper = new BeanPropertyRowMapper<SysConfigEntity>(SysConfigEntity.class);
-        List<SysConfigEntity> list = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_181"), rowMapper);
-        List<SysConfigEntity> list2 = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_187"), rowMapper, domainId);
+        List<SysConfigEntity> commonConfig = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_181"), rowMapper);
+        List<SysConfigEntity> domainConfigList = jdbcTemplate.query(batchSqlText.getSql("sys_rdbms_187"), rowMapper, domainId);
         Map<String, SysConfigEntity> map = new HashMap<>();
 
-        for (int i = 0; i < list2.size(); i++) {
-            map.put(list2.get(i).getConfigId(), list2.get(i));
+        for (int i = 0; i < domainConfigList.size(); i++) {
+            map.put(domainConfigList.get(i).getConfigId(), domainConfigList.get(i));
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            String cid = list.get(i).getConfigId();
+        for (int i = 0; i < commonConfig.size(); i++) {
+            String cid = commonConfig.get(i).getConfigId();
             if (map.containsKey(cid)) {
-                list.get(i).setConfigValue(map.get(cid).getConfigValue());
+                commonConfig.get(i).setConfigValue(map.get(cid).getConfigValue());
             }
         }
-        return list;
+        return commonConfig;
     }
 
     @Override

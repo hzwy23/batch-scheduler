@@ -126,7 +126,9 @@
                 width: "180px",
                 value: data.domain_id,
                 onclick: function () {
-                    //todo
+                    console.log('hello world')
+                    let cdomainId = $("#h-dispatch-batch-config-domain-list").val();
+                    BatchSysConfigObj.init(cdomainId);
                 }
             });
 
