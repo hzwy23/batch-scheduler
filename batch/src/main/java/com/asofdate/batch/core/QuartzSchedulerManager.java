@@ -3,6 +3,7 @@ package com.asofdate.batch.core;
 import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.service.BatchDefineService;
 import com.asofdate.batch.utils.BatchStatus;
+import com.asofdate.batch.utils.DateTime;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
 import com.asofdate.utils.factory.RetMsgFactory;
@@ -37,13 +38,9 @@ public class QuartzSchedulerManager extends Thread {
 
     // 创建调度服务
     public void createJobSchedulerService(BatchRunConfDto conf) throws Exception {
-
         this.conf = conf;
         drm.afterPropertiesSet(conf);
         logger.info("【{}】初始化参数管理服务成功", conf.getBatchId());
-
-        // 由于初始化时关闭了所有的触发器
-        // 所以,调度开启后,并不会有任务执行
         this.scheduler = quartzSchedulerConfig.createSchedulerFactoryBean(conf, drm);
     }
 
@@ -69,7 +66,7 @@ public class QuartzSchedulerManager extends Thread {
                  * 接着根据翻页频率，翻页执行批次
                  * */
                 if (drm.isBatchCompleted()) {
-                    logger.info("batch completed.");
+                    logger.info("批次执行完成，完成时间是：{}, 批次号是：{}，批次日期是：{}", DateTime.getCurrentDateTime(), conf.getBatchId(), conf.getAsOfDate());
                     scheduler.stop();
                     scheduler.destroy();
                     batchDefineService.destoryBatch(conf.getBatchId(), BATCH_SUCCESS_MSG, BatchStatus.BATCH_STATUS_COMPLETED);
@@ -83,7 +80,7 @@ public class QuartzSchedulerManager extends Thread {
                  * 并撤销整个批次
                  * */
                 if (drm.hasError()) {
-                    logger.info("task error, destroy scheduler");
+                    logger.info("任务执行失败，停止调度服务, 批次号是：{}", conf.getBatchId());
                     scheduler.stop();
                     scheduler.destroy();
                     batchDefineService.destoryBatch(conf.getBatchId(), BATCH_ERROR_MSG, BatchStatus.BATCH_STATUS_ERROR);
@@ -91,7 +88,7 @@ public class QuartzSchedulerManager extends Thread {
                     return BatchStatus.BATCH_STATUS_ERROR;
                 }
 
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 // 如果批次状态被设置为非执行状态，则退出当前批次
                 int batchSt = batchDefineService.getStatus(conf.getBatchId());
                 if (BatchStatus.BATCH_STATUS_RUNNING != batchSt) {

@@ -313,7 +313,6 @@ public class BatchDefineServiceImpl implements BatchDefineService {
     @Override
     public BatchRunConfDto initConf(String batchId, String domainId) {
         BatchDefineEntity bde = batchDefineDao.findDetailsByBatchId(batchId);
-
         String basePath = sysConfigService.getValue(domainId, "CONF0001");
         String redisSwitch = sysConfigService.getValue(domainId, "CONF0002");
         BatchRunConfDto batchRunConfDto = new BatchRunConfDto();

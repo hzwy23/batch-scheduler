@@ -62,7 +62,7 @@ public class MySQLBatchSqlDefine implements SQLFactory {
     private final String sys_rdbms_154 = "insert into dispatch_batch_group_relation(suite_key,batch_id,group_id,domain_id) values(?,?,?,?)";
     private final String sys_rdbms_155 = "delete from dispatch_batch_group_relation where suite_key = ?";
     private final String sys_rdbms_156 = "insert into dispatch_group_dependency(uuid,suite_key,up_suite_key,domain_id) values(uuid(),?,?,?)";
-    private final String sys_rdbms_157 = "select as_of_date from dispatch_batch_define where batch_id = ?";
+    private final String sys_rdbms_157 = "select date_format(as_of_date,'%Y-%m-%d %H:%i:%s') as_of_date from dispatch_batch_define where batch_id = ?";
     private final String sys_rdbms_158 = "insert into dispatch_batch_argument_rel(uuid,batch_id,arg_id,arg_value,domain_id) values(uuid(),?,?,?,?)";
     private final String sys_rdbms_159 = "select count(*) from dispatch_batch_argument_rel where batch_id = ? and arg_id = ?";
     private final String sys_rdbms_160 = "update dispatch_batch_argument_rel set arg_value = ? where batch_id = ? and arg_id = ?";

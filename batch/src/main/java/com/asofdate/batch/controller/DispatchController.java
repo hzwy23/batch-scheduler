@@ -60,7 +60,7 @@ public class DispatchController {
 
         if (BatchStatus.BATCH_STATUS_RUNNING == batchDefineService.getStatus(batchId)) {
             response.setStatus(421);
-            logger.info("batch is running,batch_id is: {}", batchId);
+            logger.info("批次正在运行中，无法重新启动, 批次号是：{}", batchId);
             return Hret.error(421, "批次正在运行中", null);
         }
 
@@ -73,7 +73,6 @@ public class DispatchController {
             return Hret.error(retMsg);
         }
 
-        logger.info("init 任务脚本输出已完成。");
         retMsg = batchDefineService.runBatchInit(batchId);
         if (SysStatus.SUCCESS_CODE != retMsg.getCode()) {
             batchDefineService.setStatus(batchId, BatchStatus.BATCH_STATUS_ERROR);
@@ -81,7 +80,7 @@ public class DispatchController {
             response.setStatus(426);
             return Hret.error(retMsg);
         }
-        logger.info("【{}】初始化修改批次状态信息完成", batchId);
+        logger.debug("初始化修改批次状态信息完成，批次号是：{}", batchId);
 
         // 进度调度依赖关系管理
         // 根据依赖关系,开启任务触发器
@@ -92,11 +91,11 @@ public class DispatchController {
             batchDefineService.setStatus(batchId, BatchStatus.BATCH_STATUS_ERROR);
             return Hret.error(SysStatus.ERROR_CODE, "启动调度器失败", e.getMessage());
         }
-        logger.info("【{}】创建调度器成功", batchId);
+        logger.debug("调度器创建成功，批次号是：{}", batchId);
 
         quartzSchedulerManager.start();
 
-        logger.info("batch started, batch_id is:{},domain_id is:{}", batchId, domainId);
+        logger.info("批次初始化完成，调度服务已启动，批次号是：{}", batchId);
         return Hret.success(SysStatus.SUCCESS_CODE, "start batch successfully. batch id is :" + batchId, null);
     }
 }

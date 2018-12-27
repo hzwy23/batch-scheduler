@@ -109,11 +109,13 @@ public class ArgumentServiceImpl implements ArgumentService {
             return null;
         }
 
-        CopyOnWriteArrayList<TaskArgumentEntity> copyOnWriteArrayList = new CopyOnWriteArrayList<TaskArgumentEntity>(taskArgMap.get(taskId));
-
-        if (copyOnWriteArrayList == null) {
+        List<TaskArgumentEntity> list = taskArgMap.get(taskId);
+        if (list == null) {
             return null;
         }
+
+        CopyOnWriteArrayList<TaskArgumentEntity> copyOnWriteArrayList = new CopyOnWriteArrayList<TaskArgumentEntity>(list);
+
 
         for (TaskArgumentEntity m : copyOnWriteArrayList) {
             String argType = argDefineMap.get(m.getArgId()).getArgType();

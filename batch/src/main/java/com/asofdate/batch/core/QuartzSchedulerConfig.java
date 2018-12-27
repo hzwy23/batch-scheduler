@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
@@ -32,9 +33,10 @@ public class QuartzSchedulerConfig {
     private TaskDefineService taskDefineService;
     @Autowired
     private ExecService execService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private BatchRunConfDto conf;
-
     private JobKeyStatusService jobKeyStatusService;
     private ArgumentService argumentService;
     private Map<String, TaskDefineEntity> taskDefineMap;
@@ -94,40 +96,51 @@ public class QuartzSchedulerConfig {
         taskDefineMap = new HashMap<>();
         List<TaskDefineEntity> list = taskDefineService.findAll(conf.getDomainId(), conf.getBatchId());
         for (TaskDefineEntity m : list) {
-            logger.debug("task is:{}", m.toString());
             taskDefineMap.put(m.getTaskId(), m);
         }
     }
 
-    private Map<String, Object> registerJob(String jobName) {
+    private void setJobData(JobDetailFactoryBean jobDetailFactoryBean, String jobName) {
         String taskId = jobKeyMap.get(JoinCode.getTaskCode(jobName)).getTaskId();
         TaskDefineEntity tm = taskDefineMap.get(taskId);
-        logger.debug("register job, job name is :{}", jobName);
         Map<String, Object> map = new HashMap<>();
         map.put("jobName", jobName);
         map.put("scriptPath", tm.getScriptFile());
-        map.put("taskType", tm.getTaskType());
         map.put("jobKeyStatusService", jobKeyStatusService);
         map.put("argumentService", argumentService);
         map.put("execService", execService);
         map.put("conf",conf);
-        return map;
+        map.put("jdbcTemplate",jdbcTemplate);
+        switch (tm.getTaskType()) {
+            case "1":
+                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
+                break;
+            case "2":
+                jobDetailFactoryBean.setJobClass(ProcedureJob.class);
+                break;
+            case "3":
+                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
+                break;
+            case "4":
+                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
+            case "5":
+                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
+                break;
+            default:
+                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
+        }
+        jobDetailFactoryBean.setJobDataAsMap(map);
     }
 
     // 注册任务
     private JobDetailFactoryBean jobDetailFactoryBean(String jobName) {
         JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
-        jobDetailFactoryBean.setJobClass(QuartzJobLauncher.class);
+        setJobData(jobDetailFactoryBean, jobName);
         jobDetailFactoryBean.setDurability(true);
-        logger.debug("register job, job name is:{}", jobName);
         jobDetailFactoryBean.setName(jobName);
-        // 注册Job
-        Map<String, Object> map = registerJob(jobName);
-        jobDetailFactoryBean.setJobDataAsMap(map);
         jobDetailFactoryBean.afterPropertiesSet();
         return jobDetailFactoryBean;
     }
-
 
     /**
      * 将任务与触发器关联
