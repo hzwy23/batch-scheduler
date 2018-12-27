@@ -6,12 +6,14 @@
     <groupId>com.asofdate</groupId>
     <artifactId>asofdate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
     <modules>
-        <module>auth</module>
         <module>bootstrap</module>
+        <module>auth</module>
         <module>batch</module>
     </modules>
-    <packaging>pom</packaging>
+
 
     <name>asofdate</name>
     <description>Demo project for Spring Boot</description>
