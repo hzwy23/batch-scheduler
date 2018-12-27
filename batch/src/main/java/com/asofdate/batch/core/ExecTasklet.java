@@ -6,10 +6,6 @@ import com.asofdate.batch.service.ExecService;
 import com.asofdate.utils.RetMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.repeat.RepeatStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,36 +16,28 @@ import java.util.Date;
 /**
  * Created by hzwy23 on 2017/7/4.
  */
-public class ExecTasklet implements Tasklet {
+public class ExecTasklet {
     private final Logger logger = LoggerFactory.getLogger(ExecTasklet.class);
 
     private String cmd = null;
     private String batchId = null;
     private String asOfDate = null;
     private ExecService execService;
+    private String jobParameters;
+    private String jobName;
 
-    public ExecTasklet(String cmd, ExecService execService, BatchRunConfDto conf) {
+    public ExecTasklet(String cmd, ExecService execService,String jobParameters, String jobName, BatchRunConfDto conf) {
         this.cmd = cmd;
         this.execService = execService;
+        this.jobParameters = jobParameters;
+        this.jobName = jobName;
         this.batchId = conf.getBatchId();
         this.asOfDate = conf.getAsOfDate();
     }
 
-    @Override
-    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-
-        Object parametersObj = chunkContext.getStepContext().getJobParameters().get("JobParameters");
-        String jobParameters = String.valueOf(System.currentTimeMillis());
-        if (parametersObj != null) {
-            jobParameters = parametersObj.toString();
-        }
-
-        String jobName = chunkContext.getStepContext().getJobName();
-
+    public boolean execute() {
         Process process = null;
-
         BufferedReader input = null;
-
         String line = null;
         int idx = 1;
         try {
@@ -63,7 +51,7 @@ public class ExecTasklet implements Tasklet {
                 writeLog(jobName, line, idx++);
             }
             process.waitFor();
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             writeLog(jobName, e.getMessage(), idx++);
             logger.error(e.getMessage());
         } finally {
@@ -75,7 +63,7 @@ public class ExecTasklet implements Tasklet {
                 }
             }
         }
-        return RepeatStatus.FINISHED;
+        return true;
     }
 
     private void writeLog(String jobId, String message, int idx) {
@@ -87,9 +75,6 @@ public class ExecTasklet implements Tasklet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         row.setExecTime(sdf.format(new Date()));
         row.setSortId(idx);
-        RetMsg retMsg = execService.echo(row);
-        if (!retMsg.checkCode()) {
-            logger.error(retMsg.toString());
-        }
+        execService.echo(row);
     }
 }

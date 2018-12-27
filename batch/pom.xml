@@ -27,11 +27,11 @@
             <version>2.2.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.batch</groupId>
-            <artifactId>spring-batch-core</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.batch</groupId>-->
+            <!--<artifactId>spring-batch-core</artifactId>-->
+            <!--<version>3.0.7.RELEASE</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.asofdate</groupId>

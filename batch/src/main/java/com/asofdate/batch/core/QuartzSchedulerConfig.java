@@ -4,6 +4,7 @@ import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.GroupTaskEntity;
 import com.asofdate.batch.entity.TaskDefineEntity;
 import com.asofdate.batch.service.ArgumentService;
+import com.asofdate.batch.service.ExecService;
 import com.asofdate.batch.service.JobKeyStatusService;
 import com.asofdate.batch.service.TaskDefineService;
 import com.asofdate.utils.JoinCode;
@@ -26,10 +27,14 @@ import java.util.Map;
 @Scope("prototype")
 public class QuartzSchedulerConfig {
     private final Logger logger = LoggerFactory.getLogger(QuartzSchedulerConfig.class);
+
     @Autowired
     private TaskDefineService taskDefineService;
+    @Autowired
+    private ExecService execService;
 
     private BatchRunConfDto conf;
+
     private JobKeyStatusService jobKeyStatusService;
     private ArgumentService argumentService;
     private Map<String, TaskDefineEntity> taskDefineMap;
@@ -100,11 +105,16 @@ public class QuartzSchedulerConfig {
         logger.debug("register job, job name is :{}", jobName);
         Map<String, Object> map = new HashMap<>();
         map.put("jobName", jobName);
+        map.put("scriptPath", tm.getScriptFile());
+        map.put("taskType", tm.getTaskType());
         map.put("jobKeyStatusService", jobKeyStatusService);
         map.put("argumentService", argumentService);
+        map.put("execService", execService);
+        map.put("conf",conf);
         return map;
     }
 
+    // 注册任务
     private JobDetailFactoryBean jobDetailFactoryBean(String jobName) {
         JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
         jobDetailFactoryBean.setJobClass(QuartzJobLauncher.class);
