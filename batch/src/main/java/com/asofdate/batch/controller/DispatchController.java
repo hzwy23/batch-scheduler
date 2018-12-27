@@ -35,8 +35,10 @@ public class DispatchController {
 
     @Autowired
     private QuartzSchedulerManager quartzSchedulerManager;
+
     @Autowired
     private BatchDefineService batchDefineService;
+
     @Autowired
     private ExecService execService;
 
@@ -65,7 +67,6 @@ public class DispatchController {
         }
 
         BatchRunConfDto bconf = batchDefineService.initConf(batchId, domainId);
-
         RetMsg retMsg = execService.init(bconf);
         if (!retMsg.checkCode()) {
             logger.info(retMsg.getMessage());
@@ -93,8 +94,7 @@ public class DispatchController {
         }
         logger.debug("调度器创建成功，批次号是：{}", batchId);
 
-        quartzSchedulerManager.start();
-
+        quartzSchedulerManager.run();
         logger.info("批次初始化完成，调度服务已启动，批次号是：{}", batchId);
         return Hret.success(SysStatus.SUCCESS_CODE, "start batch successfully. batch id is :" + batchId, null);
     }

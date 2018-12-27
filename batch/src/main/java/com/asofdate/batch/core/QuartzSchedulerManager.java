@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ import java.util.Set;
  */
 @Component
 @Scope("prototype")
-public class QuartzSchedulerManager extends Thread {
+public class QuartzSchedulerManager{
     private final String BATCH_SUCCESS_MSG = "success";
     private final String BATCH_ERROR_MSG = "Running error";
     private final String BATCH_STOPPED_MSG = "stopped";
@@ -40,15 +41,30 @@ public class QuartzSchedulerManager extends Thread {
     public void createJobSchedulerService(BatchRunConfDto conf) throws Exception {
         this.conf = conf;
         drm.afterPropertiesSet(conf);
-        logger.info("【{}】初始化参数管理服务成功", conf.getBatchId());
+        logger.debug("初始化参数管理服务成功，批次号是：{}", conf.getBatchId());
         this.scheduler = quartzSchedulerConfig.createSchedulerFactoryBean(conf, drm);
+    }
+
+    @Async
+    public void run() {
+        while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED) {
+            RetMsg retMsg = batchPagging();
+            if (!retMsg.checkCode()) {
+                if (SysStatus.COMPLETED.equals(retMsg.getCode())) {
+                    logger.info(retMsg.getMessage());
+                } else {
+                    logger.error(retMsg.getMessage());
+                }
+                return;
+            }
+        }
+        logger.info("批次停止运行");
     }
 
 
     private int schedulerCenter() {
         try {
             while (scheduler.isRunning()) {
-
                 /**
                  * 获取可以运行的任务组
                  * 一旦任务组依赖的上级任务组运行完成，
@@ -92,7 +108,7 @@ public class QuartzSchedulerManager extends Thread {
                 // 如果批次状态被设置为非执行状态，则退出当前批次
                 int batchSt = batchDefineService.getStatus(conf.getBatchId());
                 if (BatchStatus.BATCH_STATUS_RUNNING != batchSt) {
-                    logger.info("batch status is not running,batchid is:{},stauts is : {}", conf.getBatchId(), batchDefineService.getStatus(conf.getBatchId()));
+                    logger.info("批次处于非运行状态，退出调度服务。批次号是：{}, 状态是：{}", conf.getBatchId(), batchDefineService.getStatus(conf.getBatchId()));
                     scheduler.stop();
                     scheduler.destroy();
                     batchDefineService.destoryBatch(conf.getBatchId(), BATCH_STOPPED_MSG, BatchStatus.BATCH_STATUS_STOPPED);
@@ -114,21 +130,6 @@ public class QuartzSchedulerManager extends Thread {
         }
     }
 
-    @Override
-    public void run() {
-        while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED) {
-            RetMsg retMsg = batchPagging();
-            if (!retMsg.checkCode()) {
-                if (SysStatus.COMPLETED.equals(retMsg.getCode())) {
-                    logger.info(retMsg.getMessage());
-                } else {
-                    logger.error(retMsg.getMessage());
-                }
-                return;
-            }
-        }
-        logger.info("批次停止运行");
-    }
 
     private RetMsg batchPagging() {
         RetMsg retMsg = batchDefineService.batchPagging(conf);

@@ -35,7 +35,6 @@ batch-schduler与常见的任务调度系统侧重点不同，这个系统设计
 
 ## 引用组件
 1. spring-boot spring社区中一款优秀的快速开发框架
-2. spring-batch 一款非常优秀的批处理框架
 3. spring-security 用户认证管理
 4. quartz 调度器
 5. swagger2-ui
