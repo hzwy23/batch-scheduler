@@ -102,7 +102,10 @@ e-mail: hzwy23@163.com
 QQ群：118183812
 
 ## 修改历史：
-2017-11-29 添加图形化任务流程配置功能，正在开发中...
+
+2018-12-28 使用spring异步处理机制（@Async）实现任务状态监控与执行
+
+2018-12-27 升级spring-boot版本至2.1.1，移除spirng-batch依赖
 
 2017-11-02 移除项目中sun.misc.BASE64Encoder和sun.misc.BASE64Decoder，替换成apache的commons-codec
 
