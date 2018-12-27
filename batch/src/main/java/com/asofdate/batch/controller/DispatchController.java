@@ -94,7 +94,7 @@ public class DispatchController {
         }
         logger.debug("调度器创建成功，批次号是：{}", batchId);
 
-        quartzSchedulerManager.run();
+        quartzSchedulerManager.schedulerStart();
         logger.info("批次初始化完成，调度服务已启动，批次号是：{}", batchId);
         return Hret.success(SysStatus.SUCCESS_CODE, "start batch successfully. batch id is :" + batchId, null);
     }

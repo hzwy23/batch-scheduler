@@ -33,6 +33,8 @@ public class QuartzSchedulerManager{
     private BatchDefineService batchDefineService;
     @Autowired
     private ResourceManagement drm;
+    @Autowired
+    private GroupSchedulerService groupSchedulerService;
 
     private BatchRunConfDto conf;
     private SchedulerFactoryBean scheduler;
@@ -46,7 +48,7 @@ public class QuartzSchedulerManager{
     }
 
     @Async
-    public void run() {
+    public void schedulerStart() {
         while (schedulerCenter() == BatchStatus.BATCH_STATUS_COMPLETED) {
             RetMsg retMsg = batchPagging();
             if (!retMsg.checkCode()) {
@@ -63,6 +65,7 @@ public class QuartzSchedulerManager{
 
 
     private int schedulerCenter() {
+        groupSchedulerService.initRunGroup(scheduler.getScheduler(), drm);
         try {
             while (scheduler.isRunning()) {
                 /**
@@ -73,7 +76,7 @@ public class QuartzSchedulerManager{
                 Set<String> set = drm.getRunnableSuite();
                 for (String suiteKey : set) {
                     drm.setSuiteRunning(suiteKey);
-                    new RunGroupThread(scheduler.getScheduler(), drm, suiteKey).start();
+                    groupSchedulerService.groupSchedulerStart(suiteKey);
                 }
 
                 /**

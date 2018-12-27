@@ -6,28 +6,30 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 /**
  * Created by hzwy23 on 2017/5/29.
  */
-public class RunGroupThread extends Thread {
-    private final Logger logger = LoggerFactory.getLogger(RunGroupThread.class);
+@Service
+@Scope("prototype")
+public class GroupSchedulerService {
+    private final Logger logger = LoggerFactory.getLogger(GroupSchedulerService.class);
     private Scheduler scheduler;
     private ResourceManagement drm;
-    private String suiteKey;
 
-    public RunGroupThread(Scheduler scheduler,
-                          ResourceManagement drm,
-                          String suiteKey) {
+    public void initRunGroup(Scheduler scheduler,
+                          ResourceManagement drm) {
         this.scheduler = scheduler;
         this.drm = drm;
-        this.suiteKey = suiteKey;
     }
 
-    @Override
-    public void run() {
+    @Async
+    public void groupSchedulerStart(String suiteKey) {
         /**
          * 将任务组设置成运行中
          * 根据任务组中的任务之间的依赖关系
