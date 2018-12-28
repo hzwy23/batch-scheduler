@@ -1,3 +1,4 @@
-﻿echo "hello world task1"%1
-echo "successfully task1"
+﻿echo "successfully task1"
+echo 1%
 echo "第一个任务"
+ping www.baidu.com

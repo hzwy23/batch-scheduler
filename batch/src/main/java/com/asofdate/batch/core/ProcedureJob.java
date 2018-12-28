@@ -30,12 +30,14 @@ public class ProcedureJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         String jobParameters = getJobParameters();
         try {
-            logger.info("开始执行时间是：{}, 存储过程是：{}, 参数是：{}" , DateTime.getCurrentDateTime(), scriptPath, jobParameters);
+            logger.info("开始执行时间是：{}, 存储过程是：{}, 参数是：{}", DateTime.getCurrentDateTime(), scriptPath, jobParameters);
             jdbcTemplate.execute("call " + scriptPath + jobParameters);
             jobKeyStatusService.setJobCompleted(jobName);
+            logger.info("存储过程执行完成，存储过程名称是：{}", scriptPath);
         } catch (Exception e) {
+            jobKeyStatusService.setJobError(jobName);
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("存储过程执行错误，存储过程是：{}, 参数是：{}, 错误消息是：{]", scriptPath, jobParameters, e.getMessage());
         }
     }
 
@@ -46,11 +48,11 @@ public class ProcedureJob extends QuartzJobBean {
             return "()";
         }
         StringBuilder params = new StringBuilder("(");
-        for(TaskArgumentEntity ele : list){
+        for (TaskArgumentEntity ele : list) {
             params.append("'").append(ele.getArgValue()).append("',");
         }
         if (params.length() > 1) {
-            params.setCharAt(params.length()-1,')');
+            params.setCharAt(params.length() - 1, ')');
         } else {
             params.append(')');
         }

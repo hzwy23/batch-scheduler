@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by hzwy23 on 2017/7/4.
  */
-public class ExecuteJob extends QuartzJobBean {
+public class JavaJarJob extends QuartzJobBean {
     private final Logger logger = LoggerFactory.getLogger(ExecuteJob.class);
 
     private String scriptPath;
@@ -31,24 +31,22 @@ public class ExecuteJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
         String jobParameters = getJobParameters();
-        String file = getScriptFilePath(conf.getBasePath(), scriptPath);
-        logger.info("开始执行时间是：{}, 脚本路径是：{}，参数是：{}", DateTime.getCurrentDateTime(), file, jobParameters);
+        String cmd = getScriptFilePath(conf.getBasePath(), scriptPath);
+        logger.info("开始执行时间是：{}, 脚本路径是：{}，参数是：{}", DateTime.getCurrentDateTime(), cmd, jobParameters);
 
         try {
-            String command = new StringBuilder(file).append(" ").append(jobParameters).toString();
+            String command = new StringBuilder("java -jar ").append(cmd).append(" ").append(jobParameters).toString();
             Process process = Runtime.getRuntime().exec(command);
-
             captureConsole.capture(process, jobName, conf);
             if (0 == process.waitFor()) {
-                logger.info("任务执行完成，任务是：{}", file);
-                jobKeyStatusService.setJobCompleted(jobName);
+                logger.info("任务执行完成，任务是：{}", cmd);
+                jobKeyStatusService.setJobError(jobName);
             }
         } catch (IOException | InterruptedException e) {
+            jobKeyStatusService.setJobCompleted(jobName);
             captureConsole.writeLog(jobName, e.getMessage(), 0, conf);
-            logger.error("脚本执行错误，脚本名称是：{}, 参数是：{}, 错误信息是：{}", file, jobParameters, e.getMessage());
-            jobKeyStatusService.setJobError(jobName);
+            logger.error("Java可执行程序执行错误，程序是：{}, 参数是：{}, 错误消息是：{]", cmd, jobParameters, e.getMessage());
         }
     }
 
@@ -78,9 +76,11 @@ public class ExecuteJob extends QuartzJobBean {
         }
     }
 
+
     public void setScriptPath(String scriptPath) {
         this.scriptPath = scriptPath;
     }
+
 
     public void setJobName(String jobName) {
         this.jobName = jobName;

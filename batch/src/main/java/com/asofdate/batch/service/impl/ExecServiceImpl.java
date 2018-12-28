@@ -26,7 +26,6 @@ public class ExecServiceImpl implements ExecService {
     private ExecDao execDao;
 
     @Override
-    @Async
     public RetMsg echo(ExecLogEntity row) {
         try {
             int size = execDao.insert(row);

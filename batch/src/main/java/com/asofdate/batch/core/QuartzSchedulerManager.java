@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Component
 @Scope("prototype")
-public class QuartzSchedulerManager{
+public class QuartzSchedulerManager {
     private final String BATCH_SUCCESS_MSG = "success";
     private final String BATCH_ERROR_MSG = "Running error";
     private final String BATCH_STOPPED_MSG = "stopped";

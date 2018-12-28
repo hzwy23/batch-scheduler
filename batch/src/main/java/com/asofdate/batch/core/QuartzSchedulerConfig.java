@@ -35,6 +35,8 @@ public class QuartzSchedulerConfig {
     private ExecService execService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private CaptureConsole captureConsole;
 
     private BatchRunConfDto conf;
     private JobKeyStatusService jobKeyStatusService;
@@ -109,21 +111,22 @@ public class QuartzSchedulerConfig {
         map.put("jobKeyStatusService", jobKeyStatusService);
         map.put("argumentService", argumentService);
         map.put("execService", execService);
-        map.put("conf",conf);
-        map.put("jdbcTemplate",jdbcTemplate);
+        map.put("captureConsole", captureConsole);
+        map.put("conf", conf);
+        map.put("jdbcTemplate", jdbcTemplate);
         switch (tm.getTaskType()) {
-            case "1":
+            case "1":   // shell 脚本
                 jobDetailFactoryBean.setJobClass(ExecuteJob.class);
                 break;
-            case "2":
+            case "2":   // 存储过程
                 jobDetailFactoryBean.setJobClass(ProcedureJob.class);
                 break;
-            case "3":
+            case "3":   // window bat脚本
                 jobDetailFactoryBean.setJobClass(ExecuteJob.class);
                 break;
-            case "4":
-                jobDetailFactoryBean.setJobClass(ExecuteJob.class);
-            case "5":
+            case "4":   // java jar 可执行程序
+                jobDetailFactoryBean.setJobClass(JavaJarJob.class);
+            case "5":   // 二进制可执行程序
                 jobDetailFactoryBean.setJobClass(ExecuteJob.class);
                 break;
             default:

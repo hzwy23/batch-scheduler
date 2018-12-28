@@ -23,7 +23,7 @@ public class GroupSchedulerService {
     private ResourceManagement drm;
 
     public void initRunGroup(Scheduler scheduler,
-                          ResourceManagement drm) {
+                             ResourceManagement drm) {
         this.scheduler = scheduler;
         this.drm = drm;
     }
