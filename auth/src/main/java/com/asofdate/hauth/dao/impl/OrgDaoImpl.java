@@ -28,14 +28,14 @@ public class OrgDaoImpl implements OrgDao {
     private SqlText sqlText;
 
     @Override
-    public List<OrgEntity> findAll(String domainId) {
+    public List<OrgEntity> findAll() {
         RowMapper<OrgEntity> rowMapper = new BeanPropertyRowMapper<>(OrgEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys041"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys041"), rowMapper);
     }
 
     @Override
-    public List<OrgEntity> findSub(String domainId, String orgId) {
-        List<OrgEntity> list = findAll(domainId);
+    public List<OrgEntity> findSub(String orgId) {
+        List<OrgEntity> list = findAll();
         List<OrgEntity> ret = new ArrayList<OrgEntity>();
         for (OrgEntity m : list) {
             if (orgId.equals(m.getOrg_id())) {
@@ -53,7 +53,6 @@ public class OrgDaoImpl implements OrgDao {
                 orgEntity.getCode_number(),
                 orgEntity.getOrg_desc(),
                 orgEntity.getUp_org_id(),
-                orgEntity.getDomain_id(),
                 orgEntity.getCreate_user(),
                 orgEntity.getModify_user(),
                 orgEntity.getOrg_id());
@@ -63,7 +62,7 @@ public class OrgDaoImpl implements OrgDao {
     @Override
     public int delete(List<OrgEntity> list) {
         for (OrgEntity m : list) {
-            jdbcTemplate.update(sqlText.getSql("sys044"), m.getOrg_id(), m.getDomain_id());
+            jdbcTemplate.update(sqlText.getSql("sys044"), m.getOrg_id());
         }
         return 1;
     }

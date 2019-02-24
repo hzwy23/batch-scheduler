@@ -4,13 +4,13 @@
     </div>
 </div>
 <div class="row subsystem-toolbar">
-    <div class="pull-left" style="height: 44px; line-height: 44px; width: 260px;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;&nbsp;所属域：</span>
-        <select id="h-role-domain-list" class="form-control pull-left"
-                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
-        </select>
-    </div>
+    <!--<div class="pull-left" style="height: 44px; line-height: 44px; width: 260px;">-->
+        <!--<span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"-->
+              <!--class="pull-left">&nbsp;&nbsp;项目：</span>-->
+        <!--<select id="h-role-domain-list" class="form-control pull-left"-->
+                <!--style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">-->
+        <!--</select>-->
+    <!--</div>-->
     <div class="pull-right">
         <button onclick="RoleObj.add()" class="btn btn btn-info btn-sm">
             <i class="icon-plus"> 新增</i>
@@ -39,22 +39,28 @@
                 <th data-field="code_number">角色编码</th>
                 <th data-field="role_name">角色名称</th>
                 <th data-align="center"
+                    data-width="80"
                     data-field="role_status_desc">状态
                 </th>
                 <th data-align="center"
+                    data-width="120"
                     data-field="create_user">创建人
                 </th>
                 <th data-align="center"
+                    data-width="150"
                     data-field="create_date">创建时间
                 </th>
                 <th data-align="center"
+                    data-width="120"
                     data-field="modify_user">修改人
                 </th>
                 <th data-align="center"
+                    data-width="150"
                     data-field="modify_date">修改时间
                 </th>
                 <th data-field="state-handle"
                     data-align="center"
+                    data-width="150"
                     data-formatter="RoleObj.formatter">资源操作
                 </th>
             </tr>
@@ -94,7 +100,6 @@
                 preprocess: function () {
                     $.getJSON("/v1/auth/domain/self/owner", function (data) {
                         var arr = new Array();
-
                         $(data.owner_list).each(function (index, element) {
                             var ijs = {}
                             ijs.id = element.domain_id
@@ -217,7 +222,7 @@
         },
     };
 
-    $(document).ready(function (obj) {
+    $(document).ready(function () {
 
         var hwindow = document.documentElement.clientHeight;
 
@@ -226,60 +231,32 @@
             height: hwindow - 130,
             url: "/v1/auth/role",
             queryParams: function (params) {
-                params.domain_id = $("#h-role-domain-list").val();
                 return params
             }
         });
 
         $("#h-role-info").height(hwindow - 130);
-
-        $.getJSON("/v1/auth/domain/self/owner", function (data) {
-
-            var arr = new Array()
-            $(data.owner_list).each(function (index, element) {
-                var ijs = {}
-                ijs.id = element.domain_id
-                ijs.text = element.domain_desc
-                ijs.upId = "####hzwy23###"
-                arr.push(ijs)
-            });
-
-            $("#h-role-domain-list").Hselect({
-                data: arr,
-                height: "24px",
-                width: "180px",
-                value: data.domain_id,
-                onclick: function () {
-                    $("#h-role-info-table-details").bootstrapTable('refresh');
-                },
-            });
-        });
     });
 </script>
 
 <script type="text/html" id="role_input_form">
     <form id="h-role-add-info">
-        <div class="form-group-sm col-sm-6 col-md-6 col-lg-6" style="margin-top: 2px;">
+        <div class="form-group-sm col-sm-12" style="margin-top: 2px;">
             <label class="h-label" style="width:100%;">角色编码：</label>
             <input placeholder="1..30位数字，字母组成" name="role_id" type="text" class="form-control"
                    style="width: 100%;height: 30px;line-height: 30px;"/>
         </div>
-        <div class="form-group-sm col-sm-6 col-md-6 col-lg-6" style="margin-top: 2px;">
+        <div class="form-group-sm col-sm-12" style="margin-top: 2px;">
             <label class="h-label" style="width: 100%;">角色名称：</label>
             <input placeholder="1..30位汉字，字母，数字组成" type="text" class="form-control" name="role_name"
                    style="width: 100%;height: 30px;line-height: 30px;"/>
         </div>
-        <div class="form-group-sm col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
+        <div class="form-group-sm col-sm-12" style="margin-top: 15px;">
             <label class="h-label" style="width: 100%;">状　态：</label>
             <select id="h-role-add-status" name="role_status" class="form-control"
                     style="width: 100%;height: 30px;line-height: 30px;">
-                <option value="0">正常</option>
+                <option value="0" selected>正常</option>
                 <option value="1">失效</option>
-            </select>
-        </div>
-        <div class="form-group-sm col-sm-6 col-md-6 col-lg-6" style="margin-top: 15px;">
-            <label class="h-label" style="width: 100%;">所属域：</label>
-            <select id="h-role-domain-id" name="domain_id" style="width: 100%;height: 30px;line-height: 30px;">
             </select>
         </div>
     </form>

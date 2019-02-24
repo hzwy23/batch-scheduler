@@ -10,9 +10,9 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/18.
  */
 public interface UserDao {
-    List<UserEntity> findAll(String domainid);
+    List<UserEntity> findAll();
 
-    List<UserEntity> findAll(String domainId, String orgId, String statusCd);
+    List<UserEntity> findAll(String orgId, String statusCd);
 
     int add(UserEntity userEntity);
 

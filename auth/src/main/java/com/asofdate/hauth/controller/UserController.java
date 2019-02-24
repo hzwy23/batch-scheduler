@@ -38,19 +38,14 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<UserEntity> findAll(HttpServletRequest request) {
-        String domainId = request.getParameter("domain_id");
-        if (domainId == null || domainId.isEmpty()) {
-            domainId = JwtService.getConnUser(request).getDomainID();
-        }
-        return userService.findAll(domainId);
+        return userService.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     public List<UserEntity> search(HttpServletRequest request) {
-        String domainId = request.getParameter("domain_id");
         String orgId = request.getParameter("org_id");
         String statusCd = request.getParameter("status_id");
-        return userService.findAll(domainId, orgId, statusCd);
+        return userService.findAll(orgId, statusCd);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -117,13 +112,6 @@ public class UserController {
             return Hret.error(422, "参数解析失败,请按照要求填写表单", null);
         }
 
-        String domainId = args.getDomainId();
-
-        Boolean status = authService.domainAuth(request, domainId, "w").getStatus();
-        if (!status) {
-            return Hret.error(422, "您没有权限在这个域中创建用户", null);
-        }
-
         int size = userService.add(args);
         if (size != 1) {
             response.setStatus(421);
@@ -148,7 +136,6 @@ public class UserController {
         String userPasswdConfirm = request.getParameter("userPasswdConfirm");
         String userEmail = request.getParameter("userEmail");
         String userPhone = request.getParameter("userPhone");
-        String domainId = request.getParameter("domainId");
         String userOrgUnitId = request.getParameter("userOrgUnitId");
         String userStatus = request.getParameter("userStatus");
         String crateUserId = JwtService.getConnUser(request).getUserId();
@@ -161,7 +148,6 @@ public class UserController {
         userEntity.setUserPhone(userPhone);
         userEntity.setOrgUnitId(userOrgUnitId);
         userEntity.setUserStatus(userStatus);
-        userEntity.setDomainId(domainId);
         userEntity.setCreateUser(crateUserId);
         userEntity.setModifyUser(crateUserId);
 

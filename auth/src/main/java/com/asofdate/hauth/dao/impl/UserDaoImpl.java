@@ -33,14 +33,14 @@ public class UserDaoImpl implements UserDao {
     private OrgDao orgDao;
 
     @Override
-    public List<UserEntity> findAll(String domainid) {
+    public List<UserEntity> findAll() {
         RowMapper<UserEntity> rowMapper = new BeanPropertyRowMapper<>(UserEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys017"), rowMapper, domainid);
+        return jdbcTemplate.query(sqlText.getSql("sys017"), rowMapper);
     }
 
     @Override
-    public List<UserEntity> findAll(String domainId, String orgId, String statusCd) {
-        List<UserEntity> list = findAll(domainId);
+    public List<UserEntity> findAll(String orgId, String statusCd) {
+        List<UserEntity> list = findAll();
         if ("0".equals(statusCd) || "1".equals(statusCd)) {
             for (int i = 0; i < list.size(); i++) {
                 if (!statusCd.equals(list.get(i).getStatusCd())) {
@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDao {
             }
         }
         if (orgId != null && !orgId.isEmpty()) {
-            List<OrgEntity> orgList = orgDao.findSub(domainId, orgId);
+            List<OrgEntity> orgList = orgDao.findSub(orgId);
             Set<String> set = new HashSet<>();
             for (OrgEntity om : orgList) {
                 set.add(om.getOrg_id());

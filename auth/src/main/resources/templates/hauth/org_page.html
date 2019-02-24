@@ -4,23 +4,17 @@
     </div>
 </div>
 <div class="row subsystem-toolbar">
-    <div class="pull-left" style="height: 44px; line-height: 44px; width: 260px;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">所属域：</span>
-        <select id="h-org-domain-list" class="form-control pull-left"
-                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
-        </select>
-    </div>
+    <!--<div class="pull-left" style="height: 44px; line-height: 44px; width: 260px;">-->
+        <!--<span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"-->
+              <!--class="pull-left">项目：</span>-->
+        <!--<select id="h-org-domain-list" class="form-control pull-left"-->
+                <!--style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">-->
+        <!--</select>-->
+    <!--</div>-->
     <div class="pull-right">
         <button onclick="OrgObj.add()" class="btn btn-info btn-sm" title="新增机构信息">
             <i class="icon-plus"> 新增</i>
         </button>
-        <!--<button onclick="OrgObj.upload()" class="btn btn-info btn-sm" title="导入机构信息">-->
-        <!--<span class="icon-edit"> 导入</span>-->
-        <!--</button>-->
-        <!--<button onclick="OrgObj.download()" class="btn btn-info btn-sm" title="导出机构信息">-->
-        <!--<span class="icon-trash"> 导出</span>-->
-        <!--</button>-->
         <button onclick="OrgObj.edit()" class="btn btn-info btn-sm" title="编辑机构信息">
             <span class="icon-edit"> 编辑</span>
         </button>
@@ -101,52 +95,32 @@
                                 type: "success",
                             });
                             $(hmode).remove();
-                            var domain_id = $("#h-org-domain-list").val()
-                            OrgObj.tree(domain_id)
+                            OrgObj.tree()
                         },
                     })
                 },
                 preprocess: function () {
-                    $.getJSON("/v1/auth/domain/self/owner", function (data) {
+                    $.getJSON("/v1/auth/org", function (data) {
                         var arr = new Array()
-                        $(data.owner_list).each(function (index, element) {
+                        $(data).each(function (index, element) {
                             var ijs = {}
-                            ijs.id = element.domain_id
-                            ijs.text = element.domain_desc
-                            ijs.upId = "####hzwy23###"
+                            ijs.id = element.org_id;
+                            ijs.text = element.org_desc;
+                            ijs.upId = element.up_org_id;
                             arr.push(ijs)
                         });
 
-                        $("#h-org-domain-up-id").Hselect({
+                        var ijs = {};
+                        ijs.id = "root_vertex_system";
+                        ijs.text = "机构树根节点";
+                        ijs.upId = "######hzwy23#####";
+                        arr.push(ijs)
+
+                        $("#h-org-up-id").Hselect({
                             data: arr,
                             height: "30px",
-                            onclick: function () {
-                                var domain_id = $("#h-org-domain-up-id").val()
-                                $.getJSON("/v1/auth/org", {domain_id: domain_id}, function (data) {
-                                    var arr = new Array()
-                                    $(data).each(function (index, element) {
-                                        var ijs = {}
-                                        ijs.id = element.org_id;
-                                        ijs.text = element.org_desc;
-                                        ijs.upId = element.up_org_id;
-                                        arr.push(ijs)
-                                    });
-
-                                    var ijs = {};
-                                    ijs.id = "root_vertex_system";
-                                    ijs.text = "机构树根节点";
-                                    ijs.upId = "######hzwy23#####";
-                                    arr.push(ijs)
-
-                                    $("#h-org-up-id").Hselect({
-                                        data: arr,
-                                        height: "30px",
-                                        value: $("#h-org-tree-info-list").attr("data-selected"),
-                                    })
-                                })
-                            },
-                        });
-                        $("#h-org-domain-up-id").val(data.domain_id).trigger("change");
+                            value: $("#h-org-tree-info-list").attr("data-selected"),
+                        })
                     });
                 }
             })
@@ -158,7 +132,6 @@
          * 这个函数只在edit函数中被调用
          * */
         handle_edit: function (row) {
-            var domain_id = row[0].domain_id;
             $.Hmodal({
                 body: $("#org_modify_form").html(),
                 header: "修改机构信息",
@@ -167,7 +140,7 @@
                     /*
                      * 初始化下拉框中机构信息
                      * */
-                    $.getJSON("/v1/auth/org", {domain_id: domain_id}, function (data) {
+                    $.getJSON("/v1/auth/org", function (data) {
                         var arr = new Array()
                         $(data).each(function (index, element) {
                             var ijs = {}
@@ -195,15 +168,11 @@
                      * */
                     var code_number = row[0].code_number
                     var org_id = row[0].org_id
-
                     var org_name = row[0].org_desc
 
                     $("#h-modify-org-code").val(code_number)
                     $("#h-modify-org-id").val(org_id)
                     $("#h-modify-org-name").val(org_name)
-
-                    $("#h-org-modify-info").find("input[name='Domain_id']").val(domain_id);
-
                 },
                 callback: function (hmode) {
                     $.HAjaxRequest({
@@ -255,8 +224,6 @@
             }
         },
         delete: function () {
-            var domain_id = $("#h-org-domain-list").val();
-
             var data = OrgObj.$table.bootstrapTable("getSelections").concat();
 
             if (data.length == 0) {
@@ -277,14 +244,14 @@
                     $.HAjaxRequest({
                         url: "/v1/auth/org/delete",
                         type: "post",
-                        data: {JSON: JSON.stringify(data), domain_id: domain_id},
+                        data: {JSON: JSON.stringify(data)},
                         success: function () {
                             $.Notify({
                                 title: "操作成功",
                                 message: "删除机构信息成功",
                                 type: "success",
                             });
-                            OrgObj.tree(data[0].domain_id)
+                            OrgObj.tree()
                         },
                     })
                 },
@@ -306,17 +273,16 @@
                 url: "/v1/auth/resource/org/upload",
                 header: "导入机构信息",
                 callback: function () {
-                    var domain_id = $("#h-org-domain-list").val();
-                    OrgObj.tree(domain_id)
+                    OrgObj.tree()
                 },
             })
         },
-        tree: function (domain_id) {
-            $.getJSON("/v1/auth/org", {domain_id: domain_id}, function (data) {
+        tree: function () {
+            $.getJSON("/v1/auth/org", function (data) {
                 if (data.length == 0) {
                     $.Notify({
                         title: "温馨提示",
-                        message: "您选择的域中没有机构信息",
+                        message: "您选择的项目中没有机构信息",
                         type: "info",
                     });
                     OrgObj.$table.bootstrapTable('load', [])
@@ -335,16 +301,15 @@
                     $("#h-org-tree-info-list").Htree({
                         data: arr,
                         onChange: function (obj) {
-                            var domain_id = $("#h-org-domain-list").val();
                             var id = $(obj).attr("data-id");
-                            $.getJSON("/v1/auth/org/sub", {org_unit_id: id, domain_id: domain_id}, function (data) {
+                            $.getJSON("/v1/auth/org/sub", {org_unit_id: id}, function (data) {
                                 OrgObj.$table.bootstrapTable('load', data)
                             });
                         }
                     });
                     if ($("#h-org-tree-info-list").attr("data-selected") != null) {
                         var org_id = $("#h-org-tree-info-list").attr("data-selected");
-                        $.getJSON("/v1/auth/org/sub", {org_unit_id: org_id, domain_id: domain_id}, function (v) {
+                        $.getJSON("/v1/auth/org/sub", {org_unit_id: org_id}, function (v) {
                             OrgObj.$table.bootstrapTable('load', v)
                         });
                     } else {
@@ -411,11 +376,6 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
-            <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
-                <label class="h-label" style="width: 100%;">所属域：</label>
-                <select id="h-org-domain-up-id" name="Domain_id" style="width: 100%;height: 30px;line-height: 30px;">
-                </select>
-            </div>
             <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
                 <label class="h-label" style="width: 100%;">上级组织部门代码：</label>
                 <select id="h-org-up-id" name="Up_org_id" style="width: 100%;height: 30px;line-height: 30px;">

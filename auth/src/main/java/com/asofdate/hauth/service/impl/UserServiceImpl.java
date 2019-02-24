@@ -26,13 +26,13 @@ public class UserServiceImpl implements UserService {
     private UserThemeDao userThemeDao;
 
     @Override
-    public List<UserEntity> findAll(String domainid) {
-        return userDao.findAll(domainid);
+    public List<UserEntity> findAll() {
+        return userDao.findAll();
     }
 
     @Override
-    public List<UserEntity> findAll(String domainId, String orgId, String statusCd) {
-        return userDao.findAll(domainId, orgId, statusCd);
+    public List<UserEntity> findAll( String orgId, String statusCd) {
+        return userDao.findAll(orgId, statusCd);
     }
 
     @Override

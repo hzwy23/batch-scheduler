@@ -28,9 +28,9 @@ public class RoleDaoImpl implements RoleDao {
     private SqlText sqlText;
 
     @Override
-    public List<RoleEntity> findAll(String domainId) {
+    public List<RoleEntity> findAll() {
         RowMapper<RoleEntity> rowMapper = new BeanPropertyRowMapper<>(RoleEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys028"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys028"), rowMapper);
     }
 
     @Override
@@ -99,7 +99,6 @@ public class RoleDaoImpl implements RoleDao {
                 roleEntity.getRole_name(),
                 roleEntity.getCreate_user(),
                 roleEntity.getRole_status_code(),
-                roleEntity.getDomain_id(),
                 roleEntity.getModify_user(),
                 roleEntity.getCode_number());
     }
@@ -108,8 +107,7 @@ public class RoleDaoImpl implements RoleDao {
     public int delete(List<RoleEntity> list) {
         for (RoleEntity m : list) {
             String roleId = m.getRole_id();
-            String domainId = m.getDomain_id();
-            jdbcTemplate.update(sqlText.getSql("sys027"), roleId, domainId);
+            jdbcTemplate.update(sqlText.getSql("sys027"), roleId);
         }
         return 1;
     }

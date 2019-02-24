@@ -5,11 +5,11 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px; width: 260px; display: inline">
-        <span style="font-size: 10px;font-weight: 600; height: 30px; line-height: 30px; margin-top: 7px;"
-              class="pull-left">&nbsp;&nbsp;所属域：</span>
-        <select id="h-auth-domain-list" class="form-control pull-left"
-                style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
-        </select>
+        <!--<span style="font-size: 10px;font-weight: 600; height: 30px; line-height: 30px; margin-top: 7px;"-->
+              <!--class="pull-left">&nbsp;&nbsp;项目：</span>-->
+        <!--<select id="h-auth-domain-list" class="form-control pull-left"-->
+                <!--style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">-->
+        <!--</select>-->
         <span style="font-size: 10px;font-weight: 600;" class="pull-left">&nbsp;&nbsp;机构：</span>
         <select id="h-auth-org-list" class="form-control pull-left"
                 style="width: 360px;height: 24px; line-height: 24px; margin-top: 10px; padding: 0px;">
@@ -62,13 +62,16 @@
             $.HAjaxRequest({
                 url: "/v1/auth/user/search",
                 type: "get",
-                data: {org_id: org_id, domain_id: did},
+                data: {org_id: org_id},
                 success: function (data) {
-                    $.Notify({
-                        title: "查询成功",
-                        message: "查询机构下用户信息成功",
-                        type: "success",
-                    })
+                    if (data === null || data.length === 0) {
+                        $.Notify({
+                            title: "查询成功",
+                            message: "查询机构下用户信息成功",
+                            type: "success",
+                        })
+                    }
+
                     $("#h-grant-info-table-details").bootstrapTable('load', data)
                     $("#h-grant-user-role-table-details").bootstrapTable('load', [])
                 },
@@ -84,8 +87,7 @@
                 return;
             }
 
-            var domain_id = $("#h-auth-domain-list").val();
-            $.getJSON("/v1/auth/role", {domain_id: domain_id}, function (data) {
+            $.getJSON("/v1/auth/role", function (data) {
                 $.Hmodal({
                     header: "撤销角色",
                     body: $("#h-other-user-role-table-details-html").html(),
@@ -141,8 +143,7 @@
                 return;
             }
 
-            var domain_id = $("#h-auth-domain-list").val();
-            $.getJSON("/v1/auth/role", {domain_id: domain_id}, function (data) {
+            $.getJSON("/v1/auth/role", function (data) {
                 $.Hmodal({
                     header: "授权管理",
                     body: $("#h-other-user-role-table-details-html").html(),
@@ -293,80 +294,35 @@
         $("#h-grant-user-table-show").height(hwindow - 130);
         $("#h-grant-user-show-box").height(hwindow - 130);
 
-        //初始化域信息
-        $.getJSON("/v1/auth/domain/self/owner", function (data) {
+        $("#h-grant-info-table-details").bootstrapTable({
+            height: hwindow - 130,
+            onClickRow: function (row, $element) {
+                var user_id = row.user_id
+                $.getJSON("/v1/auth/user/roles/get", {user_id: user_id}, function (dt) {
+                    $("#h-grant-user-role-table-details").bootstrapTable('load', dt)
+                })
+            },
+            queryParams: function (params) {
+                return params
+            },
+        });
+        $.getJSON("/v1/auth/org",  function (data) {
             var arr = new Array()
-            $(data.owner_list).each(function (index, element) {
+            $(data).each(function (index, element) {
                 var ijs = {}
-                ijs.id = element.domain_id
-                ijs.text = element.domain_desc
-                ijs.upId = "####hzwy23###"
+                ijs.id = element.org_id;
+                ijs.text = element.org_desc;
+                ijs.upId = element.up_org_id;
                 arr.push(ijs)
             });
 
-            $("#h-grant-info-table-details").bootstrapTable({
-                height: hwindow - 130,
-                onClickRow: function (row, $element) {
-                    var user_id = row.user_id
-                    $.getJSON("/v1/auth/user/roles/get", {user_id: user_id}, function (dt) {
-                        $("#h-grant-user-role-table-details").bootstrapTable('load', dt)
-                    })
-                },
-                queryParams: function (params) {
-                    params.domain_id = $("#h-auth-domain-list").val();
-                    return params
-                },
-            });
-
-            $("#h-auth-domain-list").Hselect({
+            $("#h-auth-org-list").Hselect({
                 data: arr,
                 height: "24px",
-                width: "180px",
-                value: data.domain_id,
+                width: "360px",
                 onclick: function () {
-                    var did = $("#h-auth-domain-list").val();
-                    $.getJSON("/v1/auth/org", {domain_id: did}, function (data) {
-                        var arr = new Array()
-                        $(data).each(function (index, element) {
-                            var ijs = {}
-                            ijs.id = element.org_id;
-                            ijs.text = element.org_desc;
-                            ijs.upId = element.up_org_id;
-                            arr.push(ijs)
-                        });
-
-                        $("#h-auth-org-list").Hselect({
-                            data: arr,
-                            height: "24px",
-                            width: "360px",
-                            onclick: function () {
-                                AuthObj.search()
-                            },
-                        });
-                        $("#h-grant-info-table-details").bootstrapTable('refresh');
-                    });
-                    $("#h-grant-user-role-table-details").bootstrapTable('load', [])
-                }
-            });
-
-            $.getJSON("/v1/auth/org", {domain_id: data.domain_id}, function (data) {
-                var arr = new Array()
-                $(data).each(function (index, element) {
-                    var ijs = {}
-                    ijs.id = element.org_id;
-                    ijs.text = element.org_desc;
-                    ijs.upId = element.up_org_id;
-                    arr.push(ijs)
-                });
-
-                $("#h-auth-org-list").Hselect({
-                    data: arr,
-                    height: "24px",
-                    width: "360px",
-                    onclick: function () {
-                        AuthObj.search()
-                    },
-                });
+                    AuthObj.search()
+                },
             });
         });
 

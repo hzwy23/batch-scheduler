@@ -99,8 +99,6 @@ public class StaticFileController {
         map.put("code_number", roleEntity.getCode_number());
         map.put("role_id", roleEntity.getRole_id());
         map.put("role_name", roleEntity.getRole_name());
-        map.put("domain_id", roleEntity.getDomain_id());
-        map.put("domain_desc", roleEntity.getDomain_desc());
 
         return "hauth/res_role_rel_page";
     }

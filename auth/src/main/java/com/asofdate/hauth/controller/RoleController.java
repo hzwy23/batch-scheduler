@@ -1,7 +1,6 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.entity.UserRoleEntity;
 import com.asofdate.hauth.service.AuthService;
@@ -33,9 +32,6 @@ public class RoleController {
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private AuthService authService;
 
     @RequestMapping(value = "/other", method = RequestMethod.GET)
     public List getOther(HttpServletRequest request) {
@@ -114,15 +110,7 @@ public class RoleController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String findAll(HttpServletRequest request) {
-        String domainId = request.getParameter("domain_id");
-        if (domainId == null || domainId.isEmpty()) {
-            domainId = JwtService.getConnUser(request).getDomainID();
-        }
-        AuthDto authDto = authService.domainAuth(request, domainId, "r");
-        if (!authDto.getStatus()) {
-            return Hret.error(403, "权限不足，您没有被授权访问这个域", authDto.getMessage());
-        }
-        return new GsonBuilder().create().toJson(roleService.findAll(domainId));
+        return new GsonBuilder().create().toJson(roleService.findAll());
     }
 
     /**
@@ -131,11 +119,6 @@ public class RoleController {
     @RequestMapping(method = RequestMethod.POST)
     public String add(HttpServletResponse response, HttpServletRequest request) {
         RoleEntity roleEntity = parse(request);
-        String domainId = roleEntity.getDomain_id();
-        AuthDto authDto = authService.domainAuth(request, domainId, "w");
-        if (!authDto.getStatus()) {
-            return Hret.error(403, "您没有权限在域【" + domainId + "】中新增角色", null);
-        }
         RetMsg retMsg = roleService.add(roleEntity);
         if (retMsg.checkCode()) {
             return Hret.success(retMsg);
@@ -147,13 +130,6 @@ public class RoleController {
     @RequestMapping(method = RequestMethod.PUT)
     public String update(HttpServletRequest request, HttpServletResponse response) {
         RoleEntity roleEntity = parse(request);
-
-        String domainId = roleEntity.getDomain_id();
-        AuthDto authDto = authService.domainAuth(request, domainId, "w");
-        if (!authDto.getStatus()) {
-            return Hret.error(403, "您没有权限在域【" + domainId + "】中更新角色", null);
-        }
-
         RetMsg retMsg = roleService.update(roleEntity);
         if (retMsg.checkCode()) {
             return Hret.success(retMsg);
@@ -167,14 +143,6 @@ public class RoleController {
         String json = request.getParameter("JSON");
         List<RoleEntity> list = new GsonBuilder().create().fromJson(json, new TypeToken<List<RoleEntity>>() {
         }.getType());
-
-        for (RoleEntity m : list) {
-            AuthDto authDto = authService.domainAuth(request, m.getDomain_id(), "w");
-            if (!authDto.getStatus()) {
-                return Hret.error(403, "您没有权限删除域【" + m.getDomain_id() + "】中的角色信息", null);
-            }
-        }
-
         RetMsg retMsg = roleService.delete(list);
         if (!retMsg.checkCode()) {
             response.setStatus(retMsg.getCode());
@@ -186,16 +154,13 @@ public class RoleController {
     private RoleEntity parse(HttpServletRequest request) {
         RoleEntity roleEntity = new RoleEntity();
         String codeNumber = request.getParameter("role_id");
-        String domainId = request.getParameter("domain_id");
         roleEntity.setCode_number(codeNumber);
         roleEntity.setRole_name(request.getParameter("role_name"));
         roleEntity.setRole_status_code(request.getParameter("role_status"));
-        roleEntity.setDomain_id(domainId);
         String userId = JwtService.getConnUser(request).getUserId();
         roleEntity.setCreate_user(userId);
         roleEntity.setModify_user(userId);
-        String roleId = JoinCode.join(domainId, codeNumber);
-        roleEntity.setRole_id(roleId);
+        roleEntity.setRole_id(codeNumber);
         return roleEntity;
     }
 }

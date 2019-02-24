@@ -15,9 +15,6 @@ public class OrgEntity {
     @JsonProperty("up_org_id")
     private String up_org_id;
 
-    @JsonProperty("domain_id")
-    private String domain_id;
-
     @JsonProperty("create_date")
     private String create_date;
 
@@ -58,14 +55,6 @@ public class OrgEntity {
 
     public void setUp_org_id(String up_org_id) {
         this.up_org_id = up_org_id;
-    }
-
-    public String getDomain_id() {
-        return domain_id;
-    }
-
-    public void setDomain_id(String domain_id) {
-        this.domain_id = domain_id;
     }
 
     public String getCreate_date() {

@@ -34,19 +34,14 @@ public class OrgController {
     private OrgService orgService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List findAll(HttpServletRequest request) {
-        String domainId = request.getParameter("domain_id");
-        if (domainId == null || domainId.isEmpty()) {
-            domainId = JwtService.getConnUser(request).getDomainID();
-        }
-        return orgService.findAll(domainId);
+    public List findAll() {
+        return orgService.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/sub")
     public List findSub(HttpServletResponse response, HttpServletRequest request) {
         String orgUnitId = request.getParameter("org_unit_id");
-        String domainId = request.getParameter("domain_id");
-        return orgService.findSub(domainId, orgUnitId);
+        return orgService.findSub(orgUnitId);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -78,17 +73,6 @@ public class OrgController {
         List<OrgEntity> list = new GsonBuilder().create().fromJson(json,
                 new TypeToken<List<OrgEntity>>() {
                 }.getType());
-        ;
-        for (OrgEntity m : list) {
-
-            String orgId = m.getOrg_id();
-            String domainId = m.getDomain_id();
-
-            AuthDto authDto = authService.domainAuth(request, domainId, "w");
-            if (!authDto.getStatus()) {
-                return Hret.error(403, "您没有权限删除域【" + domainId + "】中的机构信息", null);
-            }
-        }
 
         RetMsg retMsg = orgService.delete(list);
         if (retMsg.checkCode()) {
@@ -101,13 +85,10 @@ public class OrgController {
     private OrgEntity parse(HttpServletRequest request) {
         OrgEntity orgEntity = new OrgEntity();
         String codeNumber = request.getParameter("Org_unit_id");
-        String domainId = request.getParameter("Domain_id");
         orgEntity.setCode_number(codeNumber);
         orgEntity.setOrg_desc(request.getParameter("Org_unit_desc"));
-        orgEntity.setDomain_id(domainId);
         orgEntity.setUp_org_id(request.getParameter("Up_org_id"));
-        String orgUnitId = JoinCode.join(domainId, codeNumber);
-        orgEntity.setOrg_id(orgUnitId);
+        orgEntity.setOrg_id(codeNumber);
         String userId = JwtService.getConnUser(request).getUserId();
         orgEntity.setCreate_user(userId);
         orgEntity.setModify_user(userId);

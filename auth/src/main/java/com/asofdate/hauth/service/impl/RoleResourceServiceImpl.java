@@ -48,7 +48,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
         try {
             int size = roleResourceDao.revoke(roleId, resId);
             if (1 == size) {
-                return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "success", null);
+                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
             }
             return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "移除权限失败，请联系管理员", null);
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 <div class="row subsystem-header">
     <div class="pull-left">
-        <span style="font-size: 14px;">域信息管理</span>
+        <span style="font-size: 14px;">项目信息管理</span>
     </div>
 </div>
 <div class="row subsystem-toolbar">
@@ -34,7 +34,7 @@
                 error: function (m) {
                     $.Notify({
                         title: "温馨提示：",
-                        message: "您没有被授权访问这个域。",
+                        message: "您没有被授权访问这个项目。",
                         type: "danger",
                     })
                 }
@@ -60,7 +60,7 @@
 
                     field: 'domain_id',
 
-                    title: '域编码',
+                    title: '项目编码',
 
                     align: 'left',
 
@@ -72,7 +72,7 @@
 
                     field: 'domain_desc',
 
-                    title: '域名称',
+                    title: '项目名称',
 
                     align: 'left',
 
@@ -84,7 +84,7 @@
 
                     field: 'domain_status_desc',
 
-                    title: '域状态',
+                    title: '项目状态',
 
                     align: 'center',
 
@@ -139,22 +139,24 @@
                     valign: 'middle',
 
                     sortable: false,
-                }, {
-
-                    title: '操作',
-
-                    align: 'center',
-
-                    valign: 'middle',
-
-                    sortable: false,
-
-                    formatter: function (value, rows, index) {
-
-                        return '<span class="h-td-btn btn-success btn-xs" onclick="DomainObj.getSharePage(\'' + rows.domain_id + '\',\'' + rows.domain_desc + '\')">共享管理</span>'
-
-                    }
-                }]
+                }
+                // , {
+                //
+                //     title: '操作',
+                //
+                //     align: 'center',
+                //
+                //     valign: 'middle',
+                //
+                //     sortable: false,
+                //
+                //     formatter: function (value, rows, index) {
+                //
+                //         return '<span class="h-td-btn btn-success btn-xs" onclick="DomainObj.getSharePage(\'' + rows.domain_id + '\',\'' + rows.domain_desc + '\')">共享管理</span>'
+                //
+                //     }
+                // }
+                ]
             }).closest(".bootstrap-table").find(".columns-right").hide();
         },
 
@@ -170,7 +172,7 @@
                     success: function (data) {
                         $.Notify({
                             title: "操作成功",
-                            message: "创建域信息成功",
+                            message: "创建项目成功",
                             type: "success"
                         });
                         $(hmode).remove();
@@ -181,7 +183,7 @@
 
             $.Hmodal({
                 callback: submitMenu,
-                header: "新增域信息",
+                header: "新增项目",
                 body: $("#domain_input_form").html(),
                 height: "360px",
                 preprocess: function () {
@@ -204,7 +206,7 @@
                             success: function (data) {
                                 $.Notify({
                                     title: "操作成功",
-                                    message: "删除域信息成功",
+                                    message: "删除项目信息成功",
                                     type: "success",
                                 });
                                 $(rst).each(function (index, element) {
@@ -213,12 +215,12 @@
                             }
                         });
                     },
-                    body: "确定删除这个域，删除后将无法恢复",
+                    body: "确定删除这个项目，删除后将无法恢复",
                 });
             } else {
                 $.Notify({
                     title: "温馨提示",
-                    message: "您没有勾选任何需要删除的域",
+                    message: "您没有勾选任何需要删除的项目",
                     type: "info",
                 });
             }
@@ -261,7 +263,7 @@
                         success: function (data) {
                             $.Notify({
                                 title: "温馨提示:",
-                                message: "更新域信息成功",
+                                message: "更新项目信息成功",
                                 type: "success",
                             });
 
@@ -286,7 +288,7 @@
                 $.Hmodal({
                     callback: editMenu,
                     preprocess: preHand,
-                    header: "修改域信息",
+                    header: "修改项目信息",
                     body: $("#domain_input_form").html(),
                     height: "360px",
                 })
@@ -307,12 +309,12 @@
         <form class="form-horizontal" id="h-domain-add-tpl">
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group-sm col-sm-12 col-md-12 col-lg-12">
-                    <label class="h-label" style="width:100%;">域编码：</label>
+                    <label class="h-label" style="width:100%;">项目代码：</label>
                     <input placeholder="1至30个字母，数字组成" name="domainId" type="text" class="form-control"
                            style="width: 100%;height: 30px;line-height: 30px;"/>
                 </div>
                 <div class="form-group-sm col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
-                    <label class="h-label" style="width: 100%;">域描述：</label>
+                    <label class="h-label" style="width: 100%;">项目名称：</label>
                     <input placeholder="1至30个汉字、字母、数字组成" type="text" class="form-control" name="domainDesc"
                            style="width: 100%;height: 30px;line-height: 30px;"/>
                 </div>

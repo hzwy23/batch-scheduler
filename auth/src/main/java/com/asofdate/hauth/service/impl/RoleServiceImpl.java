@@ -24,8 +24,8 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     @Override
-    public List<RoleEntity> findAll(String domainId) {
-        return roleDao.findAll(domainId);
+    public List<RoleEntity> findAll() {
+        return roleDao.findAll();
     }
 
     @Override

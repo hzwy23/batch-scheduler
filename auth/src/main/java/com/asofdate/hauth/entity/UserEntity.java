@@ -33,12 +33,6 @@ public class UserEntity {
     @JsonProperty("org_unit_desc")
     private String org_unit_desc;
 
-    @JsonProperty("domain_id")
-    private String domain_id;
-
-    @JsonProperty("domain_name")
-    private String domain_name;
-
     @JsonProperty("modify_date")
     private String modify_date;
 
@@ -151,22 +145,6 @@ public class UserEntity {
 
     public void setOrgUnitDesc(String org_unit_desc) {
         this.org_unit_desc = org_unit_desc;
-    }
-
-    public String getDomainId() {
-        return domain_id;
-    }
-
-    public void setDomainId(String domain_id) {
-        this.domain_id = domain_id;
-    }
-
-    public String getDomainName() {
-        return domain_name;
-    }
-
-    public void setDomainName(String domain_name) {
-        this.domain_name = domain_name;
     }
 
     public String getModifyDate() {

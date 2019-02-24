@@ -1,13 +1,13 @@
 <div class="row subsystem-header">
     <div class="pull-left">
-        <span style="font-size: 16px;">域信息共享配置管理</span>
+        <span style="font-size: 16px;">项目信息共享配置管理</span>
     </div>
 </div>
 
 <div class="row subsystem-toolbar">
     <div class="pull-left" style="height: 44px; line-height: 44px; width: 260px;">
         <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;&nbsp;所属域：</span>
+              class="pull-left">&nbsp;&nbsp;项目：</span>
         <select id="h-domain-share-domain-list" class="form-control pull-left"
                 style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
         </select>
@@ -34,15 +34,15 @@
                     <th style="text-align: center">值</th>
                 </tr>
                 <tr style="height: 36px; line-height: 36px;">
-                    <td style="text-align: right;padding-right: 15px;vertical-align: middle;">域编码</td>
+                    <td style="text-align: right;padding-right: 15px;vertical-align: middle;">项目代码</td>
                     <td id="h-domain-share-did" style="vertical-align: middle;" th:text="${domainId}"></td>
                 </tr>
                 <tr style="height: 36px; line-height: 36px;">
-                    <td style="text-align: right;padding-right: 15px; vertical-align: middle;">域描述</td>
+                    <td style="text-align: right;padding-right: 15px; vertical-align: middle;">项目名称</td>
                     <td id="h-domain-share-did-name" style="vertical-align: middle;" th:text="${domainDesc}"></td>
                 </tr>
                 <tr style="height: 36px; line-height: 36px;">
-                    <td style="text-align: right;padding-right: 15px; vertical-align: middle;">域状态</td>
+                    <td style="text-align: right;padding-right: 15px; vertical-align: middle;">项目状态</td>
                     <td id="h-domain-share-did-status" style="vertical-align: middle;" th:text="${statusDesc}"></td>
                 </tr>
                 <tr style="height: 36px; line-height: 36px;">
@@ -82,8 +82,8 @@
             <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-align="center" data-field="target_domain_id">域编码</th>
-                <th data-field="domain_name">域描述</th>
+                <th data-align="center" data-field="target_domain_id">项目编码</th>
+                <th data-field="domain_name">项目名称</th>
                 <th data-align="center" data-field="create_date">创建日期</th>
                 <th data-align="center" data-field="create_user">创建人</th>
                 <th data-align="center" data-field="modify_date">修改日期</th>

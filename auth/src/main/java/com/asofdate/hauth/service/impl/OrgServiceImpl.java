@@ -20,13 +20,13 @@ public class OrgServiceImpl implements OrgService {
     private OrgDao orgDao;
 
     @Override
-    public List<OrgEntity> findAll(String domainId) {
-        return orgDao.findAll(domainId);
+    public List<OrgEntity> findAll() {
+        return orgDao.findAll();
     }
 
     @Override
-    public List<OrgEntity> findSub(String domainId, String orgId) {
-        return orgDao.findSub(domainId, orgId);
+    public List<OrgEntity> findSub(String orgId) {
+        return orgDao.findSub(orgId);
     }
 
     @Override

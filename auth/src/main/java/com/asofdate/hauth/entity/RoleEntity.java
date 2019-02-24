@@ -24,12 +24,6 @@ public class RoleEntity {
     @JsonProperty("role_status_code")
     private String role_status_code;
 
-    @JsonProperty("domain_id")
-    private String domain_id;
-
-    @JsonProperty("domain_desc")
-    private String domain_desc;
-
     @JsonProperty("modify_date")
     private String modify_date;
 
@@ -87,22 +81,6 @@ public class RoleEntity {
         this.role_status_code = role_status_code;
     }
 
-    public String getDomain_id() {
-        return domain_id;
-    }
-
-    public void setDomain_id(String domain_id) {
-        this.domain_id = domain_id;
-    }
-
-    public String getDomain_desc() {
-        return domain_desc;
-    }
-
-    public void setDomain_desc(String domain_desc) {
-        this.domain_desc = domain_desc;
-    }
-
     public String getModify_date() {
         return modify_date;
     }
@@ -136,8 +114,6 @@ public class RoleEntity {
                 ", create_date='" + create_date + '\'' +
                 ", role_status_desc='" + role_status_desc + '\'' +
                 ", role_status_code='" + role_status_code + '\'' +
-                ", domain_id='" + domain_id + '\'' +
-                ", domain_desc='" + domain_desc + '\'' +
                 ", modify_date='" + modify_date + '\'' +
                 ", modify_user='" + modify_user + '\'' +
                 ", role_id='" + role_id + '\'' +
