@@ -10,7 +10,7 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/1.
  */
 public interface DomainService {
-    DomainDto findAll(String domainId);
+    DomainDto findAll(String userId, String domainId);
 
     List<DomainEntity> getAll();
 

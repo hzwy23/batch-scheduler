@@ -28,9 +28,9 @@ public class HandleLogController {
         String domainId = JwtService.getConnUser(request).getDomainID();
         String offset = request.getParameter("offset");
         String limit = request.getParameter("limit");
-        List<HandleLogEntity> list = handleLogService.findAll(domainId, Integer.parseInt(offset), Integer.parseInt(limit));
+        List<HandleLogEntity> list = handleLogService.findAll(Integer.parseInt(offset), Integer.parseInt(limit));
 
-        Integer total = handleLogService.getTotal(domainId);
+        Integer total = handleLogService.getTotal();
         return new PagingDto<List<HandleLogEntity>>(total, list);
     }
 }

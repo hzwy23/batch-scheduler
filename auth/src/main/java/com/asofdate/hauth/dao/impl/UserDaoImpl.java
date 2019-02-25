@@ -121,7 +121,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public UserDetailsEntity findById(String userId) {
         RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys023"), rowMapper, userId);
+        UserDetailsEntity detailsEntity = jdbcTemplate.queryForObject(sqlText.getSql("sys023"), rowMapper, userId);
+        String domainId = jdbcTemplate.queryForObject("select domain_id from sys_domain_authorization where user_id = ? and default_domain = 1", String.class, userId);
+        detailsEntity.setDomainId(domainId);
+        return detailsEntity;
     }
 
     @Override

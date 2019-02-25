@@ -22,19 +22,19 @@ public class HandleLogDaoImpl implements HandleLogDao {
     private SqlText sqlText;
 
     @Override
-    public List<HandleLogEntity> findAll(String domainId) {
+    public List<HandleLogEntity> findAll() {
         RowMapper<HandleLogEntity> rowMapper = new BeanPropertyRowMapper<>(HandleLogEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys012"), rowMapper, domainId);
+        return jdbcTemplate.query(sqlText.getSql("sys012"), rowMapper);
     }
 
     @Override
-    public List<HandleLogEntity> findAll(String domainId, Integer offset, Integer limit) {
+    public List<HandleLogEntity> findAll(Integer offset, Integer limit) {
         RowMapper<HandleLogEntity> rowMapper = new BeanPropertyRowMapper<>(HandleLogEntity.class);
-        return jdbcTemplate.query(sqlText.getSql("sys029"), rowMapper, domainId, offset, limit);
+        return jdbcTemplate.query(sqlText.getSql("sys029"), rowMapper, offset, limit);
     }
 
     @Override
-    public Integer getTotal(String domainId) {
-        return jdbcTemplate.queryForObject(sqlText.getSql("sys030"), Integer.class, domainId);
+    public Integer getTotal() {
+        return jdbcTemplate.queryForObject(sqlText.getSql("sys030"), Integer.class);
     }
 }
