@@ -79,12 +79,11 @@ public class ShareDomainDaoImpl implements ShareDomainDao {
     }
 
     @Override
-    public Set<String> findShareDomain(String targetDomainId) {
+    public Set<String> findShareDomain(String userId) {
         RowMapper<DomainShareEntity> rowMapper = new BeanPropertyRowMapper<>(DomainShareEntity.class);
-        List<DomainShareEntity> list = jdbcTemplate.query(sqlText.getSql("sys116"), rowMapper, targetDomainId);
+        List<DomainShareEntity> list = jdbcTemplate.query(sqlText.getSql("sys116"), rowMapper, userId);
 
         Set<String> set = new HashSet<>();
-        set.add(targetDomainId);
         for (DomainShareEntity m : list) {
             set.add(m.getDomain_id());
         }

@@ -27,5 +27,5 @@ public interface ShareDomainDao {
      */
     List<DomainShareEntity> findShareTo(String domainId);
 
-    Set<String> findShareDomain(String targetDomainId);
+    Set<String> findShareDomain(String userId);
 }

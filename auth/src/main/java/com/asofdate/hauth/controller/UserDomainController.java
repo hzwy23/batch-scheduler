@@ -26,8 +26,9 @@ public class UserDomainController {
     public DomainDto getDomain(HttpServletRequest request) {
 
         // 获取连接用户账号
+        String userId = JwtService.getConnUser(request).getUserId();
         String domainId = JwtService.getConnUser(request).getDomainID();
 
-        return domainService.findAll(domainId);
+        return domainService.findAll(userId,domainId);
     }
 }

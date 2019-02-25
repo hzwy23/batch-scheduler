@@ -17,17 +17,17 @@ public class HandleLogServiceImpl implements HandleLogService {
     private HandleLogDao handleLogDao;
 
     @Override
-    public List<HandleLogEntity> findAll(String domainId) {
-        return handleLogDao.findAll(domainId);
+    public List<HandleLogEntity> findAll() {
+        return handleLogDao.findAll();
     }
 
     @Override
-    public List<HandleLogEntity> findAll(String domainId, Integer offset, Integer limit) {
-        return handleLogDao.findAll(domainId, offset, limit);
+    public List<HandleLogEntity> findAll(Integer offset, Integer limit) {
+        return handleLogDao.findAll(offset, limit);
     }
 
     @Override
-    public Integer getTotal(String domainId) {
-        return handleLogDao.getTotal(domainId);
+    public Integer getTotal() {
+        return handleLogDao.getTotal();
     }
 }

@@ -11,6 +11,7 @@ import com.asofdate.utils.factory.RetMsgFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,18 +27,18 @@ public class DomainServiecImpl implements DomainService {
     private ShareDomainDao shareDomainDaoo;
 
     @Override
-    public DomainDto findAll(String domainId) {
+    public DomainDto findAll(String userId, String domainId) {
         List<DomainEntity> list = domainDao.findAll();
-        Set<String> set = shareDomainDaoo.findShareDomain(domainId);
+        Set<String> set = shareDomainDaoo.findShareDomain(userId);
+        List<DomainEntity> result = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            if (!set.contains(list.get(i).getDomainId())) {
-                list.remove(i);
-                i--;
+            if (set.contains(list.get(i).getDomainId())) {
+                result.add(list.get(i));
             }
         }
         DomainDto domainDto = new DomainDto();
         domainDto.setDomainId(domainId);
-        domainDto.setOwnerList(list);
+        domainDto.setOwnerList(result);
         return domainDto;
     }
 
