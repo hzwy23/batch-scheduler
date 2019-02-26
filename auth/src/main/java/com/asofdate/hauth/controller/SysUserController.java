@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/auth/user")
-@Api("用户信息管理")
+@Api(description = "系统管理--用户信息管理")
 public class SysUserController {
     private final Logger logger = LoggerFactory.getLogger(SysUserController.class);
     @Autowired

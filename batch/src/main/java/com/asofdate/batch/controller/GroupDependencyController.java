@@ -25,7 +25,7 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/27.
  */
 @RestController
-@Api("批次调度-批次内任务组依赖管理")
+@Api(description ="批次调度-批次内任务组依赖管理")
 public class GroupDependencyController {
     private final Logger logger = LoggerFactory.getLogger(GroupDependencyController.class);
     @Autowired

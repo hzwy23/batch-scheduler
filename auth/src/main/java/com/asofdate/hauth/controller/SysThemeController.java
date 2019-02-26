@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by hzwy23 on 2017/5/18.
  */
 @Controller
-@Api("主题配置管理")
+@Api(description = "系统管理--主题配置管理")
 public class SysThemeController {
     private final static Logger logger = LoggerFactory.getLogger(SystemPageController.class);
     @Autowired

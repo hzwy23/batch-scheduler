@@ -5,6 +5,7 @@ import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.entity.SysDomainAuthorization;
 import com.asofdate.hauth.service.DomainService;
 import com.asofdate.hauth.service.SysDomainAuthorizationService;
+import com.asofdate.hauth.vo.SysDomainAuthorizationAddParamVo;
 import com.asofdate.hauth.vo.SysDomainAuthorizationVo;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.TimeFormat;
@@ -38,12 +39,11 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
         return result;
     }
 
-
     public List<DomainEntity> findUnauth(String userId) {
         // 查询用户已经获取到的项目
         List<SysDomainAuthorization> owners = sysDomainAuthorizationDao.findByUserId(userId);
         Set<String> domainIdSet = new HashSet<>();
-        if (owners == null || owners.isEmpty()) {
+        if (owners != null && !owners.isEmpty()) {
             for (SysDomainAuthorization item : owners) {
                 domainIdSet.add(item.getDomainId());
             }
@@ -51,12 +51,11 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
         List<DomainEntity> domainList = domainService.getAll();
         List<DomainEntity> result = new ArrayList<>();
         for (DomainEntity item : domainList) {
-            if (domainIdSet.contains(item.getDomainId())) {
+            if (domainIdSet.contains(item.getDomain_id())) {
                 continue;
             }
             result.add(item);
         }
-
         return result;
     }
 
@@ -72,24 +71,25 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
     }
 
     @Override
-    public RetMsg grant(String domainId, String userId, int level, String handleUserId) {
-        int size = sysDomainAuthorizationDao.countByDomainIdAndUserId(domainId, userId);
-        if (size == 1) {
-            return new RetMsg(10011, "项目已经授权给用户，不能重复授权", domainId + "," + userId);
+    public RetMsg grant(SysDomainAuthorizationAddParamVo paramVo,  String handleUserId) {
+        int size = sysDomainAuthorizationDao.countByDomainIdAndUserId(paramVo.getDomainId(), paramVo.getUserId());
+        if (size >= 1) {
+            log.info("用户已经被授予这个项目的访问权限，{}", paramVo);
+            return new RetMsg(10011, "项目已经授权给用户，不能重复授权",  paramVo);
         }
         String current = TimeFormat.currentTime();
         SysDomainAuthorization element = new SysDomainAuthorization();
         element.setUuid(UUID.randomUUID().toString().replace("-", ""));
-        element.setAuthorizationLevel(level);
+        element.setAuthorizationLevel(paramVo.getAuthorizationLevel());
         element.setDefaultDomain(false);
-        element.setUserId(userId);
-        element.setDomainId(domainId);
+        element.setUserId(paramVo.getUserId());
+        element.setDomainId(paramVo.getDomainId());
         element.setCreateDate(current);
         element.setModifyDate(current);
         element.setModifyUser(handleUserId);
         element.setCreateUser(handleUserId);
-        sysDomainAuthorizationDao.save(element);
-        return new RetMsg(200, "SUccess", element);
+        element = sysDomainAuthorizationDao.save(element);
+        return new RetMsg(200, "Success", element);
     }
 
     @Override
@@ -100,11 +100,11 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
 
     @Override
     public RetMsg modify(String uuid, int level) {
-        int size = sysDomainAuthorizationDao.updateLevel(uuid, level);
+        int size = sysDomainAuthorizationDao.updateLevel(level, uuid);
         if (size == 1) {
             return new RetMsg(200, "success", uuid);
         }
-        return new RetMsg(10012, "修改授权模式失败", uuid);
+        return new RetMsg(10012, "项目ID不存在，不能进行修改", uuid);
     }
 
 }

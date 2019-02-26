@@ -36,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/auth/domain")
-@Api("域信息管理")
+@Api(description = "系统管理--域信息管理")
 public class SysDomainController {
     private final Logger logger = LoggerFactory.getLogger(SysDomainController.class);
     @Autowired
@@ -71,7 +71,7 @@ public class SysDomainController {
 
         //用户非超级管理域，过滤超级管理域信息
         for (int i = 0; i < list.size(); i++) {
-            if (Validator.isAdminDomain(list.get(i).getDomainId())) {
+            if (Validator.isAdminDomain(list.get(i).getDomain_id())) {
                 list.remove(i);
                 i--;
             }
@@ -96,10 +96,10 @@ public class SysDomainController {
 
         // 校验用户是否有权删除这些域
         for (DomainEntity m : list) {
-            Boolean status = authService.domainAuth(request, m.getDomainId(), "w").getStatus();
+            Boolean status = authService.domainAuth(request, m.getDomain_id(), "w").getStatus();
             if (!status) {
                 response.setStatus(403);
-                return Hret.error(403, "您没有权限删除域【 " + m.getDomainDesc() + " 】", null);
+                return Hret.error(403, "您没有权限删除项目【 " + m.getDomain_desc() + " 】", null);
             }
         }
 
@@ -127,8 +127,8 @@ public class SysDomainController {
         }
 
         String userId = JwtService.getConnUser(request).getUserId();
-        domainEntity.setDomainModifyUser(userId);
-        domainEntity.setCreateUserId(userId);
+        domainEntity.setDomain_modify_user(userId);
+        domainEntity.setCreate_user_id(userId);
         RetMsg retMsg = domainService.add(domainEntity);
 
         if (retMsg.checkCode()) {
@@ -184,13 +184,13 @@ public class SysDomainController {
         }
 
         String userId = JwtService.getConnUser(request).getUserId();
-        domainEntity.setDomainModifyUser(userId);
-        domainEntity.setCreateUserId(userId);
+        domainEntity.setDomain_modify_user(userId);
+        domainEntity.setCreate_user_id(userId);
 
-        Boolean status = authService.domainAuth(request, domainEntity.getDomainId(), "w").getStatus();
+        Boolean status = authService.domainAuth(request, domainEntity.getDomain_id(), "w").getStatus();
         if (!status) {
             response.setStatus(403);
-            return Hret.error(403, "你没有权限编辑域 [ " + domainEntity.getDomainDesc() + " ]", domainEntity);
+            return Hret.error(403, "你没有权限编辑域 [ " + domainEntity.getDomain_desc() + " ]", domainEntity);
         }
 
         RetMsg retMsg = domainService.update(domainEntity);

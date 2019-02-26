@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @ApiModel
@@ -19,6 +21,6 @@ public class SysDomainAuthorizationAddParamVo {
     private String userId;
 
     @ApiModelProperty(name = "授权模式")
-    @NotBlank(message = "请选择授权模式")
+    @NotNull(message = "请选择授权模式")
     private Integer authorizationLevel;
 }

@@ -127,6 +127,9 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     public String getBatchAsOfDate(String batchId) {
         try {
             String asOfDate = jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_102"), String.class, batchId);
+            if(asOfDate == null) {
+                return null;
+            }
             return TimeFormat.formatTime(asOfDate);
         } catch (Exception e) {
             e.printStackTrace();

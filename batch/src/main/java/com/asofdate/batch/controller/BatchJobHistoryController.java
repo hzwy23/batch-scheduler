@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/job/history")
-@Api("批次调度-批次Job运行历史")
+@Api(description ="批次调度-批次Job运行历史")
 public class BatchJobHistoryController {
     private final Logger logger = LoggerFactory.getLogger(BatchJobHistoryController.class);
     @Autowired

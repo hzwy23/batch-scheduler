@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/monitoring")
-@Api("批次调度-批次运行实时监控")
+@Api(description ="批次调度-批次运行实时监控")
 public class MonitoringController {
     private final Logger logger = LoggerFactory.getLogger(MonitoringController.class);
 

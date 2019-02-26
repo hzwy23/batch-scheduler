@@ -39,17 +39,17 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public int update(DomainEntity domainEntity) {
         return jdbcTemplate.update(sqlText.getSql("sys038"),
-                domainEntity.getDomainDesc(),
-                domainEntity.getDomainStatusId(),
-                domainEntity.getDomainModifyUser(),
-                domainEntity.getDomainId());
+                domainEntity.getDomain_desc(),
+                domainEntity.getDomain_status_id(),
+                domainEntity.getDomain_modify_user(),
+                domainEntity.getDomain_id());
     }
 
     @Transactional
     @Override
     public int delete(List<DomainEntity> list) {
         for (DomainEntity m : list) {
-            jdbcTemplate.update(sqlText.getSql("sys037"), m.getDomainId());
+            jdbcTemplate.update(sqlText.getSql("sys037"), m.getDomain_id());
         }
         return 1;
     }
@@ -57,11 +57,11 @@ public class DomainDaoImpl implements DomainDao {
     @Override
     public int add(DomainEntity domainEntity) {
         return jdbcTemplate.update(sqlText.getSql("sys036"),
-                domainEntity.getDomainId(),
-                domainEntity.getDomainDesc(),
-                domainEntity.getDomainStatusId(),
-                domainEntity.getCreateUserId(),
-                domainEntity.getDomainModifyUser());
+                domainEntity.getDomain_id(),
+                domainEntity.getDomain_desc(),
+                domainEntity.getDomain_status_id(),
+                domainEntity.getCreate_user_id(),
+                domainEntity.getDomain_modify_user());
     }
 
     @Override

@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/auth")
-@Api("菜单资源定义管理")
+@Api(description = "系统管理--菜单资源定义管理")
 public class SysResourceController {
     @Autowired
     private MenuService menuService;

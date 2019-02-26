@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/history")
-@Api("批次调度-批次历史管理")
+@Api(description ="批次调度-批次历史管理")
 public class BatchHistoryController {
     @Autowired
     private BatchHistoryService batchHistoryService;

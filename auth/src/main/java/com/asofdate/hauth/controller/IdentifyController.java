@@ -19,7 +19,7 @@ import java.io.IOException;
  * Created by hzwy23 on 2017/5/16.
  */
 @Controller
-@Api("安全退出管理")
+@Api(description = "系统管理--安全退出管理")
 public class IdentifyController {
     private final Logger logger = LoggerFactory.getLogger(IdentifyController.class);
     private final String HEADER_STRING = "Authorization";

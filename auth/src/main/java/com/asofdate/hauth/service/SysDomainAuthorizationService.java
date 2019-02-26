@@ -1,6 +1,7 @@
 package com.asofdate.hauth.service;
 
 import com.asofdate.hauth.entity.DomainEntity;
+import com.asofdate.hauth.vo.SysDomainAuthorizationAddParamVo;
 import com.asofdate.hauth.vo.SysDomainAuthorizationVo;
 import com.asofdate.utils.RetMsg;
 
@@ -22,12 +23,8 @@ public interface SysDomainAuthorizationService {
 
     /**
      * 添加授权
-     *
-     * @param domainId
-     * @param userId
-     * @param level
      */
-    RetMsg grant(String domainId, String userId, int level, String handleUserId);
+    RetMsg grant(SysDomainAuthorizationAddParamVo paramVo, String handleUserId);
 
 
     /**

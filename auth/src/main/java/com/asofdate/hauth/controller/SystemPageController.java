@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by hzwy23 on 2017/5/17.
  */
 @Controller
-@Api("系统首页管理")
+@Api(description = "系统管理--系统首页管理")
 public class SystemPageController {
     private final static Logger logger = LoggerFactory.getLogger(SystemPageController.class);
     @Autowired

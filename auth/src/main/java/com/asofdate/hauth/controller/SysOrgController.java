@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/auth/org")
-@Api("机构定义管理")
+@Api(description = "系统管理--机构定义管理")
 public class SysOrgController {
     @Autowired
     private AuthService authService;

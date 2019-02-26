@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/task/define")
-@Api("批次调度-任务定义管理")
+@Api(description = "批次调度-任务定义管理")
 public class TaskDefineController {
     private final Logger logger = LoggerFactory.getLogger(TaskDefineController.class);
     @Autowired

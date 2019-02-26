@@ -23,7 +23,7 @@ public class SysDomainAuthorization {
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "Authorization_level")
+    @Column(name = "authorization_level")
     private Integer authorizationLevel;
 
     @Column(name = "create_user")

@@ -26,7 +26,7 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/27.
  */
 @RestController
-@Api("批次调度-批次内任务组配置管理")
+@Api(description ="批次调度-批次内任务组配置管理")
 public class BatchGroupRelController {
     private final Logger logger = LoggerFactory.getLogger(BatchGroupRelController.class);
     @Autowired

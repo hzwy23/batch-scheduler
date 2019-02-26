@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by hzwy23 on 2017/6/18.
  */
 @Controller
-@Api("静态页面资源管理")
+@Api(description = "系统管理--静态页面资源管理")
 public class StaticFileController {
     @Autowired
     private DomainService domainService;

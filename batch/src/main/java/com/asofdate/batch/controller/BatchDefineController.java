@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/define")
-@Api("批次调度-批次定义管理")
+@Api(description ="批次调度-批次定义管理")
 public class BatchDefineController {
     private static Logger logger = LoggerFactory.getLogger(BatchDefineController.class);
 

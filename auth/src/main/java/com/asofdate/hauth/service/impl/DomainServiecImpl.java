@@ -47,9 +47,9 @@ public class DomainServiecImpl implements DomainService {
 
         List<DomainEntity> result = new ArrayList<>();
         for (DomainEntity element : list) {
-            if (domainIdSet.containsKey(element.getDomainId())) {
-                if (domainIdSet.get(element.getDomainId()).getDefaultDomain()) {
-                    domainDto.setDomainId(element.getDomainId());
+            if (domainIdSet.containsKey(element.getDomain_id())) {
+                if (domainIdSet.get(element.getDomain_id()).getDefaultDomain()) {
+                    domainDto.setDomainId(element.getDomain_id());
                 }
                 result.add(element);
             }

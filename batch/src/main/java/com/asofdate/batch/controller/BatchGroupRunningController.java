@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/group/running")
-@Api("批次调度-任务组运行监控管理")
+@Api(description = "批次调度-任务组运行监控管理")
 public class BatchGroupRunningController {
     private final Logger logger = LoggerFactory.getLogger(BatchGroupRunningController.class);
     @Autowired

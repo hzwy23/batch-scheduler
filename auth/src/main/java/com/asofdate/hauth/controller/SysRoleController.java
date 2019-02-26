@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/auth/role")
-@Api("角色定义管理")
+@Api(description = "系统管理--角色定义管理")
 public class SysRoleController {
     private final Logger logger = LoggerFactory.getLogger(SysRoleController.class);
     @Autowired
