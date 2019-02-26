@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> findAll( String orgId, String statusCd) {
+    public List<UserEntity> findAll(String orgId, String statusCd) {
         return userDao.findAll(orgId, statusCd);
     }
 

@@ -1,12 +1,10 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
-import com.asofdate.hauth.dto.AuthDto;
 import com.asofdate.hauth.entity.OrgEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.OrgService;
 import com.asofdate.utils.Hret;
-import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/org")
 @Api("机构定义管理")
-public class OrgController {
+public class SysOrgController {
     @Autowired
     private AuthService authService;
 

@@ -11,6 +11,10 @@ public class RetMsg {
     public RetMsg() {
     }
 
+    public static RetMsg success(){
+        return new RetMsg(200,"Success", null);
+    }
+
     public RetMsg(Integer code, String message, Object details) {
         this.code = code;
         this.message = message;

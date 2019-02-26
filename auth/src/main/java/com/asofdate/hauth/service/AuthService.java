@@ -9,6 +9,4 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AuthService {
     AuthDto domainAuth(HttpServletRequest request, String domainId, String mode);
-
-    AuthDto basicAuth(HttpServletRequest request);
 }

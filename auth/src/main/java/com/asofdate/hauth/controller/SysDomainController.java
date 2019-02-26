@@ -1,6 +1,7 @@
 package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
+import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.DomainService;
@@ -36,12 +37,21 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/domain")
 @Api("域信息管理")
-public class DomainController {
-    private final Logger logger = LoggerFactory.getLogger(DomainController.class);
+public class SysDomainController {
+    private final Logger logger = LoggerFactory.getLogger(SysDomainController.class);
     @Autowired
     private DomainService domainService;
     @Autowired
     private AuthService authService;
+
+
+    @RequestMapping(value = "/v1/auth/domain/self/owner", method = RequestMethod.GET)
+    @ResponseBody
+    public DomainDto getDomain(HttpServletRequest request) {
+        // 获取连接用户账号
+        String userId = JwtService.getConnUser(request).getUserId();
+        return domainService.findAll(userId);
+    }
 
     /**
      * 查询系统中所有的域信息

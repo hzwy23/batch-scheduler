@@ -20,6 +20,9 @@ public interface SysDomainAuthorizationDao extends JpaRepository<SysDomainAuthor
 
     int countByDomainIdAndUserId(String domainId, String userId);
 
+    SysDomainAuthorization findByDomainIdAndUserId(String domainId, String userId);
+
     @Query(value = "update SysDomainAuthorization set authorizationLevel = ?1 where uuid = ?2")
     int updateLevel(String uuid, Integer level);
+
 }

@@ -28,8 +28,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/user")
 @Api("用户信息管理")
-public class UserController {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+public class SysUserController {
+    private final Logger logger = LoggerFactory.getLogger(SysUserController.class);
     @Autowired
     private UserService userService;
 

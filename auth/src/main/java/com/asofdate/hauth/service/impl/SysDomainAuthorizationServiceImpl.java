@@ -1,7 +1,9 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.dao.jpa.SysDomainAuthorizationDao;
+import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.entity.SysDomainAuthorization;
+import com.asofdate.hauth.service.DomainService;
 import com.asofdate.hauth.service.SysDomainAuthorizationService;
 import com.asofdate.hauth.vo.SysDomainAuthorizationVo;
 import com.asofdate.utils.RetMsg;
@@ -12,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -23,15 +23,40 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
     @Autowired
     private SysDomainAuthorizationDao sysDomainAuthorizationDao;
 
+    @Autowired
+    private DomainService domainService;
+
     @Override
     public List<SysDomainAuthorizationVo> findAll(String userId) {
         List<SysDomainAuthorization> ret = sysDomainAuthorizationDao.findByUserId(userId);
         List<SysDomainAuthorizationVo> result = new ArrayList<>();
-        for(SysDomainAuthorization item: ret){
+        for (SysDomainAuthorization item : ret) {
             SysDomainAuthorizationVo element = new SysDomainAuthorizationVo();
             BeanUtils.copyProperties(item, element);
             result.add(element);
         }
+        return result;
+    }
+
+
+    public List<DomainEntity> findUnauth(String userId) {
+        // 查询用户已经获取到的项目
+        List<SysDomainAuthorization> owners = sysDomainAuthorizationDao.findByUserId(userId);
+        Set<String> domainIdSet = new HashSet<>();
+        if (owners == null || owners.isEmpty()) {
+            for (SysDomainAuthorization item : owners) {
+                domainIdSet.add(item.getDomainId());
+            }
+        }
+        List<DomainEntity> domainList = domainService.getAll();
+        List<DomainEntity> result = new ArrayList<>();
+        for (DomainEntity item : domainList) {
+            if (domainIdSet.contains(item.getDomainId())) {
+                continue;
+            }
+            result.add(item);
+        }
+
         return result;
     }
 
@@ -40,21 +65,21 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
     public RetMsg modifyDefaultDomain(String uuid, String userId) {
         sysDomainAuthorizationDao.updateClearDefaultDomain(userId);
         int size = sysDomainAuthorizationDao.updateUserDefaultDomain(uuid);
-        if (size == 1){
-            return new RetMsg(200,"success",null);
+        if (size == 1) {
+            return new RetMsg(200, "success", null);
         }
-        return new RetMsg(10010,"项目不存在",uuid);
+        return new RetMsg(10010, "项目不存在", uuid);
     }
 
     @Override
     public RetMsg grant(String domainId, String userId, int level, String handleUserId) {
         int size = sysDomainAuthorizationDao.countByDomainIdAndUserId(domainId, userId);
         if (size == 1) {
-            return new RetMsg(10011,"项目已经授权给用户，不能重复授权",domainId+","+userId);
+            return new RetMsg(10011, "项目已经授权给用户，不能重复授权", domainId + "," + userId);
         }
         String current = TimeFormat.currentTime();
         SysDomainAuthorization element = new SysDomainAuthorization();
-        element.setUuid(UUID.randomUUID().toString().replace("-",""));
+        element.setUuid(UUID.randomUUID().toString().replace("-", ""));
         element.setAuthorizationLevel(level);
         element.setDefaultDomain(false);
         element.setUserId(userId);
@@ -64,22 +89,22 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
         element.setModifyUser(handleUserId);
         element.setCreateUser(handleUserId);
         sysDomainAuthorizationDao.save(element);
-        return new RetMsg(200,"SUccess", element);
+        return new RetMsg(200, "SUccess", element);
     }
 
     @Override
     public RetMsg revoke(String uuid) {
         sysDomainAuthorizationDao.deleteById(uuid);
-        return new RetMsg(200,"success", uuid);
+        return new RetMsg(200, "success", uuid);
     }
 
     @Override
     public RetMsg modify(String uuid, int level) {
-        int size = sysDomainAuthorizationDao.updateLevel(uuid,level);
+        int size = sysDomainAuthorizationDao.updateLevel(uuid, level);
         if (size == 1) {
-            return new RetMsg(200,"success", uuid);
+            return new RetMsg(200, "success", uuid);
         }
-        return new RetMsg(10012,"修改授权模式失败",uuid);
+        return new RetMsg(10012, "修改授权模式失败", uuid);
     }
 
 }

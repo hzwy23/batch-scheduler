@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @Api("主题配置管理")
-public class ThemeController {
+public class SysThemeController {
     private final static Logger logger = LoggerFactory.getLogger(SystemPageController.class);
     @Autowired
     private UserService userDetailsService;

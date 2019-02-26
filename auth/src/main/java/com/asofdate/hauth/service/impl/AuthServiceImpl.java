@@ -1,13 +1,14 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.authentication.JwtService;
+import com.asofdate.hauth.dao.jpa.SysDomainAuthorizationDao;
 import com.asofdate.hauth.dto.AuthDto;
+import com.asofdate.hauth.dto.RequestUserDto;
+import com.asofdate.hauth.entity.SysDomainAuthorization;
 import com.asofdate.hauth.service.AuthService;
-import com.asofdate.hauth.service.ShareDomainService;
 import com.asofdate.utils.factory.AuthDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -15,11 +16,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Service
 public class AuthServiceImpl implements AuthService {
-    private final String READ_MODE = "r";
-    private final String WRITE_MODE = "w";
 
     @Autowired
-    private ShareDomainService shareDomainService;
+    private SysDomainAuthorizationDao sysDomainAuthorizationDao;
+
+    private final String READ_MODE = "r";
+    private final String WRITE_MODE = "w";
 
     private Integer checkMode(String mode) {
         if (mode.toLowerCase().equals(READ_MODE)) {
@@ -34,12 +36,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthDto domainAuth(HttpServletRequest request, String domainId, String mode) {
-        String userDomainId = JwtService.getConnUser(request).getDomainID();
-        if (userDomainId.equals(domainId) || "vertex_root".equals(userDomainId)) {
+        RequestUserDto user = JwtService.getConnUser(request);
+        String userDomainId = user.getDomainID();
+        String userId = user.getUserId();
+        if (userDomainId.equals(domainId) || "admin".equals(userId)) {
             return AuthDTOFactory.getAuthDTO(true, "success");
         }
-
-        Integer level = shareDomainService.getAuthLevel(domainId, userDomainId);
+        SysDomainAuthorization item = sysDomainAuthorizationDao.findByDomainIdAndUserId(domainId, userId);
+        if (item == null) {
+            return AuthDTOFactory.getAuthDTO(false, "您没有被授权访问这个域");
+        }
+        Integer level = item.getAuthorizationLevel();
         if (level == 2) {
             return AuthDTOFactory.getAuthDTO(true, "success");
         } else if (level == 1 && checkMode(mode) == 2) {
@@ -49,10 +56,5 @@ public class AuthServiceImpl implements AuthService {
         }
         return AuthDTOFactory.getAuthDTO(false, "您没有被授权访问这个域");
 
-    }
-
-    @Override
-    public AuthDto basicAuth(HttpServletRequest request) {
-        return null;
     }
 }

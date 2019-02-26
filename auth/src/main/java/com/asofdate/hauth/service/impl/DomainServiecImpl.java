@@ -1,9 +1,10 @@
 package com.asofdate.hauth.service.impl;
 
 import com.asofdate.hauth.dao.DomainDao;
-import com.asofdate.hauth.dao.ShareDomainDao;
+import com.asofdate.hauth.dao.jpa.SysDomainAuthorizationDao;
 import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.entity.DomainEntity;
+import com.asofdate.hauth.entity.SysDomainAuthorization;
 import com.asofdate.hauth.service.DomainService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
@@ -12,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by hzwy23 on 2017/6/1.
@@ -23,21 +25,36 @@ public class DomainServiecImpl implements DomainService {
 
     @Autowired
     private DomainDao domainDao;
+
     @Autowired
-    private ShareDomainDao shareDomainDaoo;
+    private SysDomainAuthorizationDao sysDomainAuthorizationDao;
 
     @Override
-    public DomainDto findAll(String userId, String domainId) {
+    public DomainDto findAll(String userId) {
+        DomainDto domainDto = new DomainDto();
+
         List<DomainEntity> list = domainDao.findAll();
-        Set<String> set = shareDomainDaoo.findShareDomain(userId);
+
+        List<SysDomainAuthorization> authList = sysDomainAuthorizationDao.findByUserId(userId);
+        Map<String, SysDomainAuthorization> domainIdSet = new HashMap<>();
+        if (authList == null || authList.isEmpty()) {
+            return null;
+        }
+
+        for (SysDomainAuthorization item : authList) {
+            domainIdSet.put(item.getDomainId(), item);
+        }
+
         List<DomainEntity> result = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            if (set.contains(list.get(i).getDomainId())) {
-                result.add(list.get(i));
+        for (DomainEntity element : list) {
+            if (domainIdSet.containsKey(element.getDomainId())) {
+                if (domainIdSet.get(element.getDomainId()).getDefaultDomain()) {
+                    domainDto.setDomainId(element.getDomainId());
+                }
+                result.add(element);
             }
         }
-        DomainDto domainDto = new DomainDto();
-        domainDto.setDomainId(domainId);
+
         domainDto.setOwnerList(result);
         return domainDto;
     }

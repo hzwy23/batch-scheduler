@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/role/resource")
 @Api("角色与资源关系管理")
-public class RoleResourceController {
+public class SysResourceRoleController {
     @Autowired
     private RoleResourceService roleResourceService;
 

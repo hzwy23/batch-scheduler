@@ -3,10 +3,8 @@ package com.asofdate.hauth.controller;
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.entity.UserRoleEntity;
-import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.RoleService;
 import com.asofdate.utils.Hret;
-import com.asofdate.utils.JoinCode;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,8 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/role")
 @Api("角色定义管理")
-public class RoleController {
-    private final Logger logger = LoggerFactory.getLogger(RoleController.class);
+public class SysRoleController {
+    private final Logger logger = LoggerFactory.getLogger(SysRoleController.class);
     @Autowired
     private RoleService roleService;
 

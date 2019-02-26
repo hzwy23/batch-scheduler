@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/auth/handle/logs")
 @Api("操作日志管理")
-public class HandleLogController {
+public class SysHandleLogController {
     @Autowired
     private HandleLogService handleLogService;
 

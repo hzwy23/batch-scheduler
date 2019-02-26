@@ -68,27 +68,9 @@ public class StaticFileController {
         return "hauth/res_info_page";
     }
 
-
-    @RequestMapping(value = "/v1/auth/domain/share/page", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/auth/grant/domain/page", method = RequestMethod.GET)
     public String getDomainSharePage(HttpServletResponse response, HttpServletRequest request, Map<String, Object> map) {
-        String domainId = request.getParameter("domain_id");
-
-        Boolean yes = authService.domainAuth(request, domainId, "r").getStatus();
-        if (!yes) {
-            response.setStatus(423);
-            map.put("domainId", domainId);
-            return "hauth/NoAuth";
-        }
-        DomainEntity domainEntity = domainService.getDomainDetails(domainId);
-
-        map.put("domainId", domainEntity.getDomainId());
-        map.put("domainDesc", domainEntity.getDomainDesc());
-        map.put("statusDesc", domainEntity.getDomainStatusDesc());
-        map.put("createDate", domainEntity.getMaintanceDate());
-        map.put("createUser", domainEntity.getCreateUserId());
-        map.put("modifyDate", domainEntity.getDomainModifyDate());
-        map.put("modifyUser", domainEntity.getDomainModifyUser());
-        return "hauth/domain_share_info";
+        return "hauth/domain_grant_page";
     }
 
     @RequestMapping(value = "/v1/auth/role/resource/details", method = RequestMethod.GET)
