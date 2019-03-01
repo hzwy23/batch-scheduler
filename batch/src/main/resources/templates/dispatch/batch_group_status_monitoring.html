@@ -6,8 +6,8 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-history-batch-desc"
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;批次名称 = <span id="h-dispatch-batch-group-history-batch-desc"
                                                    th:text="${batchDesc}"></span></span>
         <span id="h-dispatch-batch-history-uuid" style="display: none;" th:text="${uuid}"></span>
     </div>
@@ -128,5 +128,6 @@
         var uuid = $("#h-dispatch-batch-history-uuid").html();
         BatchGroupHistoryObj.init(uuid);
     });
+
 </script>
 </html>

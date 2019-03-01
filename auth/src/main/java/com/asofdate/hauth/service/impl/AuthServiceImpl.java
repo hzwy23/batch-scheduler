@@ -9,6 +9,7 @@ import com.asofdate.hauth.service.AuthService;
 import com.asofdate.utils.factory.AuthDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -17,11 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private SysDomainAuthorizationDao sysDomainAuthorizationDao;
-
     private final String READ_MODE = "r";
     private final String WRITE_MODE = "w";
+    @Autowired
+    private SysDomainAuthorizationDao sysDomainAuthorizationDao;
 
     private Integer checkMode(String mode) {
         if (mode.toLowerCase().equals(READ_MODE)) {

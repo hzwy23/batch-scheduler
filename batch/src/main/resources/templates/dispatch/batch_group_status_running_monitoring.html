@@ -6,8 +6,8 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次名称 = <span id="h-dispatch-batch-group-running-batch-desc"
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;批次名称 = <span id="h-dispatch-batch-group-running-batch-desc"
                                                    th:text="${batchDesc}"></span></span>
         <span id="h-dispatch-batch-running-uuid" style="display: none;" th:text="${batchId}"></span>
         <span id="h-dispatch-batch-running-asofdate" style="display: none;" th:text="${asOfDate}"></span>
@@ -186,5 +186,6 @@
         var uuid = $("#h-dispatch-batch-running-uuid").html();
         BatchGroupRunningObj.init(uuid);
     });
+
 </script>
 </html>

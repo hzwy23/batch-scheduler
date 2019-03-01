@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <div class="row subsystem-header">
     <div class="pull-left">
         <span>任务组配置管理</span>
@@ -8,33 +8,33 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次描述 = <span th:text="${batchDesc}"></span></span>
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;批次描述 = <span th:text="${batchDesc}"></span></span>
     </div>
 
-    <div id="h-dispatch-batch-group-toolbar-list" class="pull-right">
-        <button onclick="DispatchBatchGroupObj.addGroup()" class="btn btn-info btn-sm" title="新增任务">
+    <div class="pull-right" id="h-dispatch-batch-group-toolbar-list">
+        <button class="btn btn-info btn-sm" onclick="DispatchBatchGroupObj.addGroup()" title="新增任务">
             <span class="icon-plus"> 添加任务组</span>
         </button>
-        <button onclick="DispatchBatchGroupObj.delete()" class="btn btn-danger btn-sm" title="新增任务">
+        <button class="btn btn-danger btn-sm" onclick="DispatchBatchGroupObj.delete()" title="新增任务">
             <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
 <div class="row">
-    <div id="h-dispatch-batch-group-table-info" class="col-sm-12 col-md-12 col-lg-12">
-        <table id="h-dispatch-batch-group-relation-table"
-               data-toggle="table"
-               data-striped="true"
-               data-url="/v1/dispatch/batch/define/group"
+    <div class="col-sm-12 col-md-12 col-lg-12" id="h-dispatch-batch-group-table-info">
+        <table data-pagination="true"
+               data-search="false"
                data-side-pagination="client"
-               data-pagination="true"
-               data-search="false">
+               data-striped="true"
+               data-toggle="table"
+               data-url="/v1/dispatch/batch/define/group"
+               id="h-dispatch-batch-group-relation-table">
             <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
-                <th data-align="center" data-width="46px" data-formatter="DispatchBatchGroupObj.formatterindex">序号</th>
-                <th data-field="suiteKey" data-align="center" data-width="320px">SuiteKey</th>
+                <th data-checkbox="true" data-field="state"></th>
+                <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterindex" data-width="46px">序号</th>
+                <th data-align="center" data-field="suiteKey" data-width="320px">SuiteKey</th>
                 <th data-align="center" data-field="code_number">任务组编码</th>
                 <th data-align="left" data-field="group_desc">任务组名称</th>
                 <th data-align="center" data-formatter="DispatchBatchGroupObj.formatterGroup">操作</th>
@@ -216,6 +216,7 @@
             })
         }
     }
+
 </script>
 <script id="h-dispatch-batch-group-add-dependency-src" type="text/html">
     <table id="h-dispatch-batch-group-dependency-add-table"

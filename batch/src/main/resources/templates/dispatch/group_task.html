@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <div class="row subsystem-header">
     <div class="pull-left">
         <span>任务配置管理</span>
@@ -7,35 +7,35 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;任务组描述 = <span th:text="${groupDesc}"></span></span>
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;任务组描述 = <span th:text="${groupDesc}"></span></span>
     </div>
 
-    <div id="h-dispatch-group-task-toolbar-listt" class="pull-right">
-        <button onclick="DispatchGroupTaskObj.addTask()" class="btn btn-info btn-sm" title="新增配置任务">
+    <div class="pull-right" id="h-dispatch-group-task-toolbar-listt">
+        <button class="btn btn-info btn-sm" onclick="DispatchGroupTaskObj.addTask()" title="新增配置任务">
             <span class="icon-plus"> 添加任务</span>
         </button>
-        <button onclick="DispatchGroupTaskObj.delete()" class="btn btn-danger btn-sm" title="删除配置任务">
+        <button class="btn btn-danger btn-sm" onclick="DispatchGroupTaskObj.delete()" title="删除配置任务">
             <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
 <div class="row" style="margin-top:6px;">
-    <div id="h-dispatch-group-task-table-info"
-         class="col-sm-12 col-md-12 col-lg-12">
-        <table id="h-dispatch-group-task-relation-table"
-               data-toggle="table"
+    <div class="col-sm-12 col-md-12 col-lg-12"
+         id="h-dispatch-group-task-table-info">
+        <table data-pagination="true"
+               data-search="false"
+               data-side-pagination="client"
                data-striped="true"
+               data-toggle="table"
                data-unique-id="taskId"
                data-url="/v1/dispatch/group/define/task"
-               data-side-pagination="client"
-               data-pagination="true"
-               data-search="false">
+               id="h-dispatch-group-task-relation-table">
             <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
-                <th data-align="center" data-width="46px" data-formatter="DispatchGroupTaskObj.formatterindex">序号</th>
-                <th data-field="jobKey" data-align="center" data-width="280px">JobKey</th>
+                <th data-checkbox="true" data-field="state"></th>
+                <th data-align="center" data-formatter="DispatchGroupTaskObj.formatterindex" data-width="46px">序号</th>
+                <th data-align="center" data-field="jobKey" data-width="280px">JobKey</th>
                 <th data-align="center" data-field="code_number">任务编码</th>
                 <th data-align="left" data-field="task_desc">任务名称</th>
                 <th data-align="center" data-field="task_type_desc">任务类型</th>
@@ -96,6 +96,7 @@
             });
         },
     }
+
 </script>
 
 <script id="h-dispatch-group-task-dependency-src" type="text/html">

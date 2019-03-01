@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/group/history")
-@Api(description ="批次调度-批次任务组运行历史")
+@Api(description = "批次调度-批次任务组运行历史")
 public class BatchGroupHistoryController {
     @Autowired
     private BatchGroupHistoryService batchGroupHistoryService;

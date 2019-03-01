@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/batch/job/running")
-@Api(description ="批次调度-批次Job运行监控")
+@Api(description = "批次调度-批次Job运行监控")
 public class BatchJobRunningController {
     @Autowired
     private BatchJobRunningService batchJobRunningService;

@@ -37,7 +37,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(value = "/v1/dispatch/group/define")
-@Api(description ="批次调度-任务组管理")
+@Api(description = "批次调度-任务组管理")
 public class GroupDefineController {
     private final Logger logger = LoggerFactory.getLogger(GroupDefineController.class);
     @Autowired
@@ -249,7 +249,7 @@ public class GroupDefineController {
         String task_id = request.getParameter("task_id");
         String domain_id = request.getParameter("domain_id");
         String arg_list = request.getParameter("arg_list");
-        String id = UUID.randomUUID().toString().replace("-","");
+        String id = UUID.randomUUID().toString().replace("-", "");
 
         RetMsg retMsg = groupTaskService.addTask(id, group_id, task_id, domain_id);
         if (!retMsg.checkCode()) {

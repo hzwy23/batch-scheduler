@@ -6,10 +6,10 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;批次名称 = <span th:text="${batchDesc}"></span></span>
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline"
-              class="pull-left">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;批次名称 = <span th:text="${batchDesc}"></span></span>
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline">&nbsp;&nbsp;&nbsp;<i style="border: #0b4059 dotted 0.5px; height: 44px;"></i>&nbsp;&nbsp;&nbsp;任务组名称 = <span
                 th:text="${groupDesc}"></span></span>
         <span id="h-dispatch-batch-job-running-batchId" style="display: none;" th:text="${batchId}"></span>
         <span id="h-dispatch-batch-job-running-gid" style="display: none;" th:text="${suiteKey}"></span>
@@ -20,29 +20,29 @@
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12"
          id="h-dispatch-batch-job-running-monitoring-content">
-        <table id="h-dispatch-batch-job-monitoring-table"
-               data-toggle="table"
-               data-striped="true"
+        <table data-page-list="[20,30,50,100]"
                data-page-size="30"
-               data-unique-id="jobKey"
-               data-toolbar-align="right"
-               data-url="/v1/dispatch/batch/job/running"
-               data-side-pagination="client"
                data-pagination="true"
-               data-page-list="[20,30,50,100]"
-               data-search="false">
+               data-search="false"
+               data-side-pagination="client"
+               data-striped="true"
+               data-toggle="table"
+               data-toolbar-align="right"
+               data-unique-id="jobKey"
+               data-url="/v1/dispatch/batch/job/running"
+               id="h-dispatch-batch-job-monitoring-table">
             <thead>
             <tr>
-                <th data-align="center" data-width="46px" data-formatter="BatchJobHistoryObj.formatterindex">序号</th>
-                <th data-width="320px" data-align="center" data-field="jobKey">JobKey</th>
-                <th data-sortable="true" data-field="taskId" data-formatter="BatchJobHistoryObj.formatter">任务编码</th>
-                <th data-sortable="true" data-field="taskDesc">任务名称</th>
-                <th data-sortable="true" data-field="taskTypeDesc">任务类型</th>
-                <th data-sortable="true" data-align="center" data-field="statusDesc">任务状态</th>
-                <th data-sortable="true" data-align="center" data-field="startTime">开始日期</th>
-                <th data-sortable="true" data-align="center" data-field="endTime">结束时间</th>
-                <th data-sortable="true" data-align="center" data-field="costTime"
-                    data-formatter="BatchJobHistoryObj.calcCost">运行时长
+                <th data-align="center" data-formatter="BatchJobHistoryObj.formatterindex" data-width="46px">序号</th>
+                <th data-align="center" data-field="jobKey" data-width="320px">JobKey</th>
+                <th data-field="taskId" data-formatter="BatchJobHistoryObj.formatter" data-sortable="true">任务编码</th>
+                <th data-field="taskDesc" data-sortable="true">任务名称</th>
+                <th data-field="taskTypeDesc" data-sortable="true">任务类型</th>
+                <th data-align="center" data-field="statusDesc" data-sortable="true">任务状态</th>
+                <th data-align="center" data-field="startTime" data-sortable="true">开始日期</th>
+                <th data-align="center" data-field="endTime" data-sortable="true">结束时间</th>
+                <th data-align="center" data-field="costTime" data-formatter="BatchJobHistoryObj.calcCost"
+                    data-sortable="true">运行时长
                 </th>
             </tr>
             </thead>
@@ -145,5 +145,6 @@
             })
         }, 3000)
     });
+
 </script>
 </html>

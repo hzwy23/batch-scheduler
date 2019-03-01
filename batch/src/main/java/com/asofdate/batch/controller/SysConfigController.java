@@ -31,7 +31,7 @@ import java.util.Set;
  * Created by hzwy23 on 2017/6/15.
  */
 @RestController
-@Api(description ="批次调度-调度核心参数管理")
+@Api(description = "批次调度-调度核心参数管理")
 public class SysConfigController {
     private final Logger logger = LoggerFactory.getLogger(SysConfigController.class);
     @Autowired

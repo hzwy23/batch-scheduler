@@ -71,11 +71,11 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
     }
 
     @Override
-    public RetMsg grant(SysDomainAuthorizationAddParamVo paramVo,  String handleUserId) {
+    public RetMsg grant(SysDomainAuthorizationAddParamVo paramVo, String handleUserId) {
         int size = sysDomainAuthorizationDao.countByDomainIdAndUserId(paramVo.getDomainId(), paramVo.getUserId());
         if (size >= 1) {
             log.info("用户已经被授予这个项目的访问权限，{}", paramVo);
-            return new RetMsg(10011, "项目已经授权给用户，不能重复授权",  paramVo);
+            return new RetMsg(10011, "项目已经授权给用户，不能重复授权", paramVo);
         }
         String current = TimeFormat.currentTime();
         SysDomainAuthorization element = new SysDomainAuthorization();

@@ -3,19 +3,19 @@
 <HTML>
 <HEAD>
     <title>jQuery.i18n.properties: Demo</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="content-script-type" content="text/javascript"/>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="text/javascript" http-equiv="content-script-type"/>
 
     <!-- JS -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript" src="jquery.i18n.properties.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+    <script src="jquery.i18n.properties.js" type="text/javascript"></script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
+    <link href="css/blueprint/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="css/blueprint/print.css" media="print" rel="stylesheet" type="text/css">
     <!--[if lt IE 8]>
     <link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen, projection">
+    <link href="css/style.css" media="screen, projection" rel="stylesheet" type="text/css">
 
 
     <script type="text/javascript">
@@ -98,6 +98,7 @@
                 .append('<li><code class="i18n">' + ex23 + '(\'' + ex23P + '\')</code>  -->  ' + eval(ex23 + '(\'' + ex23P + '\')') + '</li>')
                 .append('<li><code class="i18n">' + ex24 + '</code>  -->  <small><i>(browser would report a missing JS symbol)</i></small></li>');
         }
+
     </script>
 </HEAD>
 
@@ -107,15 +108,15 @@
 <div class="left">
     <h3>I18N Bundles</h3>
     <h4>Messages.properties</h4>
-    <a href="#" class="toggle">[toggle contents]</a>
+    <a class="toggle" href="#">[toggle contents]</a>
     <code class="files"></code><br/>
 
     <h4>Messages_pt.properties</h4>
-    <a href="#" class="toggle">[toggle contents]</a>
+    <a class="toggle" href="#">[toggle contents]</a>
     <code class="files"></code><br/>
 
     <h4>Messages_pt_BR.properties</h4>
-    <a href="#" class="toggle">[toggle contents]</a>
+    <a class="toggle" href="#">[toggle contents]</a>
     <code class="files"></code>
     <p/>
     <p/>
@@ -129,7 +130,7 @@
             <option value="browser">Indicated by the browser</option>
             <option value="en">en</option>
             <option value="pt">pt</option>
-            <option value="pt_BR" selected>pt_BR</option>
+            <option selected value="pt_BR">pt_BR</option>
         </select>
         <span id="langBrowser"></span>
     </div>

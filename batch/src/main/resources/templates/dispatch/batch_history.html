@@ -6,45 +6,45 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;"
-              class="pull-left">&nbsp;项目：</span>
-        <select id="h-dispatch-batch-history-domain-list" class="form-control pull-left"
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;">&nbsp;项目：</span>
+        <select class="form-control pull-left" id="h-dispatch-batch-history-domain-list"
                 style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
         </select>
     </div>
-    <div id="h-dispatch-batch-history-toolbar-list" class="pull-right">
-        <button onclick="DispatchBatchHistoryObj.refresh()" class="btn btn-info btn-sm" title="编辑机构信息">
+    <div class="pull-right" id="h-dispatch-batch-history-toolbar-list">
+        <button class="btn btn-info btn-sm" onclick="DispatchBatchHistoryObj.refresh()" title="编辑机构信息">
             <span class="icon-refresh"> 刷新</span>
         </button>
-        <button onclick="DispatchBatchHistoryObj.delete()" class="btn btn-danger btn-sm" title="删除机构信息">
+        <button class="btn btn-danger btn-sm" onclick="DispatchBatchHistoryObj.delete()" title="删除机构信息">
             <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
 <div class="row">
-    <div id="h-dispatch-batch-history-table-info" class="col-sm-12 col-md-12 col-lg-12">
-        <table id="h-dispatch-batch-history-info-table-details"
-               data-toggle="table"
-               data-striped="true"
+    <div class="col-sm-12 col-md-12 col-lg-12" id="h-dispatch-batch-history-table-info">
+        <table data-page-list="[20,30,50,100]"
                data-page-size="30"
-               data-unique-id="sid"
-               data-toolbar-align="right"
-               data-url="/v1/dispatch/history"
-               data-side-pagination="client"
                data-pagination="true"
-               data-page-list="[20,30,50,100]"
-               data-search="false">
+               data-search="false"
+               data-side-pagination="client"
+               data-striped="true"
+               data-toggle="table"
+               data-toolbar-align="right"
+               data-unique-id="sid"
+               data-url="/v1/dispatch/history"
+               id="h-dispatch-batch-history-info-table-details">
             <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
+                <th data-checkbox="true" data-field="state"></th>
                 <th data-align="center" data-formatter="DispatchBatchHistoryObj.formatterindex">序号</th>
-                <th data-sortable="true" data-align="center" data-field="codeNumber">批次编码</th>
-                <th data-sortable="true" data-field="batchDesc">批次描述</th>
-                <th data-sortable="true" data-align="center" data-field="batchStatusDesc">批次状态</th>
-                <th data-sortable="true" data-align="center" data-field="asOfDate">批次日期</th>
-                <th data-sortable="true" data-align="center" data-field="startTime">开始日期</th>
-                <th data-sortable="true" data-align="center" data-field="endTime">结束时间</th>
-                <th data-sortable="true" data-align="center" data-formatter="DispatchBatchHistoryObj.calcCost">运行时长</th>
+                <th data-align="center" data-field="codeNumber" data-sortable="true">批次编码</th>
+                <th data-field="batchDesc" data-sortable="true">批次描述</th>
+                <th data-align="center" data-field="batchStatusDesc" data-sortable="true">批次状态</th>
+                <th data-align="center" data-field="asOfDate" data-sortable="true">批次日期</th>
+                <th data-align="center" data-field="startTime" data-sortable="true">开始日期</th>
+                <th data-align="center" data-field="endTime" data-sortable="true">结束时间</th>
+                <th data-align="center" data-formatter="DispatchBatchHistoryObj.calcCost" data-sortable="true">运行时长</th>
                 <th data-field="retMsg">退出消息</th>
                 <th data-align="center" data-formatter="DispatchBatchHistoryObj.formatter">操作</th>
             </tr>
@@ -182,5 +182,6 @@
             });
         });
     });
+
 </script>
 </html>

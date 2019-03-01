@@ -1,6 +1,5 @@
 package com.asofdate.hauth.controller;
 
-import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.DomainService;

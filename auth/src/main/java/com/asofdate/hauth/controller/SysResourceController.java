@@ -27,10 +27,9 @@ import java.util.List;
 @Api(description = "系统管理--菜单资源定义管理")
 public class SysResourceController {
     @Autowired
-    private MenuService menuService;
-
-    @Autowired
     public HomeMenuService homeMenuService;
+    @Autowired
+    private MenuService menuService;
 
     @RequestMapping(value = "/main/menu", method = RequestMethod.GET)
     @ResponseBody

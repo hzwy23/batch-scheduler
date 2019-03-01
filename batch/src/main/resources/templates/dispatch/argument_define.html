@@ -7,45 +7,45 @@
 </div>
 <div class="row subsystem-toolbar">
     <div style="height: 44px; line-height: 44px;display: inline;">
-        <span style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;"
-              class="pull-left">&nbsp;项目：</span>
-        <select id="h-dispatch-argument-define-domain-list" class="form-control pull-left"
+        <span class="pull-left"
+              style="height: 30px; line-height: 30px; margin-top: 7px;display: inline;">&nbsp;项目：</span>
+        <select class="form-control pull-left" id="h-dispatch-argument-define-domain-list"
                 style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">
         </select>
     </div>
-    <div id="h-dispatch-argument-define-toolbar-list" class="pull-right">
-        <button onclick="DispatchArgumentDefineObj.add()" class="btn btn-info btn-sm" title="新增机构信息">
+    <div class="pull-right" id="h-dispatch-argument-define-toolbar-list">
+        <button class="btn btn-info btn-sm" onclick="DispatchArgumentDefineObj.add()" title="新增机构信息">
             <span class="icon-plus"> 新增</span>
         </button>
-        <button onclick="DispatchArgumentDefineObj.edit()" class="btn btn-info btn-sm" title="编辑机构信息">
+        <button class="btn btn-info btn-sm" onclick="DispatchArgumentDefineObj.edit()" title="编辑机构信息">
             <span class="icon-edit"> 编辑</span>
         </button>
-        <button onclick="DispatchArgumentDefineObj.delete()" class="btn btn-danger btn-sm" title="删除机构信息">
+        <button class="btn btn-danger btn-sm" onclick="DispatchArgumentDefineObj.delete()" title="删除机构信息">
             <span class="icon-trash"> 删除</span>
         </button>
     </div>
 </div>
 <div class="row">
-    <div id="h-dispatch-argument-define-table-info" class="col-sm-12 col-md-12 col-lg-12">
-        <table id="h-dispatch-argument-define-info-table-details"
-               data-toggle="table"
-               data-striped="true"
+    <div class="col-sm-12 col-md-12 col-lg-12" id="h-dispatch-argument-define-table-info">
+        <table data-page-list="[20,30, 50, 100, 200,1000]"
                data-page-size="30"
-               data-unique-id="arg_id"
-               data-toolbar-align="right" data-url="/v1/dispatch/argument/define"
-               data-side-pagination="client"
                data-pagination="true"
-               data-page-list="[20,30, 50, 100, 200,1000]"
-               data-search="false">
+               data-search="false"
+               data-side-pagination="client"
+               data-striped="true" data-toggle="table"
+               data-toolbar-align="right"
+               data-unique-id="arg_id"
+               data-url="/v1/dispatch/argument/define"
+               id="h-dispatch-argument-define-info-table-details">
             <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
-                <th data-sortable="true" data-align="center" data-field="code_number">参数编码</th>
-                <th data-sortable="true" data-field="arg_desc">参数描述</th>
-                <th data-sortable="true" data-align="center" data-field="arg_type_desc">参数类型</th>
-                <th data-sortable="true" data-align="right" data-field="arg_value">参数初始值</th>
-                <th data-sortable="true" data-align="right" data-field="bind_as_of_date"
-                    data-formatter="DispatchArgumentDefineObj.formatter">是否绑定批次日期
+                <th data-checkbox="true" data-field="state"></th>
+                <th data-align="center" data-field="code_number" data-sortable="true">参数编码</th>
+                <th data-field="arg_desc" data-sortable="true">参数描述</th>
+                <th data-align="center" data-field="arg_type_desc" data-sortable="true">参数类型</th>
+                <th data-align="right" data-field="arg_value" data-sortable="true">参数初始值</th>
+                <th data-align="right" data-field="bind_as_of_date" data-formatter="DispatchArgumentDefineObj.formatter"
+                    data-sortable="true">是否绑定批次日期
                 </th>
                 <th data-align="center" data-field="create_user">创建人</th>
                 <th data-align="center" data-field="create_date">创建时间</th>
@@ -271,6 +271,7 @@
             });
         });
     });
+
 </script>
 
 <script id="h-dispatch-argument-src" type="text/html">

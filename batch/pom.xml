@@ -28,9 +28,9 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.springframework.batch</groupId>-->
-            <!--<artifactId>spring-batch-core</artifactId>-->
-            <!--<version>3.0.7.RELEASE</version>-->
+        <!--<groupId>org.springframework.batch</groupId>-->
+        <!--<artifactId>spring-batch-core</artifactId>-->
+        <!--<version>3.0.7.RELEASE</version>-->
         <!--</dependency>-->
 
         <dependency>

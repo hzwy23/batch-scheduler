@@ -45,7 +45,7 @@ public class CaptureConsole {
             } while (process.isAlive());
         } catch (IOException e) {
             logger.error("读取任务输出信息失败，退出读取过程. 任务名是：{}, 错误信息是：{}", jobName, e.getMessage());
-        }finally {
+        } finally {
             try {
                 std.close();
                 error.close();

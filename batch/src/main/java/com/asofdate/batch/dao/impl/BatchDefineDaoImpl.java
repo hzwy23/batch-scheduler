@@ -116,7 +116,7 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     public int saveHistory(String batchId) {
         String asOfDate = getBatchAsOfDate(batchId);
 
-        String uuid = UUID.randomUUID().toString().replaceAll("-","");
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_192"), uuid, batchId);
         jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_195"), uuid, batchId, asOfDate);
         jdbcTemplate.update(batchSqlText.getSql("sys_rdbms_212"), uuid, batchId, asOfDate);
@@ -127,7 +127,7 @@ public class BatchDefineDaoImpl implements BatchDefineDao {
     public String getBatchAsOfDate(String batchId) {
         try {
             String asOfDate = jdbcTemplate.queryForObject(batchSqlText.getSql("sys_rdbms_102"), String.class, batchId);
-            if(asOfDate == null) {
+            if (asOfDate == null) {
                 return null;
             }
             return TimeFormat.formatTime(asOfDate);

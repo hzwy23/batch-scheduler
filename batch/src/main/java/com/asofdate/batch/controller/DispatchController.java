@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @Scope("prototype")
-@Api(description ="批次调度-批次启动管理")
+@Api(description = "批次调度-批次启动管理")
 public class DispatchController {
     private final Logger logger = LoggerFactory.getLogger(DispatchController.class);
 

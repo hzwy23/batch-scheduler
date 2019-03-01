@@ -11,18 +11,18 @@ public class RetMsg {
     public RetMsg() {
     }
 
-    public static RetMsg success(){
-        return new RetMsg(200,"Success", null);
-    }
-
-    public static RetMsg success(Object data){
-        return new RetMsg(200,"Success", data);
-    }
-
     public RetMsg(Integer code, String message, Object details) {
         this.code = code;
         this.message = message;
         this.details = details;
+    }
+
+    public static RetMsg success() {
+        return new RetMsg(200, "Success", null);
+    }
+
+    public static RetMsg success(Object data) {
+        return new RetMsg(200, "Success", data);
     }
 
     public Boolean checkCode() {
