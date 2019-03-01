@@ -103,7 +103,7 @@ public class QuartzSchedulerConfig {
     }
 
     private void setJobData(JobDetailFactoryBean jobDetailFactoryBean, String jobName) {
-        String taskId = jobKeyMap.get(JoinCode.getTaskCode(jobName)).getTaskId();
+        String taskId = jobKeyMap.get(JoinCode.getLast(jobName)).getTaskId();
         TaskDefineEntity tm = taskDefineMap.get(taskId);
         Map<String, Object> map = new HashMap<>();
         map.put("jobName", jobName);

@@ -5,6 +5,7 @@ import com.asofdate.hauth.entity.RoleEntity;
 import com.asofdate.hauth.entity.UserRoleEntity;
 import com.asofdate.hauth.sql.SqlText;
 import com.asofdate.utils.JoinCode;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,9 @@ import java.util.List;
  * Created by hzwy23 on 2017/6/18.
  */
 @Repository
+@Slf4j
 public class RoleDaoImpl implements RoleDao {
-    private final Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -73,8 +75,8 @@ public class RoleDaoImpl implements RoleDao {
             try {
                 jdbcTemplate.update(sqlText.getSql("sys096"), uuid, roleId, userId, modifyUserId);
             } catch (Exception e) {
-                logger.info("用户[{}]已经拥有了角色[{}],无需重复授权", userId, roleId);
-                logger.info(e.getMessage());
+                log.info("用户[{}]已经拥有了角色[{}],无需重复授权", userId, roleId);
+                log.info(e.getMessage());
             }
         }
         return 1;
@@ -114,7 +116,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public int update(RoleEntity roleEntity) {
-        logger.debug("{},{},{},{}",
+        log.debug("{},{},{},{}",
                 roleEntity.getRole_name(),
                 roleEntity.getRole_status_code(),
                 roleEntity.getModify_user(),

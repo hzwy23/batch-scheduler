@@ -17,7 +17,7 @@ public class MySqlDefine implements SQLFactory {
     private final String sys005 = "update sys_resource_info set res_name = ?, res_up_id = ? where res_id = ?";
     private final String sys006 = "select count(*) from sys_theme_value where theme_id = ? and res_id = ?";
     private final String sys007 = "delete from sys_user_info where user_id = ? and org_unit_id = ?";
-    private final String sys008 = "insert into sys_theme_value(uuid,theme_id,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id,new_iframe) value(uuid(),?,?,?,?,?,?,?,?,?,?)";
+    private final String sys008 = "insert into sys_theme_value(uuid,theme_id,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id,new_iframe) value(replace(uuid(),'-',''),?,?,?,?,?,?,?,?,?,?)";
     private final String sys009 = "update sys_theme_value set res_url = ?, res_bg_color = ?, res_class = ?, res_img = ?, group_id = ?, sort_id = ?, res_type = ?, new_iframe = ? where theme_id = ? and res_id = ?";
     //    private final String sys010 = "select authorization_level from sys_domain_share_info where domain_id = ? and target_domain_id = ?";
     private final String sys011 = "select distinct t2.res_url from sys_user_theme t1 inner join sys_theme_value t2 on t1.theme_id = t2.theme_id inner join sys_resource_info t3 on t2.res_id = t3.res_id where t1.user_id = ? and t2.res_id = ? and t3.res_type = '0'";
@@ -57,7 +57,7 @@ public class MySqlDefine implements SQLFactory {
     private final String sys045 = "insert into sys_user_theme(user_id,theme_id) values(?,?)";
     private final String sys046 = "select t.role_id,t.role_name,t.code_number from sys_role_info t where ( t.role_owner = ? or exists ( select 1 from sys_role_user_relation r where r.user_id = ? and t.role_id = r.role_id ))";
     private final String sys047 = "";
-    private final String sys048 = "insert into sys_role_user_relation(uuid,role_id,user_id,maintance_date,maintance_user) values(uuid(),?,?,now(),?)";
+    private final String sys048 = "insert into sys_role_user_relation(uuid,role_id,user_id,maintance_date,maintance_user) values(replace(uuid(),'-',''),?,?,now(),?)";
     private final String sys050 = "update sys_role_info t set t.role_name = ? ,t.role_status_id = ?, role_maintance_date = now(), role_maintance_user = ? where t.role_id = ?";
     private final String sys069 = "update sys_org_info set org_unit_desc = ?, up_org_id = ?, maintance_date = now(), maintance_user= ? where org_unit_id = ?";
     private final String sys070 = "select t.theme_id,i.theme_desc, res_id,res_url,res_type,res_bg_color,res_class, t.group_id, t.res_img, t.sort_id, t.new_iframe from sys_theme_value t left join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? and t.res_id = ?";
@@ -129,21 +129,21 @@ public class MySqlDefine implements SQLFactory {
     private final String sys141 = "update dispatch_task_argument_rel set sort_id = ? where uuid = ?";
     private final String sys142 = "delete from dispatch_task_argument_rel where uuid = ?";
     private final String sys143 = "select arg_id,arg_desc,arg_value,arg_type,domain_id from dispatch_argument_define where arg_id = ?";
-    private final String sys144 = "insert into dispatch_task_argument_rel(uuid,task_id,arg_id,domain_id,arg_value,sort_id) values(uuid(),?,?,?,?,?)";
+    private final String sys144 = "insert into dispatch_task_argument_rel(uuid,task_id,arg_id,domain_id,arg_value,sort_id) values(replace(uuid(),'-',''),?,?,?,?,?)";
     private final String sys145 = "update dispatch_task_argument_rel set arg_value = ? where uuid = ?";
     private final String sys146 = "update dispatch_group_argument_rel set arg_value = ? where id = ? and arg_id = ?";
     private final String sys147 = "delete from dispatch_group_task_relation where id = ?";
     private final String sys148 = "insert into dispatch_group_task_relation(id,group_id,task_id,domain_id) values(?,?,?,?)";
-    private final String sys149 = "insert into dispatch_group_argument_rel(uuid,id,arg_id,arg_value,domain_id) values(uuid(),?,?,?,?)";
+    private final String sys149 = "insert into dispatch_group_argument_rel(uuid,id,arg_id,arg_value,domain_id) values(replace(uuid(),'-',''),?,?,?,?)";
     private final String sys150 = "select t.id,t.group_id,t.task_id,d.task_desc,t.domain_id from dispatch_group_task_relation t inner join dispatch_task_define d on t.task_id = d.task_id where t.group_id = ?";
-    private final String sys151 = "insert into dispatch_task_dependency(uuid,id,up_id,domain_id) values(uuid(),?,?,?)";
+    private final String sys151 = "insert into dispatch_task_dependency(uuid,id,up_id,domain_id) values(replace(uuid(),'-',''),?,?,?)";
     private final String sys152 = "delete from dispatch_task_dependency where uuid = ?";
     private final String sys153 = "delete from dispatch_group_dependency where uuid = ?";
     private final String sys154 = "insert into dispatch_batch_group_relation(id,batch_id,group_id,domain_id) values(?,?,?,?)";
     private final String sys155 = "delete from dispatch_batch_group_relation where id = ?";
-    private final String sys156 = "insert into dispatch_group_dependency(uuid,id,up_id,domain_id) values(uuid(),?,?,?)";
+    private final String sys156 = "insert into dispatch_group_dependency(uuid,id,up_id,domain_id) values(replace(uuid(),'-',''),?,?,?)";
     private final String sys157 = "select as_of_date from dispatch_batch_define where batch_id = ?";
-    private final String sys158 = "insert into dispatch_batch_argument_rel(uuid,batch_id,arg_id,arg_value,domain_id) values(uuid(),?,?,?,?)";
+    private final String sys158 = "insert into dispatch_batch_argument_rel(uuid,batch_id,arg_id,arg_value,domain_id) values(replace(uuid(),'-',''),?,?,?,?)";
     private final String sys159 = "select count(*) from dispatch_batch_argument_rel where batch_id = ? and arg_id = ?";
     private final String sys160 = "update dispatch_batch_argument_rel set arg_value = ? where batch_id = ? and arg_id = ?";
     private final String sys161 = "update dispatch_batch_define set as_of_date = ? where batch_id = ?";
@@ -192,7 +192,7 @@ public class MySqlDefine implements SQLFactory {
     private final String sys204 = "select t.batch_id,t.job_id,t.status,t.start_time,t.end_time,t.gid,t.tid,a.batch_status_desc as status_desc,td.task_id,td.task_desc,td.task_type,c.task_type_desc from dispatch_batch_job_status t left join dispatch_batch_status_attr a on t.status = a.batch_status inner join dispatch_group_task_relation o on t.tid = o.id inner join dispatch_task_define td on o.task_id = td.task_id inner join dispatch_task_type_attr c on td.task_type = c.task_type where t.batch_id = ? and t.gid = ?";
     private final String sys205 = "select t.batch_id,t.gid,t.status,t.start_time,t.end_time,d.batch_status_desc as status_desc,g.group_id,e.group_desc from dispatch_batch_group_status t inner join dispatch_batch_group_relation g on t.gid = g.id inner join dispatch_group_define e on g.group_id = e.group_id left join dispatch_batch_status_attr d on t.status = d.batch_status where t.batch_id = ? and t.gid = ?";
     private final String sys206 = "select t.batch_id,t.job_id,t.status,t.start_time,t.end_time,t.gid,t.tid,a.batch_status_desc as status_desc,td.task_id,td.task_desc,td.task_type,c.task_type_desc from dispatch_batch_job_status t left join dispatch_batch_status_attr a on t.status = a.batch_status inner join dispatch_group_task_relation o on t.tid = o.id inner join dispatch_task_define td on o.task_id = td.task_id inner join dispatch_task_type_attr c on td.task_type = c.task_type where t.batch_id = ? and t.gid = ? and t.tid = ?";
-    private final String sys207 = "insert into sys_handle_logs(uuid,user_id,handle_time,client_ip,status_code,method,url,data,domain_id) values(uuid(),?,now(),?,?,?,?,?,?)";
+    private final String sys207 = "insert into sys_handle_logs(uuid,user_id,handle_time,client_ip,status_code,method,url,data,domain_id) values(replace(uuid(),'-',''),?,now(),?,?,?,?,?,?)";
     private final String sys208 = "select t.code_number,t.role_name,t.role_owner as create_user,t.role_create_date as create_date,a.role_status_desc,a.role_status_id as role_status_code, t.role_maintance_date as modify_date,t.role_maintance_user as modify_user,t.role_id from sys_role_info t inner join sys_role_status_attr a on t.role_status_id = a.role_status_id where t.role_id = ?";
     private final String sys209 = "select t.uuid, t.role_id, t.res_id, i.res_name,res_up_id from sys_role_resource_relat t left join sys_resource_info i on t.res_id = i.res_id where t.role_id = ?";
 

@@ -43,7 +43,7 @@ public class BatchGroupDaoImpl implements BatchGroupDao {
     public int addGroup(List<BatchGroupEntity> list) {
         for (BatchGroupEntity m : list) {
 
-            String id = UUID.randomUUID().toString();
+            String id = UUID.randomUUID().toString().replace("-","");
             String batch_id = m.getBatchId();
             String group_id = m.getGroupId();
             String domain_id = m.getDomainId();

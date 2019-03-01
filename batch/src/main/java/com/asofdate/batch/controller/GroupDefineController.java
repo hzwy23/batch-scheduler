@@ -249,7 +249,7 @@ public class GroupDefineController {
         String task_id = request.getParameter("task_id");
         String domain_id = request.getParameter("domain_id");
         String arg_list = request.getParameter("arg_list");
-        String id = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString().replace("-","");
 
         RetMsg retMsg = groupTaskService.addTask(id, group_id, task_id, domain_id);
         if (!retMsg.checkCode()) {

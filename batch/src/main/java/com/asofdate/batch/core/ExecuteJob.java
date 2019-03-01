@@ -53,7 +53,7 @@ public class ExecuteJob extends QuartzJobBean {
     }
 
     private String getJobParameters() {
-        String jobId = JoinCode.getTaskCode(jobName);
+        String jobId = JoinCode.getLast(jobName);
         List<TaskArgumentEntity> list = argumentService.queryArgument(jobId);
         if (list == null) {
             return "";
