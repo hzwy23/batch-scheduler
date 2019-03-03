@@ -2223,76 +2223,84 @@ var Hutils = {
                 },
             })
         },
-        Hmodal: function (param) {
+        Hmodal:function(param){
             var __DEFAULT = {
-                callback: "",
+                callback : "",
                 preprocess: "",
-                width: "800px",
-                height: "494px ",
+                width:"800px",
+                height:"494px ",
 
-                header: "弹框信息",
-                headerHeight: "40px",
-                headerFontSize: "14px",
-                headerFontColor: "",
+                header:"弹框信息",
+                headerHeight:"40px",
+                headerFontSize:"14px",
+                headerFontColor:"",
+                body:"",
+                footer:"",
+                executing:function (obj) {
+                    var m = $(obj).find(".modal-content")[0];
+                    var spinnner = $.Hspinner(m);
+                    $(spinnner).delay("fast").queue(function () {
+                        __DEFAULT.callback(obj);
+                        spinnner.spin();
+                        $(spinnner.modal).remove();
+                        //如果已经没有模态框出现，清理掉屏障
+                        if ($(".modal.fade.in").length == 0) {
+                            $(".modal-backdrop.fade.in:last").remove();
+                        }
+                    })
+                },
 
-                body: "",
+                footerBtnStatus:true,
+                submitBtn:true,
+                submitIcon:"icon-ok",
+                submitDesc:"提交",
 
-                footer: "",
-
-                footerBtnStatus: true,
-
-                submitBtn: true,
-                submitIcon: "icon-ok",
-                submitDesc: "提交",
-
-                cancelBtn: true,
-                cancelIcon: "icon-remove",
-                cancelDesc: "取消",
+                cancelBtn:true,
+                cancelIcon:"icon-remove",
+                cancelDesc:"取消",
             }
-            $.extend(true, __DEFAULT, param)
+            $.extend(true,__DEFAULT,param)
 
             //初始化弹框主体
-            function init() {
-                var mframe = '<div class="modal-dialog">' +
-                    '<div class="modal-content h-modal-content" style="width: ' + __DEFAULT.width + '; height: ' + __DEFAULT.height + ';">' +
-                    '<div class="modal-header h-modal-header" style="height: ' + __DEFAULT.headerHeight + '; line-height: ' + __DEFAULT.headerHeight + '; padding: 0px;">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="height: ' + __DEFAULT.headerHeight + '; line-height: ' + __DEFAULT.headerHeight + '; width: 30px; padding-top: 2px;">×</button>' +
-                    '<h4 class="modal-title" style="margin-left: 15px;height: ' + __DEFAULT.headerFontSize + ';color: ' + __DEFAULT.headerFontColor + '; line-height: ' + __DEFAULT.headerHeight + ';font-weight: 600; font-size: ' + __DEFAULT.headerFontSize + '">' + __DEFAULT.header + '</h4>' +
-                    '</div>' +
-                    '<div class="modal-body" style="width: ' + __DEFAULT.width + '; overflow-y: auto">' + __DEFAULT.body + '</div>' +
-                    '<div class="modal-footer btn-group-sm">' +
-                    '<button type="button" class="btn btn-danger cancel" data-dismiss="modal"><i class="' + __DEFAULT.cancelIcon + '"></i>&nbsp;' + __DEFAULT.cancelDesc + '</button>' +
-                    '<button type="button" class="btn btn-primary submit"><i class="' + __DEFAULT.submitIcon + '"></i>&nbsp;' + __DEFAULT.submitDesc + '</button>' +
+            function init(){
+                var mframe='<div class="modal-dialog" style="width: '+__DEFAULT.width+'; height: '+__DEFAULT.height+';">'+
+                    '<div class="modal-content h-modal-content" style="width: '+__DEFAULT.width+'; height: '+__DEFAULT.height+';">'+
+                    '<div class="modal-header h-modal-header" style="height: '+__DEFAULT.headerHeight+'; line-height: '+__DEFAULT.headerHeight+'; padding: 0px;">'+
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="height: '+__DEFAULT.headerHeight+'; line-height: '+__DEFAULT.headerHeight+'; width: 30px; padding-top: 2px;">×</button>'+
+                    '<h4 class="modal-title" style="margin-left: 15px;height: '+__DEFAULT.headerFontSize+';color: '+__DEFAULT.headerFontColor+'; line-height: '+__DEFAULT.headerHeight+';font-weight: 600; font-size: '+__DEFAULT.headerFontSize+'">'+__DEFAULT.header+'</h4>'+
+                    '</div>'+
+                    '<div class="modal-body" style="width: '+__DEFAULT.width+'; overflow-y: auto">'+__DEFAULT.body+'</div>'+
+                    '<div class="modal-footer btn-group-sm">'+
+                    '<button type="button" class="btn btn-danger cancel" data-dismiss="modal"><i class="'+__DEFAULT.cancelIcon+'"></i>&nbsp;'+__DEFAULT.cancelDesc+'</button>'+
+                    '<button type="button" class="btn btn-primary submit"><i class="'+__DEFAULT.submitIcon+'"></i>&nbsp;'+__DEFAULT.submitDesc+'</button>'+
                     '</div>' +
                     '</div>' +
                     '</div>';
                 return mframe;
             }
-
             //显示弹出框
-            function showModal(mframe) {
-                var hmod = document.createElement("div");
+            function showModal(mframe){
+                var hmod=document.createElement("div");
                 $(hmod).addClass("modal fade").attr({
-                    "tabindex": "-1",
-                    "role": "dialog",
-                    "aria-labelledby": "myModalLabel",
-                    "aria-hidden": "true",
+                    "tabindex":"-1",
+                    "role":"dialog",
+                    "aria-labelledby":"myModalLabel",
+                    "aria-hidden":"true",
                 })
-                hmod.innerHTML = mframe;
+                hmod.innerHTML=mframe;
                 document.body.appendChild(hmod);
-                $(hmod).modal({backdrop: false});
-                $(hmod).modal("show");
+                $(hmod).modal({backdrop:"static"});
                 return hmod
             }
 
             //根据类获取对象实例
-            function getObj(mod, className, typeObj) {
-                if (typeof typeObj == "undefined") {
+            function getObj(mod,className,typeObj){
+                if (typeof typeObj == "undefined"){
                     typeObj = "div"
                 }
                 var obj = {}
-                $(mod).find(typeObj).each(function (index, element) {
-                    if ($(element).hasClass(className)) {
+                $(mod).find(typeObj).each(function(index,element){
+                    if ($(element).hasClass(className)){
                         obj = element
                     }
                 })
@@ -2300,133 +2308,144 @@ var Hutils = {
             }
 
             //调节body高度和宽度
-            function modifyBodyHeightAndWidth(mod) {
-                var headerObj = getObj(mod, "modal-header")
-                var contentObj = getObj(mod, "modal-content")
-                var bodyObj = getObj(hmode, "modal-body")
+            function modifyBodyHeightAndWidth(mod){
+                var headerObj = getObj(mod,"modal-header")
+                var contentObj = getObj(mod,"modal-content")
+                var bodyObj = getObj(hmode,"modal-body")
                 var headHeight = $(headerObj).height()
                 var contentHeight = $(contentObj).height()
 
-                $(bodyObj).css("height", contentHeight - headHeight - 65)
-                $(bodyObj).css("width", "-=4")
+                $(bodyObj).css("height",contentHeight-headHeight-65)
+                $(bodyObj).css("width","-=4")
             }
 
             //modify location
-            function modifyLocation(mod) {
-                var ww = $(window).width()
-                var wh = $(window).height();
-                var mw = $(getObj(mod, "modal-content")).width()
-                var mh = $(getObj(mod, "modal-content")).height()
-                //var modifyY = (wh - 2*mh)/2
-                var modifyX = (ww - mw) / 2
-                $(getObj(mod, "modal-content")).offset({
-                    left: modifyX
-                })
+            function modifyLocation(mod){
+                // var ww = $(window).width()
+                // var wh = $(window).height();
+                // var mh = $(getObj(mod,"modal-content")).height()
+                // //var modifyY = (wh - 2*mh)/2
+                // var modifyX = (__DEFAULT.width)/2
+                // $(getObj(mod,"modal-content")).offset({
+                //     left:modifyX
+                // })
             }
 
-            function initfooter(mode) {
-                if (!__DEFAULT.cancelBtn) {
-                    $(getObj(mode, "cancel", "button")).remove();
+            function initfooter(mode){
+                if (!__DEFAULT.cancelBtn){
+                    $(getObj(mode,"cancel","button")).remove();
                 }
-                if (!__DEFAULT.submitBtn) {
-                    $(getObj(mode, "submit", "button")).remove();
+                if (!__DEFAULT.submitBtn){
+                    $(getObj(mode,"submit","button")).remove();
                 }
             }
 
             //
-            var mframe = init()
+            var mframe =  init()
             var hmode = showModal(mframe)
             modifyBodyHeightAndWidth(hmode)
             modifyLocation(hmode)
             //close modal when click close button in right header
-            $(getObj(hmode, "modal-header")).find("button").on("click", function () {
+            $(getObj(hmode,"modal-header")).find("button").on("click",function(){
                 $(hmode).remove();
+                $(".modal-backdrop.fade.in:last").remove();
             })
 
             // init footer
             //
-            if (__DEFAULT.footerBtnStatus) {
-                var footer = $(getObj(hmode, "modal-body")).find(".h-modal-footer")
-                if ($(footer).find("button").html() == "") {
+            if (__DEFAULT.footerBtnStatus){
+                var footer = $(getObj(hmode,"modal-body")).find(".h-modal-footer")
+                if ($(footer).find("button").html()==""){
                     console.log("can not found button in modal body content")
-                    $(getObj(getObj(hmode, "modal-footer"), "submit", "button")).on("click", function () {
+                    $(getObj(getObj(hmode,"modal-footer"),"submit","button")).on("click",function(){
                         console.log("no button found, default submit")
+                        $(".modal-backdrop.fade.in:last").remove();
                         $(hmode).remove()
                     })
-                    $(getObj(getObj(hmode, "modal-footer"), "cancel", "button")).on("click", function () {
+                    $(getObj(getObj(hmode,"modal-footer"),"cancel","button")).on("click",function(){
                         console.log("no button found, default cancel")
+                        $(".modal-backdrop.fade.in:last").remove();
                         $(hmode).remove()
                     })
-                } else {
-                    $(getObj(hmode, "modal-footer")).html($(footer).html())
+                }else{
+                    $(getObj(hmode,"modal-footer")).html($(footer).html())
                     $(footer).remove()
                     if (__DEFAULT.callback == "") {
-                        $(getObj(getObj(hmode, "modal-footer"), "submit", "button")).on("click", function () {
+                        $(getObj(getObj(hmode,"modal-footer"),"submit","button")).on("click",function(){
                             console.log("no callback found, default submit")
+                            $(".modal-backdrop.fade.in:last").remove();
                             $(hmode).remove()
                         })
-                        $(getObj(getObj(hmode, "modal-footer"), "cancel", "button")).on("click", function () {
+                        $(getObj(getObj(hmode,"modal-footer"),"cancel","button")).on("click",function(){
                             console.log("no callback found, default cancel")
+                            $(".modal-backdrop.fade.in:last").remove();
                             $(hmode).remove()
                         })
-                    } else if (typeof __DEFAULT.callback == "function") {
-                        $(getObj(getObj(hmode, "modal-footer"), "cancel", "button")).on("click", function () {
-                            console.log("defined callback, cancel");
+                    } else if (typeof __DEFAULT.callback == "function"){
+                        $(getObj(getObj(hmode,"modal-footer"),"cancel","button")).on("click",function(){
+                            console.log("defined callback, cancel")
+                            $(".modal-backdrop.fade.in:last").remove();
                             $(hmode).remove()
                         })
-                        $(getObj(getObj(hmode, "modal-footer"), "submit", "button")).on("click", function () {
-                            console.log("defined callback, submit");
-                            __DEFAULT.callback(hmode)
+                        $(getObj(getObj(hmode,"modal-footer"),"submit","button")).on("click",function(){
+                            __DEFAULT.executing(hmode);
                         })
                     }
                 }
-            } else {
-                $(getObj(hmode, "modal-footer")).remove();
-                var h = $(getObj(hmode, "modal-body")).height();
-                $(getObj(hmode, "modal-body")).height(h + 57);
+            }else{
+                $(getObj(hmode,"modal-footer")).remove();
+                var h = $(getObj(hmode,"modal-body")).height();
+                $(getObj(hmode,"modal-body")).height(h+57);
             }
 
             initfooter(hmode);
-
-            // preprocess function
-            if (typeof  __DEFAULT.preprocess == "function") {
-                __DEFAULT.preprocess(hmode)
+            document.onkeydown=function(ev) {
+                var oEvent=ev||event;//获取事件对象(IE和其他浏览器不一样，这里要处理一下浏览器的兼容性event是IE；ev是chrome等)
+                //Esc键的keyCode是27
+                if(oEvent.keyCode==27) {
+                    $(hmode).remove();
+                    $(".modal-backdrop.fade.in:last").remove();
+                }
             }
 
 
             // 拖动绑定
-            var d = "getSelection" in window ? function () {
+            var d = "getSelection" in window?function(){
                 window.getSelection().removeAllRanges()
-            } : function () {
+            }:function(){
                 document.selection.empty()
             };
 
-            var f = 0, c = 0, e = 0, b = 0, a = 0;
-            $(getObj(hmode, "modal-header")).bind("mousemove", function (h) {
-                if (a == 1) {
-                    f = h.pageX - e;
-                    c = h.pageY - b;
-                    if (c <= 0) {
-                        c = 0
+            var f=0,c=0,e=0,b=0,a=0;
+            $(getObj(hmode,"modal-header")).bind("mousemove",function(h){
+                if(a==1){
+                    f=h.pageX-e;
+                    c=h.pageY-b;
+                    if(c<=0){
+                        c=0
                     }
-                    $(this).parent().offset({left: f, top: c})
+                    $(this).parent().offset({left:f,top:c})
                 }
-            }).bind("mousedown", function (h) {
-                    d();
-                    e = h.pageX - $(this).parent().offset().left;
-                    b = h.pageY - $(this).parent().offset().top;
-                    a = 1;
-                    $(getObj(hmode, "modal-header")).css({"cursor": "move"})
-                }
-            ).bind("mouseup", function (h) {
-                $(getObj(hmode, "modal-header")).css({"cursor": "default"});
-                a = 0;
-                e = 0;
-                b = 0
-            }).bind("mouseleave", function (h) {
-                a = 0;
-                $(getObj(hmode, "modal-header")).css({"cursor": "default"})
+            }).bind("mousedown",function(h){
+                d();
+                e=h.pageX-$(this).parent().offset().left;
+                b=h.pageY-$(this).parent().offset().top;
+                a=1;
+                $(getObj(hmode,"modal-header")).css({"cursor":"move"})}
+            ).bind("mouseup",function(h){
+                $(getObj(hmode,"modal-header")).css({"cursor":"default"});
+                a=0;
+                e=0;
+                b=0
+            }).bind("mouseleave",function(h){
+                a=0;
+                $(getObj(hmode,"modal-header")).css({"cursor":"default"})
             })
+
+            // preprocess function
+            if (typeof  __DEFAULT.preprocess == "function"){
+                __DEFAULT.preprocess(hmode);
+            }
         },
         Hconfirm: function (param) {
             var __DEFAULT = {

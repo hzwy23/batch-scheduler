@@ -17,11 +17,13 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>com.asofdate</groupId>
             <artifactId>batch</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>

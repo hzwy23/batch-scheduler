@@ -21,10 +21,24 @@ public interface SysDomainAuthorizationService {
      */
     RetMsg modifyDefaultDomain(String uuid, String userId);
 
+
+    /**
+     * 查询未授权的用户
+     * @param domainId
+     * */
+    List<SysDomainAuthorizationVo> findUnauahtUserByDomainId(String domainId);
+
+
+    /**
+     * 根据项目ID，查询这个项目权限授予了哪些用户
+     * @param domainId
+     * */
+    List<SysDomainAuthorizationVo> findByDomainId(String domainId);
+
     /**
      * 添加授权
      */
-    RetMsg grant(SysDomainAuthorizationAddParamVo paramVo, String handleUserId);
+    RetMsg grant(List<SysDomainAuthorizationAddParamVo> paramVo, String handleUserId);
 
 
     /**
@@ -33,6 +47,13 @@ public interface SysDomainAuthorizationService {
      * @param uuid
      */
     RetMsg revoke(String uuid);
+
+
+    /**
+     * 批量删除授权信息
+     * @param uuids
+     * */
+    RetMsg batchRevoke(List<String> uuids);
 
 
     /**

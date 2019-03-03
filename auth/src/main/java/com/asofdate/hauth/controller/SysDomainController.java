@@ -5,8 +5,10 @@ import com.asofdate.hauth.dto.DomainDto;
 import com.asofdate.hauth.entity.DomainEntity;
 import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.DomainService;
+import com.asofdate.hauth.vo.SysDomainInfoAddParamVo;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
+import com.asofdate.utils.TimeFormat;
 import com.asofdate.utils.Validator;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -45,7 +47,7 @@ public class SysDomainController {
     private AuthService authService;
 
 
-    @RequestMapping(value = "/v1/auth/domain/self/owner", method = RequestMethod.GET)
+    @RequestMapping(value = "/self/owner", method = RequestMethod.GET)
     @ResponseBody
     public DomainDto getDomain(HttpServletRequest request) {
         // 获取连接用户账号
@@ -118,7 +120,10 @@ public class SysDomainController {
     @ResponseBody
     @ApiOperation(value = "新增域信息", notes = "添加新的域信息，新增的域默认授权给创建人")
     @ApiImplicitParam(name = "domain_id", value = "域编码", required = true, dataType = "String")
-    public String add(@Validated DomainEntity domainEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+    public String add(@Validated SysDomainInfoAddParamVo paramVo,
+                      BindingResult bindingResult,
+                      HttpServletResponse response,
+                      HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
@@ -126,9 +131,11 @@ public class SysDomainController {
             }
         }
 
+        DomainEntity domainEntity = validParam(paramVo);
         String userId = JwtService.getConnUser(request).getUserId();
         domainEntity.setDomain_modify_user(userId);
         domainEntity.setCreate_user_id(userId);
+
         RetMsg retMsg = domainService.add(domainEntity);
 
         if (retMsg.checkCode()) {
@@ -175,7 +182,8 @@ public class SysDomainController {
             @ApiImplicitParam(required = true, name = "domain_id", value = "域编码"),
             @ApiImplicitParam(required = true, name = "domain_desc", value = "域描述信息")
     })
-    public String update(@Validated DomainEntity domainEntity, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+    public String update(@Validated SysDomainInfoAddParamVo paramVo, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request) {
+
         if (bindingResult.hasErrors()) {
             for (ObjectError m : bindingResult.getAllErrors()) {
                 response.setStatus(421);
@@ -183,15 +191,17 @@ public class SysDomainController {
             }
         }
 
+        DomainEntity domainEntity = validParam(paramVo);
         String userId = JwtService.getConnUser(request).getUserId();
         domainEntity.setDomain_modify_user(userId);
-        domainEntity.setCreate_user_id(userId);
+
 
         Boolean status = authService.domainAuth(request, domainEntity.getDomain_id(), "w").getStatus();
         if (!status) {
             response.setStatus(403);
             return Hret.error(403, "你没有权限编辑域 [ " + domainEntity.getDomain_desc() + " ]", domainEntity);
         }
+
 
         RetMsg retMsg = domainService.update(domainEntity);
         if (retMsg.checkCode()) {
@@ -200,5 +210,14 @@ public class SysDomainController {
 
         response.setStatus(retMsg.getCode());
         return Hret.error(retMsg);
+    }
+
+    private DomainEntity validParam(SysDomainInfoAddParamVo paramVo){
+        DomainEntity domainEntity = new DomainEntity();
+        domainEntity.setDomain_id(paramVo.getDomainId());
+        domainEntity.setDomain_desc(paramVo.getDomainDesc());
+        domainEntity.setDomain_status_id(paramVo.getDomainStatusId());
+        domainEntity.setDomain_modify_date(TimeFormat.currentTime());
+        return domainEntity;
     }
 }

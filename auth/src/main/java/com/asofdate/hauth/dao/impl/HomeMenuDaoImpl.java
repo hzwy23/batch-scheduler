@@ -62,6 +62,7 @@ public class HomeMenuDaoImpl implements HomeMenuDao {
     public List findById(String userId, String typeId, String resId) {
 
         Set<String> set = userResourceDao.findAll(userId);
+
         // 获取用户配置的主题信息
         String themeId = getThemeId(userId);
 

@@ -21,6 +21,7 @@ public class ArgumentDefineServiceImpl implements ArgumentDefineService {
     @Autowired
     private ArgumentDefineDao argumentDefineDao;
 
+
     @Override
     public List<ArgumentDefineEntity> findAll(String domainID) {
         return argumentDefineDao.findAll(domainID);

@@ -198,7 +198,7 @@ public class BatchDefineController {
             return RetMsgFactory.getRetMsg(422, "请求参数解析失败，请联系管理员", null);
         }
         // 批次编码校验
-        if (!Validator.isWord(bdf.getBatchId(), 30)) {
+        if (!Validator.isWord(bdf.getCodeNumber())) {
             return RetMsgFactory.getRetMsg(422, "批次编码必须由1-30位字母，数字组成", null);
         }
         // 校验批次名称

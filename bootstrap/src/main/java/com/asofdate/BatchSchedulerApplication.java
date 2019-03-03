@@ -11,9 +11,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableJpaRepositories
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.asofdate"})
+@EnableFeignClients
 public class BatchSchedulerApplication {
+
     public static void main(String[] args) {
+
         SpringApplication.run(BatchSchedulerApplication.class, args);
+
     }
+
 }

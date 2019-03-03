@@ -24,4 +24,10 @@ public class SysDomainAuthorizationVo {
 
     private Boolean defaultDomain;
 
+    private String userName;
+
+    private String orgUnitId;
+
+    private String orgUnitDesc;
+
 }

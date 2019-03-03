@@ -4,7 +4,6 @@ import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.dto.UserDTO;
 import com.asofdate.hauth.entity.UserDetailsEntity;
 import com.asofdate.hauth.entity.UserEntity;
-import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.UserService;
 import com.asofdate.utils.Hret;
 import com.google.gson.GsonBuilder;
@@ -33,8 +32,6 @@ public class SysUserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private AuthService authService;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<UserEntity> findAll(HttpServletRequest request) {
@@ -105,8 +102,10 @@ public class SysUserController {
         return Hret.error(421, "删除用户信息失败, 请联系管理员", null);
     }
 
+
     @RequestMapping(method = RequestMethod.POST)
     public String add(HttpServletResponse response, HttpServletRequest request) {
+
         UserEntity args = parse(request);
         if (args == null) {
             return Hret.error(422, "参数解析失败,请按照要求填写表单", null);

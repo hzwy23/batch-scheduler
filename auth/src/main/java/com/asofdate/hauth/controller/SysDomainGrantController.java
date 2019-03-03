@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController()
-@RequestMapping(value = "/v1/auth/grant/domain")
 @Api(description = "系统管理--项目授权管理")
 @Slf4j
 public class SysDomainGrantController {
@@ -36,10 +35,30 @@ public class SysDomainGrantController {
         return RetMsg.success(ret);
     }
 
+    @RequestMapping(value = "/v1/auth/domain/unauth/user", method = RequestMethod.GET)
+    public RetMsg findUnauthUsers(@RequestParam(value = "domainId") String domainId){
+
+        List<SysDomainAuthorizationVo> ret = sysDomainAuthorizationService.findUnauahtUserByDomainId(domainId);
+        return RetMsg.success(ret);
+    }
+
+    @RequestMapping(value = "/v1/auth/domain/grant/user", method = RequestMethod.GET)
+    public RetMsg findAuthUsers(@RequestParam(value = "domainId") String domainId) {
+        List<SysDomainAuthorizationVo> ret = sysDomainAuthorizationService.findByDomainId(domainId);
+        log.debug("授予这个项目权限的用户是：{}", ret);
+        return RetMsg.success(ret);
+    }
+
     @ApiOperation(value = "删除授权信息")
     @RequestMapping(value = "/v1/auth/user/domain/grant/{uuid}", method = RequestMethod.DELETE)
     public RetMsg delete(@PathVariable(value = "uuid") String uuid) {
         return sysDomainAuthorizationService.revoke(uuid);
+    }
+
+    @ApiOperation(value = "批量删除授权信息")
+    @RequestMapping(value = "/v1/auth/user/domain/revoke", method = RequestMethod.POST)
+    public RetMsg batchDelete(@RequestParam(value = "uuids") List<String> uuids) {
+        return sysDomainAuthorizationService.batchRevoke(uuids);
     }
 
     @ApiOperation(value = "更新用户授权权限模式")
@@ -52,7 +71,7 @@ public class SysDomainGrantController {
 
     @ApiOperation(value = "添加授权信息")
     @RequestMapping(value = "/v1/auth/user/domain/grant", method = RequestMethod.POST)
-    public RetMsg add(@Validated @RequestBody SysDomainAuthorizationAddParamVo paramVo,
+    public RetMsg add(@Validated @RequestBody List<SysDomainAuthorizationAddParamVo> paramVo,
                       BindingResult bindingResult,
                       HttpServletRequest request) {
         if (bindingResult.hasErrors()) {

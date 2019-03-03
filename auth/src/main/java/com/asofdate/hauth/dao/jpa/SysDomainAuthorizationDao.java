@@ -32,4 +32,7 @@ public interface SysDomainAuthorizationDao extends JpaRepository<SysDomainAuthor
     @Transactional
     int updateLevel(@Param(value = "level") Integer level, @Param(value = "uuid") String uuid);
 
+
+    List<SysDomainAuthorization> findByDomainId(String domainId);
+
 }

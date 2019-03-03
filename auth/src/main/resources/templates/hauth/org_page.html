@@ -329,33 +329,12 @@
         $("#h-org-table-info").height(hwindow - 139);
         $("#h-org-tree-info-list").height(hwindow - 213);
 
-        $.getJSON("/v1/auth/domain/self/owner", function (data) {
-            var arr = new Array()
-            $(data.owner_list).each(function (index, element) {
-                var ijs = {}
-                ijs.id = element.domain_id
-                ijs.text = element.domain_desc
-                ijs.upId = "####hzwy23###"
-                arr.push(ijs)
-            });
-            $("#h-org-domain-list").Hselect({
-                data: arr,
-                height: "24px",
-                width: "180px",
-                value: data.domain_id,
-                onclick: function () {
-                    var id = $("#h-org-domain-list").val();
-                    OrgObj.tree(id);
-                },
-            });
-            OrgObj.tree(data.domain_id);
-            $('#h-org-info-table-details').bootstrapTable({
-                height: hwindow - 130,
-                queryParams: function (params) {
-                    params.domain_id = $("#h-org-domain-list").val();
-                    return params
-                },
-            });
+        OrgObj.tree();
+        $('#h-org-info-table-details').bootstrapTable({
+            height: hwindow - 130,
+            queryParams: function (params) {
+                return params
+            },
         });
     });
     /*]]>*/

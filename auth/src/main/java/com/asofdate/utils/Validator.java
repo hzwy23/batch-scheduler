@@ -20,6 +20,10 @@ public class Validator {
         return false;
     }
 
+    public static boolean isAdmin(String userId){
+        return "admin".equals(userId);
+    }
+
     public static Boolean isFloat(String str) {
         Pattern pattern = Pattern.compile("(-\\+)^[0-9]*(\\.[0-9])$");
         Matcher matcher = pattern.matcher(str);

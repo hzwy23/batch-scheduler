@@ -38,7 +38,9 @@ public class SysResourceController {
         String Id = request.getParameter("Id");
 
         String username = JwtService.getConnUser(request).getUserId();
+
         List<HomeMenuEntity> homeMenusModel = homeMenuService.findAuthedMenus(username, TypeId, Id);
+
         return homeMenusModel;
     }
 

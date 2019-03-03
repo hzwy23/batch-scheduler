@@ -65,6 +65,7 @@
 </div>
 <script>
     NProgress.start();
+
     $(document).ready(function (e) {
         /*
          * 设置用户展示区域高度
@@ -115,54 +116,23 @@
     var UserObj = {
         add: function () {
             var getDomainInfo = function () {
+                $.getJSON("/v1/auth/org", function (data) {
 
-                $.getJSON("/v1/auth/domain/self/owner", function (data) {
                     var arr = new Array()
-                    $(data.owner_list).each(function (index, element) {
+
+                    $(data).each(function (index, element) {
                         var ijs = {}
-                        ijs.id = element.domain_id
-                        ijs.text = element.domain_desc
-                        ijs.upId = "####hzwy23###"
+                        ijs.id = element.org_id;
+                        ijs.text = element.org_desc;
+                        ijs.upId = element.up_org_id;
                         arr.push(ijs)
                     });
 
-                    $("#h-domain-up-id").Hselect({
+                    $("#h-add-org-unit-list").Hselect({
                         data: arr,
                         height: "30px",
-                        value: data.domain_id,
-                        onclick: function () {
-                            var domain_id = $("#h-domain-up-id").val()
-                            $.getJSON("/v1/auth/org", {domain_id: domain_id}, function (data) {
-                                var arr = new Array()
-                                $(data).each(function (index, element) {
-                                    var ijs = {}
-                                    ijs.id = element.org_id;
-                                    ijs.text = element.org_desc;
-                                    ijs.upId = element.up_org_id;
-                                    arr.push(ijs)
-                                });
-                                $("#h-add-org-unit-list").Hselect({
-                                    data: arr,
-                                    height: "30px",
-                                })
-                            })
-                        },
-                    });
-                    $.getJSON("/v1/auth/org", {domain_id: data.domain_id}, function (data) {
-                        var arr = new Array()
-                        $(data).each(function (index, element) {
-                            var ijs = {}
-                            ijs.id = element.org_id;
-                            ijs.text = element.org_desc;
-                            ijs.upId = element.up_org_id;
-                            arr.push(ijs)
-                        });
-                        $("#h-add-org-unit-list").Hselect({
-                            data: arr,
-                            height: "30px",
-                        })
                     })
-                });
+                })
             };
 
             $.Hmodal({
@@ -204,8 +174,8 @@
                     body: $("#modify-user-info").html(),
                     height: "360px",
                     preprocess: function () {
-                        var domain_id = $("#h-user-domain-list").val()
-                        $.getJSON("/v1/auth/org", {domain_id: domain_id}, function (data) {
+
+                        $.getJSON("/v1/auth/org", function (data) {
                             var arr = new Array()
                             $(data).each(function (index, element) {
                                 var ijs = {}

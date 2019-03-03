@@ -1,32 +1,41 @@
 <div class="row subsystem-header">
     <div class="pull-left">
-        <span style="font-size: 14px;">项目授权管理</span>
+        <span style="font-size: 16px;">项目授权管理</span>
     </div>
 </div>
 <div class="row subsystem-toolbar">
-    <div class="pull-right">
-        <button onclick="DomainObj.domainInsertRow()" class="btn btn btn-info btn-sm">
-            <i class="icon-plus"> 新增</i>
-        </button>
-        <button onclick="DomainObj.domainEditRow()" class="btn btn btn-info btn-sm">
-            <i class="icon-edit"> 编辑</i>
-        </button>
-        <button onclick="DomainObj.domainDeleteRow()" class="btn btn btn-danger btn-sm">
-            <i class="icon-trash"> 删除</i>
-        </button>
-    </div>
+    <!--<div style="height: 44px; line-height: 44px; width: 260px; display: inline">-->
+        <!--&lt;!&ndash;<span style="font-size: 10px;font-weight: 600; height: 30px; line-height: 30px; margin-top: 7px;"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="pull-left">&nbsp;&nbsp;项目：</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;<select id="h-auth-domain-list" class="form-control pull-left"&ndash;&gt;-->
+        <!--&lt;!&ndash;style="width: 180px;height: 24px; line-height: 24px; margin-top: 10px;padding: 0px;">&ndash;&gt;-->
+        <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--<span style="font-size: 10px;font-weight: 600;" class="pull-left">&nbsp;&nbsp;机构：</span>-->
+        <!--<select id="h-auth-org-list" class="form-control pull-left"-->
+                <!--style="width: 360px;height: 24px; line-height: 24px; margin-top: 10px; padding: 0px;">-->
+        <!--</select>-->
+    <!--</div>-->
+    <!--<div class="pull-right">-->
+        <!--<button onclick="DomainAuthObj.batchAuth()" class="btn btn-info btn-sm">-->
+            <!--<i class="icon-plus"> 批量授权</i>-->
+        <!--</button>-->
+        <!--<button onclick="DomainAuthObj.batchRemove()" class="btn btn-danger btn-sm">-->
+            <!--<i class="icon-trash"> 批量撤权</i>-->
+        <!--</button>-->
+    <!--</div>-->
 </div>
+
 <div class="row">
-    <div id="h-domain-info" class="col-sm-12 col-md-12 col-lg-12">
-        <table id="HdomainInfoTable"></table>
+    <div id="h-grant-user-table-show" class="col-sm-12 col-md-12 col-lg-12">
+        <table id="h-grant-info-table-details"></table>
     </div>
 </div>
 
+
 <script type="text/javascript">
-    /*<![CDATA[*/
-    var DomainObj = {
-        getDomainInfo: function () {
-            $("#HdomainInfoTable").bootstrapTable({
+    var DomainAuthObj = {
+        getDomainList: function(){
+            $("#h-grant-info-table-details").bootstrapTable({
                 url: '/v1/auth/domain',
                 height: document.documentElement.clientHeight - 142,
                 uniqueId: 'domain_id',
@@ -124,178 +133,221 @@
                     valign: 'middle',
 
                     sortable: false,
+                }, {
+
+                    title: '授权操作',
+
+                    align: 'center',
+
+                    valign: 'middle',
+
+                    formatter: DomainAuthObj.formatterHandle
+
                 }]
             }).closest(".bootstrap-table").find(".columns-right").hide();
         },
-
-        domainInsertRow: function (e) {
-            var submitMenu = function (hmode) {
-                $.HAjaxRequest({
-                    type: "Post",
-                    url: "/v1/auth/domain",
-                    cache: false,
-                    data: $("#h-domain-add-tpl").serialize(),
-                    async: true,
-                    dataType: "text",
-                    success: function (data) {
+        formatterHandle: function (value, row, index) {
+            return '<span class="h-td-btn btn-success btn-xs" onclick="DomainAuthObj.auth(\'' + row.domain_id + '\')"> 授权</span>' +
+                '&nbsp;&nbsp;<span class="h-td-btn btn-danger btn-xs" onclick="DomainAuthObj.revoke(\'' + row.domain_id + '\')"> 撤权</span>';
+        },
+        search: function () {
+            $.notifyClose();
+            var org_id = $("#h-auth-org-list").val();
+            var did = $("#h-auth-domain-list").val();
+            $.HAjaxRequest({
+                url: "/v1/auth/user/search",
+                type: "get",
+                data: {org_id: org_id},
+                success: function (data) {
+                    if (data === null || data.length === 0) {
                         $.Notify({
-                            title: "操作成功",
-                            message: "创建项目成功",
-                            type: "success"
-                        });
-                        $(hmode).remove();
-                        $("#HdomainInfoTable").bootstrapTable('refresh');
+                            title: "查询成功",
+                            message: "查询机构下用户信息成功",
+                            type: "success",
+                        })
                     }
-                });
-            };
 
-            $.Hmodal({
-                callback: submitMenu,
-                header: "新增项目",
-                body: $("#domain_input_form").html(),
-                height: "360px",
-                preprocess: function () {
-                    $("#h-domain-add-status").Hselect({
-                        height: "30px",
-                    })
-                }
+                    $("#h-grant-info-table-details").bootstrapTable('load', data)
+                    $("#h-grant-user-role-table-details").bootstrapTable('load', [])
+                },
             })
         },
+        auth: function (domainId) {
+            $.getJSON("/v1/auth/domain/unauth/user", {domainId: domainId}, function (data) {
+                if (data === null || data.details === null) {
+                    $.Notify({
+                        title: "温馨提示",
+                        message: "获取未授权用户失败，请联系系统管理员",
+                        type: "info",
+                    });
+                    return;
+                }
+                $.Hmodal({
+                    header: "授权管理",
+                    body: $("#h-other-user-role-table-details-html").html(),
+                    height: "360px",
+                    submitDesc: "授予角色",
+                    cancelDesc: "关闭",
+                    preprocess: function () {
+                        var $table = $("#h-other-user-role-table-details");
+                        $table.bootstrapTable({
+                            paginationLoop: false,
+                            height: 222,
+                            striped: true,
+                        });
+                        $table.bootstrapTable('load', data.details);
+                    },
+                    callback: function (hmode) {
+                        var $table = $("#h-other-user-role-table-details");
+                        var sect = $table.bootstrapTable('getSelections');
+                        var arr = new Array();
 
-        domainDeleteRow: function () {
-            var rst = $("#HdomainInfoTable").bootstrapTable("getAllSelections")
-            if (rst.length > 0) {
-                $.Hconfirm({
-                    callback: function () {
+                        $(sect).each(function (index, element) {
+                            var e = {};
+                            e.userId = element.userId;
+                            e.domainId = element.domainId;
+                            let key = 'authorizationLevel-'+ element.userId;
+                            e.authorizationLevel = $("input[name='"+key+"']:checked").val();
+                            arr.push(e);
+                        });
+
                         $.HAjaxRequest({
-                            type: 'post',
-                            url: "/v1/auth/domain/delete",
-                            data: {JSON: JSON.stringify(rst)},
-                            success: function (data) {
+                            url: "/v1/auth/user/domain/grant",
+                            type: "post",
+                            data: JSON.stringify(arr),
+                            dataType: 'json',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            success: function () {
                                 $.Notify({
                                     title: "操作成功",
-                                    message: "删除项目信息成功",
+                                    message: "授权用户角色信息成功",
                                     type: "success",
                                 });
-                                $(rst).each(function (index, element) {
-                                    $("#HdomainInfoTable").bootstrapTable('removeByUniqueId', element.domain_id);
-                                })
-                            }
-                        });
-                    },
-                    body: "确定删除这个项目，删除后将无法恢复",
-                });
+                                $(hmode).remove();
+                            },
+                        })
+                    }
+                })
+            });
+        },
+        formatter: function (value, row, index) {
+            var user_id = row.user_id;
+            var role_id = row.role_id;
+            return '<button onclick="DomainAuthObj.revoke(\'' + user_id + '\',\'' + role_id + '\')" class="btn btn-danger btn-xs">删除</button>'
+        },
+        formatterLevel: function(value, row, index){
+            return '<input name="authorizationLevel-'+row.userId+'" value="1" checked type="radio">只读</input>&nbsp;&nbsp;<input name="authorizationLevel-'+row.userId+'" value="2" type="radio">读写</input>'
+        },
+        revokeFormatterLevel: function(value, row, index){
+            if(value === 1) {
+                return '<input name="authorizationLevel-'+row.userId+'" value="1" readonly disabled checked type="radio">只读</input>&nbsp;&nbsp;<input readonly disabled name="authorizationLevel-'+row.userId+'" value="2" type="radio">读写</input>'
+            } else if (value === 2) {
+                return '<input name="authorizationLevel-'+row.userId+'" value="1" readonly disabled type="radio">只读</input>&nbsp;&nbsp;<input readonly disabled checked name="authorizationLevel-'+row.userId+'" value="2" type="radio">读写</input>'
             } else {
-                $.Notify({
-                    title: "温馨提示",
-                    message: "您没有勾选任何需要删除的项目",
-                    type: "info",
-                });
+                return '未定义';
             }
         },
-        domainEditRow: function () {
-
-            var rst = $("#HdomainInfoTable").bootstrapTable('getSelections');
-            if (rst.length == 0) {
-                $.Notify({
-                    title: "温馨提示",
-                    message: "请在下方表格中选中需要修改的行",
-                    type: "info"
-                });
-                return
-            } else if (rst.length > 1) {
-                $.Notify({
-                    title: "温馨提示",
-                    message: "您选中了多行，不知道您具体需要编辑哪一行",
-                    type: "warning"
-                });
-                return
-            } else if (rst.length === 1) {
-                var tr = rst[0];
-                var editMenu = function (hmode) {
-                    var domainid = tr.domain_id;
-                    var domainDesc = $("#h-domain-add-tpl").find("input[name='domainDesc']").val();
-                    var domainStatus = $("#h-domain-add-tpl").find("select[name='domainStatusId'] option:selected").val();
-
-                    $.HAjaxRequest({
-                        type: "Put",
-                        url: "/v1/auth/domain",
-                        cache: false,
-                        data: {
-                            domainId: domainid,
-                            domainDesc: domainDesc,
-                            domainStatusId: domainStatus,
-                        },
-                        async: false,
-                        dataType: "text",
-                        success: function (data) {
-                            $.Notify({
-                                title: "温馨提示:",
-                                message: "更新项目信息成功",
-                                type: "success",
-                            });
-
-                            $(hmode).remove();
-                            $("#HdomainInfoTable").bootstrapTable('refresh');
-                        }
+        revoke: function (domainId) {
+            $.getJSON("/v1/auth/domain/grant/user", {domainId: domainId}, function (data) {
+                if (data === null || data.details === null) {
+                    $.Notify({
+                        title: "温馨提示",
+                        message: "获取未授权用户失败，请联系系统管理员",
+                        type: "info",
                     });
-                };
+                    return;
+                }
 
-                var preHand = function () {
-                    var domainid = tr.domain_id;
-                    var domainDesc = tr.domain_desc;
-
-                    $("#h-domain-add-tpl").find("input[name='domainId']").val(domainid).attr("readonly", "readonly");
-                    $("#h-domain-add-tpl").find("input[name='domainDesc']").val(domainDesc);
-
-                    $("#h-domain-add-status").Hselect({
-                        height: "30px",
-                        value: tr.domain_status_cd,
-                    });
-                };
                 $.Hmodal({
-                    callback: editMenu,
-                    preprocess: preHand,
-                    header: "修改项目信息",
-                    body: $("#domain_input_form").html(),
+                    header: "撤销角色",
+                    body: $("#h-revoke-user-role-table-details-html").html(),
                     height: "360px",
+                    submitDesc: "撤销角色",
+                    cancelDesc: "关闭",
+                    preprocess: function () {
+                        var $table = $("#h-revoke-user-role-table-details");
+                        $table.bootstrapTable({
+                            paginationLoop: false,
+                            height: 222,
+                            striped: true,
+                        });
+                        $table.bootstrapTable('load', data.details)
+                    },
+                    callback: function (hmode) {
+                        var $table = $("#h-revoke-user-role-table-details");
+                        var sect = $table.bootstrapTable('getSelections');
+                        var arr = new Array();
+
+                        $(sect).each(function (index, element) {
+                            arr.push(element.uuid);
+                        });
+
+                        $.HAjaxRequest({
+                            url: "/v1/auth/user/domain/revoke",
+                            type: "post",
+                            data: {uuids:arr.join(',')},
+                            success: function () {
+                                $.Notify({
+                                    title: "操作成功",
+                                    message: "授权用户角色信息成功",
+                                    type: "success",
+                                });
+                                $(hmode).remove();
+                            },
+                        })
+                    }
                 })
-            }
+            });
         },
     };
+
     $(document).ready(function () {
-        var height = document.documentElement.clientHeight;
-        $("#h-domain-info").height(height - 139);
-        DomainObj.getDomainInfo();
+        var hwindow = document.documentElement.clientHeight;
+        $("#h-grant-user-table-show").height(hwindow - 130);
+        $("#h-grant-user-show-box").height(hwindow - 130);
+        DomainAuthObj.getDomainList();
     });
-    /*]]>*/
 
 </script>
 
+<script type="text/html" id="h-other-user-role-table-details-html">
+    <table id="h-other-user-role-table-details"
+           data-toggle="table"
+           data-side-pagination="client"
+           data-pagination="false"
+           data-page-list="[20, 50, 100, 200]"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-field="userId" data-sortable="true">用户账号</th>
+            <th data-field="userName">用户名称</th>
+            <th data-field="orgUnitDesc">所属机构</th>
+            <th data-field="domainId">授予项目</th>
+            <th data-field="authorizationLevel" data-formatter="DomainAuthObj.formatterLevel">权限模式</th>
+        </tr>
+        </thead>
+    </table>
+</script>
 
-<script id="domain_input_form" type="text/html">
-    <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px">
-        <form class="form-horizontal" id="h-domain-add-tpl">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <div class="form-group-sm col-sm-12 col-md-12 col-lg-12">
-                    <label class="h-label" style="width:100%;">项目代码：</label>
-                    <input placeholder="1至30个字母，数字组成" name="domainId" type="text" class="form-control"
-                           style="width: 100%;height: 30px;line-height: 30px;"/>
-                </div>
-                <div class="form-group-sm col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
-                    <label class="h-label" style="width: 100%;">项目名称：</label>
-                    <input placeholder="1至30个汉字、字母、数字组成" type="text" class="form-control" name="domainDesc"
-                           style="width: 100%;height: 30px;line-height: 30px;"/>
-                </div>
-                <div class="form-group-sm col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
-                    <label class="h-label" style="width: 100%;">状　态：</label>
-                    <select id="h-domain-add-status" name="domainStatusId" class="form-control"
-                            style="width: 100%;height: 30px;line-height: 30px;">
-                        <option value="0">正常</option>
-                        <option value="1">失效</option>
-                    </select>
-                </div>
-            </div>
-        </form>
-    </div>
+<script type="text/html" id="h-revoke-user-role-table-details-html">
+    <table id="h-revoke-user-role-table-details"
+           data-toggle="table"
+           data-side-pagination="client"
+           data-pagination="false"
+           data-page-list="[20, 50, 100, 200]"
+           data-search="false">
+        <thead>
+        <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-field="userId" data-sortable="true">用户账号</th>
+            <th data-field="userName">用户名称</th>
+            <th data-field="orgUnitDesc">所属机构</th>
+            <th data-field="domainId">授予项目</th>
+            <th data-field="authorizationLevel" data-formatter="DomainAuthObj.revokeFormatterLevel">权限模式</th>
+        </tr>
+        </thead>
+    </table>
 </script>

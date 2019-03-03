@@ -31,7 +31,7 @@ public class OracleDefine implements SQLFactory {
     private final String sys019 = "insert into sys_sec_user(user_id,user_passwd,status_id) values(?,?,?)";
     private final String sys020 = "update sys_sec_user set user_passwd = ? where user_id = ?";
     private final String sys021 = "update sys_user_info t set t.user_name = ?, t.user_phone = ?, t.user_email = ? ,t.user_maintance_date = sysdate, t.user_maintance_user = ?,t.org_unit_id = ? where t.user_id = ?";
-    private final String sys022 = "select count(*) from sys_role_user_relation r inner join sys_role_resource_relat e on r.role_id = e.role_id inner join sys_theme_value v on e.res_id = v.res_id inner join sys_user_theme m on v.theme_id = m.theme_id and r.user_id = m.user_id where r.user_id = ? and v.res_url = ?";
+    private final String sys022 = "select count(*) from sys_role_user r inner join sys_role_resource e on r.role_id = e.role_id inner join sys_theme_value v on e.res_id = v.res_id inner join sys_user_theme m on v.theme_id = m.theme_id and r.user_id = m.user_id where r.user_id = ? and v.res_url = ?";
     private final String sys023 = "select t.user_id,t.user_name,a.status_desc,t.user_create_date, t.user_owner,t.user_email,t.user_phone,i.org_unit_id,i.org_unit_desc,di.domain_id,di.domain_name,t.user_maintance_date,t.user_maintance_user,u.status_id from sys_user_info t inner join sys_sec_user u on t.user_id = u.user_id inner join sys_user_status_attr a on u.status_id = a.status_id inner join sys_org_info i on i.org_unit_id = t.org_unit_id inner join sys_domain_info di on i.domain_id = di.domain_id where t.user_id = ?";
     private final String sys024 = "update sys_user_theme set theme_id = ? where user_id = ?";
     private final String sys025 = "select t.domain_id, t.domain_name as domain_desc, s.domain_status_name  as domain_status_desc, t.domain_create_date as maintance_date , t.domain_owner as create_user_id,t.domain_maintance_date as domain_modify_date,t.domain_maintance_user as domain_modify_user,t.domain_status_id as domain_status_cd from sys_domain_info t inner join sys_domain_status_attr s on t.domain_status_id = s.domain_status_id";
@@ -55,16 +55,16 @@ public class OracleDefine implements SQLFactory {
     private final String sys043 = "insert into sys_org_info(code_number,org_unit_desc,up_org_id,domain_id,create_date,maintance_date,create_user,maintance_user,org_unit_id) values(?,?,?,?,sysdate,sysdate,?,?,?)";
     private final String sys044 = "delete from sys_org_info where org_unit_id = ? and domain_id = ?";
     private final String sys045 = "insert into sys_user_theme(user_id,theme_id) values(?,?)";
-    private final String sys046 = "select t.role_id,t.role_name,t.code_number from sys_role_info t where ( t.role_owner = ? or exists ( select 1 from sys_role_user_relation r where r.user_id = ? and t.role_id = r.role_id ))";
+    private final String sys046 = "select t.role_id,t.role_name,t.code_number from sys_role_info t where ( t.role_owner = ? or exists ( select 1 from sys_role_user r where r.user_id = ? and t.role_id = r.role_id ))";
     private final String sys047 = "";
-    private final String sys048 = "insert into sys_role_user_relation(uuid,role_id,user_id,maintance_date,maintance_user) values(sys_guid(),?,?,sysdate,?)";
+    private final String sys048 = "insert into sys_role_user(uuid,role_id,user_id,maintance_date,maintance_user) values(sys_guid(),?,?,sysdate,?)";
     private final String sys050 = "update sys_role_info t set t.role_name = ? ,t.role_status_id = ?, role_maintance_date = sysdate, role_maintance_user = ? where t.role_id = ?";
     private final String sys069 = "update sys_org_info set org_unit_desc = ? ,up_org_id = ?, maintance_date = sysdate,maintance_user=? where org_unit_id = ?";
     private final String sys070 = "select t.theme_id,i.theme_desc, res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id from sys_theme_value t left join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? and t.res_id = ?";
     private final String sys071 = "select t.res_id,t.res_name,t.res_attr, a.res_attr_desc,t.res_up_id,t.res_type,r.res_type_desc,t.sys_flag from sys_resource_info t inner join sys_resource_info_attr a on t.res_attr = a.res_attr inner join sys_resource_type_attr r on t.res_type = r.res_type";
     private final String sys072 = "insert into sys_resource_info(res_id,res_name,res_attr,res_up_id,res_type) values(?,?,?,?,?)";
     private final String sys073 = "select t.id,d.up_id from dispatch_batch_group_relation t inner join dispatch_group_dependency d on t.id = d.id where t.batch_id = ?";
-    private final String sys074 = "insert into sys_role_resource_relat(uuid,role_id,res_id) values(?,?,?)";
+    private final String sys074 = "insert into sys_role_resource(uuid,role_id,res_id) values(?,?,?)";
     private final String sys075 = "select t.id, d.up_id from dispatch_group_task_relation t inner join  dispatch_task_dependency d on t.id = d.id where t.group_id = ?";
     private final String sys076 = "delete from sys_theme_value where res_id = ?";
     private final String sys077 = "delete from sys_resource_info where res_id = ? and sys_flag is null";
@@ -78,14 +78,14 @@ public class OracleDefine implements SQLFactory {
     private final String sys087 = "delete from sys_domain_share_info where uuid = ?";
     private final String sys088 = "update sys_domain_share_info set authorization_level = ?,modify_user = ? , modify_date = sysdate where uuid = ?";
     private final String sys089 = "select t.res_id,t.res_name,t.res_attr, a.res_attr_desc,t.res_up_id,t.res_type,r.res_type_desc from sys_resource_info t inner join sys_resource_info_attr a on t.res_attr = a.res_attr inner join sys_resource_type_attr r on t.res_type = r.res_type where res_id = ?";
-    private final String sys093 = "delete from sys_role_resource_relat where role_id = ? and res_id = ?";
-    private final String sys094 = "select r.user_id, t.role_id, t.code_number,t.role_name,t.role_status_id from sys_role_info t inner join sys_role_user_relation r on t.role_id = r.role_id where r.user_id = ? and t.role_status_id = '0'";
-    private final String sys095 = "select t.role_id,t.code_number,t.role_name from sys_user_info i inner join sys_org_info o on i.org_unit_id = o.org_unit_id inner join sys_role_info t on o.domain_id = t.domain_id where i.user_id = ? and t.role_status_id = '0' and  not exists ( select 1 from sys_role_user_relation r where i.user_id = r.user_id and r.role_id = t.role_id )";
-    private final String sys096 = "insert into sys_role_user_relation(uuid,role_id,user_id,maintance_date,maintance_user) values(?,?,?,sysdate,?)";
-    private final String sys097 = "delete from sys_role_user_relation where uuid = ?";
+    private final String sys093 = "delete from sys_role_resource where role_id = ? and res_id = ?";
+    private final String sys094 = "select r.user_id, t.role_id, t.code_number,t.role_name,t.role_status_id from sys_role_info t inner join sys_role_user r on t.role_id = r.role_id where r.user_id = ? and t.role_status_id = '0'";
+    private final String sys095 = "select t.role_id,t.code_number,t.role_name from sys_user_info i inner join sys_org_info o on i.org_unit_id = o.org_unit_id inner join sys_role_info t on o.domain_id = t.domain_id where i.user_id = ? and t.role_status_id = '0' and  not exists ( select 1 from sys_role_user r where i.user_id = r.user_id and r.role_id = t.role_id )";
+    private final String sys096 = "insert into sys_role_user(uuid,role_id,user_id,maintance_date,maintance_user) values(?,?,?,sysdate,?)";
+    private final String sys097 = "delete from sys_role_user where uuid = ?";
     private final String sys098 = "update sys_sec_user set continue_error_cnt = ? where user_id = ?";
     private final String sys099 = "update sys_sec_user set status_id = 1 where user_id = ?";
-    private final String sys100 = "select role_id,res_id from sys_role_resource_relat where role_id = ?";
+    private final String sys100 = "select role_id,res_id from sys_role_resource where role_id = ?";
     private final String sys101 = "select t.theme_id,i.theme_desc,res_id,res_url,res_type,res_bg_color,res_class,group_id,res_img,sort_id from sys_theme_value t inner join sys_theme_info i on t.theme_id = i.theme_id where t.theme_id = ? order by group_id,sort_id asc";
     private final String sys102 = "select as_of_date from dispatch_batch_define where batch_id = ? and complete_date >= as_of_date";
     private final String sys103 = "select theme_id from sys_user_theme where user_id = ?";
@@ -100,7 +100,7 @@ public class OracleDefine implements SQLFactory {
     private final String sys112 = "select uuid,id,up_id,domain_id from dispatch_group_dependency where domain_id = ?";
     private final String sys113 = "select uuid,id,up_id,domain_id from dispatch_task_dependency where domain_id = ?";
     private final String sys114 = "select uuid,id,arg_id,arg_value,domain_id from dispatch_group_argument_rel where domain_id = ?";
-    private final String sys115 = "select distinct r.res_id from sys_role_user_relation t inner join sys_role_resource_relat r on t.role_id = r.role_id where t.user_id = ?";
+    private final String sys115 = "select distinct r.res_id from sys_role_user t inner join sys_role_resource r on t.role_id = r.role_id where t.user_id = ?";
     private final String sys116 = "select uuid,domain_id,target_domain_id,authorization_level from sys_domain_share_info where target_domain_id = ?";
     private final String sys117 = "select uuid,domain_id,target_domain_id,authorization_level from sys_domain_share_info where domain_id = ?";
     private final String sys118 = "select t.domain_id,t.domain_name as domain_desc,t.domain_status_id,a.domain_status_name as domain_status_desc from sys_domain_info t inner join sys_domain_status_attr a on t.domain_status_id = a.domain_status_id";
@@ -192,7 +192,7 @@ public class OracleDefine implements SQLFactory {
     private final String sys206 = "select t.batch_id,t.job_id,t.status,t.start_time,t.end_time,t.gid,t.tid,a.batch_status_desc as status_desc,td.task_id,td.task_desc,td.task_type,c.task_type_desc from dispatch_batch_job_status t left join dispatch_batch_status_attr a on t.status = a.batch_status inner join dispatch_group_task_relation o on t.tid = o.id inner join dispatch_task_define td on o.task_id = td.task_id inner join dispatch_task_type_attr c on td.task_type = c.task_type where t.batch_id = ? and t.gid = ? and t.tid = ?";
     private final String sys207 = "insert into sys_handle_logs(uuid,user_id,handle_time,client_ip,status_code,method,url,data,domain_id) values(sys_guid(),?,sysdate,?,?,?,?,?,?)";
     private final String sys208 = "select t.code_number,t.role_name,t.role_owner as create_user,t.role_create_date as create_date,a.role_status_desc,a.role_status_id as role_status_code,t.domain_id,o.domain_name as domain_desc,t.role_maintance_date as modify_date,t.role_maintance_user as modify_user,t.role_id from sys_role_info t inner join sys_role_status_attr a on t.role_status_id = a.role_status_id inner join sys_domain_info o on t.domain_id = o.domain_id where t.role_id = ?";
-    private final String sys209 = "select t.uuid, t.role_id, t.res_id, i.res_name,res_up_id from sys_role_resource_relat t left join sys_resource_info i on t.res_id = i.res_id where t.role_id = ?";
+    private final String sys209 = "select t.uuid, t.role_id, t.res_id, i.res_name,res_up_id from sys_role_resource t left join sys_resource_info i on t.res_id = i.res_id where t.role_id = ?";
 
     @Override
     public String getSqlText(String id) throws NoSuchFieldException, IllegalAccessException {

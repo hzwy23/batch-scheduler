@@ -1,7 +1,7 @@
 package com.asofdate.hauth.dao.impl;
 
 import com.asofdate.hauth.dao.UserResourceDao;
-import com.asofdate.hauth.sql.SqlText;
+import com.asofdate.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -17,20 +17,37 @@ import java.util.Set;
  */
 @Repository
 public class UserResourceDaoImpl implements UserResourceDao {
-    @Autowired
-    private SqlText sqlText;
+
+
+    private static final String SQL_TEXT = "select distinct r.res_id from sys_role_user t inner join sys_role_resource r on t.role_id = r.role_id where t.user_id = ?";
+
+    private static final String SQL_QUERY_ALL = "select distinct r.res_id from sys_resource_info r";
+
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public Set<String> findAll(String userId) {
+
         Set<String> set = new HashSet<>();
-        jdbcTemplate.query(sqlText.getSql("sys115"), new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                set.add(resultSet.getString("res_id"));
-            }
-        }, userId);
+
+        if (Validator.isAdmin(userId)) {
+            jdbcTemplate.query(SQL_QUERY_ALL, new RowCallbackHandler() {
+                @Override
+                public void processRow(ResultSet resultSet) throws SQLException {
+                    set.add(resultSet.getString("res_id"));
+                }
+            });
+        } else {
+            jdbcTemplate.query(SQL_TEXT, new RowCallbackHandler() {
+                @Override
+                public void processRow(ResultSet resultSet) throws SQLException {
+                    set.add(resultSet.getString("res_id"));
+                }
+            }, userId);
+        }
+
         return set;
     }
 }

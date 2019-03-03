@@ -8,6 +8,7 @@ import com.asofdate.hauth.entity.SysDomainAuthorization;
 import com.asofdate.hauth.service.DomainService;
 import com.asofdate.utils.RetMsg;
 import com.asofdate.utils.SysStatus;
+import com.asofdate.utils.Validator;
 import com.asofdate.utils.factory.RetMsgFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,17 @@ public class DomainServiecImpl implements DomainService {
 
     @Override
     public DomainDto findAll(String userId) {
+
         DomainDto domainDto = new DomainDto();
 
         List<DomainEntity> list = domainDao.findAll();
 
+        if (Validator.isAdmin(userId)) {
+            return getAdminDomain(list);
+        }
+
         List<SysDomainAuthorization> authList = sysDomainAuthorizationDao.findByUserId(userId);
+
         Map<String, SysDomainAuthorization> domainIdSet = new HashMap<>();
         if (authList == null || authList.isEmpty()) {
             return null;
@@ -56,6 +63,23 @@ public class DomainServiecImpl implements DomainService {
         }
 
         domainDto.setOwnerList(result);
+
+        return domainDto;
+    }
+
+
+    public DomainDto getAdminDomain(List<DomainEntity> list){
+        DomainDto domainDto = new DomainDto();
+        List<DomainEntity> result = new ArrayList<>();
+        if (list == null || list.isEmpty()) {
+            return domainDto;
+        }
+
+        for (DomainEntity element : list) {
+            result.add(element);
+        }
+        domainDto.setOwnerList(result);
+        domainDto.setDomainId(result.get(0).getDomain_id());
         return domainDto;
     }
 

@@ -2,7 +2,6 @@ package com.asofdate.hauth.controller;
 
 import com.asofdate.hauth.authentication.JwtService;
 import com.asofdate.hauth.entity.OrgEntity;
-import com.asofdate.hauth.service.AuthService;
 import com.asofdate.hauth.service.OrgService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
@@ -25,8 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/auth/org")
 @Api(description = "系统管理--机构定义管理")
 public class SysOrgController {
-    @Autowired
-    private AuthService authService;
+
 
     @Autowired
     private OrgService orgService;

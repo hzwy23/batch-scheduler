@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
  */
 @Data
 public class DomainEntity {
+
     @Size(min = 1, max = 30, message = "域编码长度必须由1-30位字母、数字组成")
     private String domain_id;
 
@@ -17,7 +18,7 @@ public class DomainEntity {
     private String domain_desc;
 
     @NotBlank(message = "状态不能为空")
-    private String domain_status_id;
+    private Integer domain_status_id;
 
     private String domain_status_desc;
 

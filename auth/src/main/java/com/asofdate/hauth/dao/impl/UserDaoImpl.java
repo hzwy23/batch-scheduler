@@ -122,8 +122,14 @@ public class UserDaoImpl implements UserDao {
     public UserDetailsEntity findById(String userId) {
         RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
         UserDetailsEntity detailsEntity = jdbcTemplate.queryForObject(sqlText.getSql("sys023"), rowMapper, userId);
-        String domainId = jdbcTemplate.queryForObject("select domain_id from sys_domain_authorization where user_id = ? and default_domain = 1", String.class, userId);
-        detailsEntity.setDomainId(domainId);
+
+        try {
+            String domainId = jdbcTemplate.queryForObject("select domain_id from sys_domain_authorization where user_id = ? and default_domain = 1", String.class, userId);
+            detailsEntity.setDomainId(domainId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return detailsEntity;
     }
 
