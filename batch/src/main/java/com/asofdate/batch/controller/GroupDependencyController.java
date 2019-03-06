@@ -3,7 +3,6 @@ package com.asofdate.batch.controller;
 import com.asofdate.batch.entity.BatchGroupEntity;
 import com.asofdate.batch.entity.GroupDependencyEntity;
 import com.asofdate.batch.service.BatchGroupService;
-import com.asofdate.batch.service.SuiteKeyDependenceService;
 import com.asofdate.utils.Hret;
 import com.asofdate.utils.RetMsg;
 import com.google.gson.GsonBuilder;
@@ -28,8 +27,8 @@ import java.util.List;
 @Api(description = "批次调度-批次内任务组依赖管理")
 public class GroupDependencyController {
     private final Logger logger = LoggerFactory.getLogger(GroupDependencyController.class);
-    @Autowired
-    private SuiteKeyDependenceService suiteKeyDependenceService;
+
+
     @Autowired
     private BatchGroupService batchGroupService;
 

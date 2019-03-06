@@ -2,7 +2,6 @@ package com.asofdate.batch.service;
 
 import com.asofdate.batch.dto.BatchArgumentDto;
 import com.asofdate.batch.dto.BatchMonitoringDto;
-import com.asofdate.batch.dto.BatchRunConfDto;
 import com.asofdate.batch.entity.BatchDefineEntity;
 import com.asofdate.utils.RetMsg;
 
@@ -71,20 +70,6 @@ public interface BatchDefineService {
      */
     RetMsg setStatus(String batchId, int status);
 
-    /**
-     * 启动批次，初始化批次状态信息
-     *
-     * @param batchId 批次编号
-     * @return RetMsg
-     */
-    RetMsg runBatchInit(String batchId);
-
-    /**
-     * 批次翻页，检查批次是否满足翻页条件
-     *
-     * @param conf 批次编号
-     */
-    RetMsg batchPagging(BatchRunConfDto conf);
 
     /**
      * 更新批次日期
@@ -119,39 +104,6 @@ public interface BatchDefineService {
      * @return BatchMonitoringDto
      */
     BatchMonitoringDto getBatchCompletedRadio(String batchId);
-
-    /**
-     * 销毁批次
-     *
-     * @param batchId 批次编号
-     * @param retMsg  批次销毁时返回信息
-     * @param Status  批次销毁时状态
-     * @return RetMsg
-     */
-    RetMsg destoryBatch(String batchId, String retMsg, int Status);
-
-    /**
-     * 批次运行完成后，保留批次的历史信息
-     *
-     * @param batchId 批次编号
-     */
-    void saveHistory(String batchId);
-
-    /**
-     * 查询批次日期
-     *
-     * @param batchId 批次编码
-     */
-    String getBatchAsOfDate(String batchId);
-
-
-    /**
-     * 初始化批次运行时的参数信息
-     *
-     * @param batchId
-     * @param domainId
-     */
-    BatchRunConfDto initConf(String batchId, String domainId);
 
 
     void initBatchStatus();

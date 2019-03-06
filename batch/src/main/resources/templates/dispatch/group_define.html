@@ -429,18 +429,20 @@
     };
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
-        $("#h-dispatch-group-define-info-table-details").bootstrapTable({
-            height: hwindow - 130,
-            queryParams: function (params) {
-                params.domain_id = $("#h-dispatch-group-define-domain-list").val();
-                return params;
-            }
-        });
 
         $("#h-dispatch-group-define-table-info").height(hwindow - 130);
 
         $.getJSON("/v1/auth/domain/self/owner", function (data) {
-            var arr = new Array()
+
+            $("#h-dispatch-group-define-info-table-details").bootstrapTable({
+                height: hwindow - 130,
+                queryParams: function (params) {
+                    params.domain_id = data.domain_id;
+                    return params;
+                }
+            });
+
+            var arr = new Array();
             $(data.owner_list).each(function (index, element) {
                 var ijs = {};
                 ijs.id = element.domain_id
@@ -448,6 +450,8 @@
                 ijs.upId = "####hzwy23###"
                 arr.push(ijs)
             });
+
+
             $("#h-dispatch-group-define-domain-list").Hselect({
                 data: arr,
                 height: "24px",

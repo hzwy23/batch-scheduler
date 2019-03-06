@@ -25,19 +25,6 @@ public class ExecServiceImpl implements ExecService {
     private ExecDao execDao;
 
     @Override
-    public RetMsg echo(ExecLogEntity row) {
-        try {
-            int size = execDao.insert(row);
-            if (1 == size) {
-                return RetMsgFactory.getRetMsg(SysStatus.SUCCESS_CODE, "success", null);
-            }
-            return RetMsgFactory.getRetMsg(SysStatus.ERROR_CODE, "写入执行信息失败", null);
-        } catch (Exception e) {
-            return RetMsgFactory.getRetMsg(SysStatus.EXCEPTION_ERROR_CODE, e.getMessage(), row.toString());
-        }
-    }
-
-    @Override
     public List<ExecLogEntity> query(String id, String jobId) {
         try {
             return execDao.query(id, jobId);

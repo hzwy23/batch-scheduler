@@ -67,7 +67,7 @@
         <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left: 30px; text-align: right">
             <span class="label label-primary"
                   style="color: #ffffff; font-size: 14px; font-weight: 700; height: 60px; line-height: 60px;"><i
-                    class="icon-user">&nbsp;</i><i th:text="${userId}"></i></span>
+                    class="icon-user">&nbsp;</i><i id="h-current-user-id" th:text="${userId}"></i></span>
         </div>
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12" id="wrap" style="overflow: auto;">
@@ -90,6 +90,12 @@
                 class="icon-off" style="color: white"></i></button>
         <button class="H-right-tab theme-tab-color" data-toggle="tooltip" onclick="Hutils.UserMgrInfo()" title="用户信息"><i
                 class="icon-user" style="color: white"></i></button>
+        <button onclick="changemodifypassword()" class="H-right-tab theme-tab-color" data-toggle="tooltip">
+            <i class="icon-lock" style="color: white"></i>
+        </button>
+        <button onclick="changeDefaultDomain()" class="H-right-tab theme-tab-color" data-toggle="tooltip">
+            <i class="icon-heart" style="color: white"></i>
+        </button>
     </div>
 </div>
 
@@ -165,6 +171,48 @@
         })
     };
 
+    var changeDefaultDomain = function () {
+        $.Hmodal({
+            header: "修改默认项目",
+            body: $("#h-default-domain-text").html(),
+            height: "420px",
+            width: "720px",
+            preprocess: function () {
+
+                $.getJSON("/v1/auth/domain/self/owner", function (data) {
+                    var arr = new Array()
+                    $(data.owner_list).each(function (index, element) {
+                        var ijs = {};
+                        ijs.id = element.domain_id
+                        ijs.text = element.domain_desc
+                        ijs.upId = "####hzwy23###"
+                        arr.push(ijs)
+                    });
+                    $("#h-default-domain-id").Hselect({
+                        data: arr,
+                        value: data.domain_id
+                    });
+                });
+            },
+            callback: function (hmode) {
+                let domainId = $("#h-default-domain-id").val();
+                $.HAjaxRequest({
+                    type: "PUT",
+                    url: "/v1/auth/default/domain",
+                    data: {domainId: domainId},
+                    dataType: "json",
+                    success: function () {
+                        $(hmode).remove();
+                        $.Notify({
+                            title: "执行成功",
+                            message: "修改密码成功",
+                        })
+                    },
+                });
+            }
+        })
+    }
+
     var changemodifypassword = function () {
         $.Hmodal({
             header: "密码修改",
@@ -172,7 +220,7 @@
             height: "420px",
             width: "720px",
             preprocess: function () {
-                var user_id = $("#h-user-details-user-id").html()
+                var user_id = $("#h-current-user-id").html()
                 $("#h-modify-user-id").val(user_id)
             },
             callback: function (hmode) {
@@ -247,11 +295,6 @@
             </button>
             <button onclick="changeTheme(1003)" class="btn btn-sm theme-apple-color" style="color: white;">
             </button>
-            <div class="pull-right">
-                <button onclick="changemodifypassword()" class="btn btn-success btn-xs">
-                    <i class="icon-wrench"> 修改密码</i>
-                </button>
-            </div>
         </div>
         <table class="table table-bordered table-responsive">
             <tr style="height: 36px;line-height: 36px;">
@@ -292,8 +335,21 @@
             </tr>
         </table>
     </div>
-
 </script>
+
+
+<script id="h-default-domain-text" type="text/html">
+    <form id="h-default-domain-form" class="col-sm-12 col-md-12 col-lg-12">
+        <input id="h-modify-default-domain-user-id" readonly="readonly" class="form-control"
+               style="display: none" type="text" name="userId"/>
+        <div class="form-group col-sm-12 col-md-12 col-lg-12">
+            <label class="h-label" style="width: 100%;">当前项目：</label>
+            <select id="h-default-domain-id" class="form-control" style="width: 100%;height: 30px; line-height: 30px;" type="text" name="defaultDomainId">
+            </select>
+        </div>
+    </form>
+</script>
+
 <script id="h-user-modify-password" type="text/html">
     <form id="plat-change-passwd" class="col-sm-12 col-md-12 col-lg-12">
         <div class="form-group col-sm-12 col-md-12 col-lg-12">

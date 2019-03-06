@@ -457,15 +457,9 @@
             })
         },
     };
+
     $(document).ready(function () {
         var hwindow = document.documentElement.clientHeight;
-        $("#h-dispatch-task-define-info-table-details").bootstrapTable({
-            height: hwindow - 130,
-            queryParams: function (params) {
-                params.domain_id = $("#h-dispatch-task-define-domain-list").val();
-                return params;
-            }
-        });
 
         $("#h-dispatch-task-define-table-info").height(hwindow - 130);
 
@@ -478,6 +472,15 @@
                 ijs.upId = "####hzwy23###"
                 arr.push(ijs)
             });
+
+            $("#h-dispatch-task-define-info-table-details").bootstrapTable({
+                height: hwindow - 130,
+                queryParams: function (params) {
+                    params.domain_id = data.domain_id;
+                    return params;
+                }
+            });
+
             $("#h-dispatch-task-define-domain-list").Hselect({
                 data: arr,
                 height: "24px",

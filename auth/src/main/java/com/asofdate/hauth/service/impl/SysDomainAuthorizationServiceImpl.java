@@ -67,6 +67,14 @@ public class SysDomainAuthorizationServiceImpl implements SysDomainAuthorization
 
     @Override
     @Transactional
+    public RetMsg updateDefaultDomain(String userId, String domainId) {
+        sysDomainAuthorizationDao.updateClearDefaultDomain(userId);
+        sysDomainAuthorizationDao.updateDefaultDomain(userId, domainId);
+        return new RetMsg(200,"success",null);
+    }
+
+    @Override
+    @Transactional
     public RetMsg modifyDefaultDomain(String uuid, String userId) {
         sysDomainAuthorizationDao.updateClearDefaultDomain(userId);
         int size = sysDomainAuthorizationDao.updateUserDefaultDomain(uuid);

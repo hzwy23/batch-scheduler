@@ -17,6 +17,7 @@ public interface SysDomainAuthorizationDao extends JpaRepository<SysDomainAuthor
 
     @Query(value = "update SysDomainAuthorization t set t.defaultDomain = 0 where t.userId = ?1")
     @Modifying
+    @Transactional
     int updateClearDefaultDomain(String userId);
 
     @Query(value = "update SysDomainAuthorization t set t.defaultDomain = 1 where t.uuid = ?1")
@@ -34,5 +35,11 @@ public interface SysDomainAuthorizationDao extends JpaRepository<SysDomainAuthor
 
 
     List<SysDomainAuthorization> findByDomainId(String domainId);
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "update SysDomainAuthorization t set t.defaultDomain = 1 where t.userId = ?1 and t.domainId = ?2")
+    int updateDefaultDomain(String userId, String domainId);
 
 }

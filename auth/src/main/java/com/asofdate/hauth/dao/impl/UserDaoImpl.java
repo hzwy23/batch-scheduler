@@ -77,6 +77,7 @@ public class UserDaoImpl implements UserDao {
                 userEntity.getUserPhone(),
                 userEntity.getOrgUnitId(),
                 userEntity.getModifyUser());
+        jdbcTemplate.update("insert into sys_user_theme(user_id,theme_id) values(?,?)", userEntity.getUserId(),"1004");
         String password = CryptoAES.getInstance().aesEncrypt(userEntity.getUserPasswd());
         return jdbcTemplate.update(sqlText.getSql("sys019"),
                 userEntity.getUserId(), password, 0);
@@ -121,6 +122,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public UserDetailsEntity findById(String userId) {
         RowMapper<UserDetailsEntity> rowMapper = new BeanPropertyRowMapper<UserDetailsEntity>(UserDetailsEntity.class);
+
         UserDetailsEntity detailsEntity = jdbcTemplate.queryForObject(sqlText.getSql("sys023"), rowMapper, userId);
 
         try {

@@ -89,4 +89,15 @@ public class SysDomainGrantController {
         return RetMsg.success(ret);
     }
 
+    @ApiOperation(value = "修改默认的域")
+    @RequestMapping(value = "/v1/auth/default/domain", method = RequestMethod.PUT)
+    public RetMsg updateDefaultDomain(@RequestParam(value = "domainId") String domainId,
+                                      HttpServletRequest request){
+        RequestUserDto user = JwtService.getConnUser(request);
+        if (domainId == null || domainId.isEmpty()) {
+            return new RetMsg(418,"项目为空", null);
+        }
+        log.info("用户是：{}, 项目是：{}", user.getUserId(), domainId);
+        return sysDomainAuthorizationService.updateDefaultDomain(user.getUserId(), domainId);
+    }
 }

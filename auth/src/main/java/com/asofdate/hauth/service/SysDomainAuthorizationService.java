@@ -73,4 +73,7 @@ public interface SysDomainAuthorizationService {
      */
     List<DomainEntity> findUnauth(String userId);
 
+
+    RetMsg updateDefaultDomain(String userId, String domainId);
+
 }
