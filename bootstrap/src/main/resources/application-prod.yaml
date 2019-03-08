@@ -1,6 +1,6 @@
 spring:
   application:
-    name: batch-task-executor
+    name: batch-manager
   cloud:
     consul:
       host: 172.16.175.222
