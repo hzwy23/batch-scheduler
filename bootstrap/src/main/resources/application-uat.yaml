@@ -15,8 +15,3 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
-
-cassandra:
-  host: 118.31.46.174
-  port: 9042
-  keyspace: demo

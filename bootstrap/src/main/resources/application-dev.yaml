@@ -3,8 +3,8 @@ spring:
     name: batch-task-executor
   cloud:
     consul:
-      host: 121.42.143.130
-      port: 8500
+      host: 118.31.46.174
+      port: 30085
       enabled: true
       discovery:
         health-check-path: /actuator/health
@@ -15,8 +15,3 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
-
-cassandra:
-  host: 118.31.46.174
-  port: 9042
-  keyspace: demo
