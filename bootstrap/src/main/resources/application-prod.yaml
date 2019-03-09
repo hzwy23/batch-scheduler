@@ -3,7 +3,7 @@ spring:
     name: batch-manager
   cloud:
     consul:
-      host: 172.16.175.222
+      host: 118.31.46.174
       port: 30085
       enabled: true
       discovery:
