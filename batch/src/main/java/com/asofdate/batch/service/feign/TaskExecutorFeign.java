@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "task-executor")
 public interface TaskExecutorFeign {
 
-    @RequestMapping(value = "/batch/schedule/v1/dispatch/start", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/v1/batch/schedule/dispatch/start", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     String start(@RequestParam(value = "batchId") String batchId,
                  @RequestParam(value = "domainId") String domainId);
 }
