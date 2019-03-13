@@ -1,6 +1,7 @@
 package com.asofdate.batch.controller;
 
 import com.asofdate.batch.service.feign.TaskExecutorFeign;
+import com.asofdate.batch.utils.ResultBody;
 import com.asofdate.utils.Hret;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,7 +48,7 @@ public class DispatchController {
             log.info("batch id or domain jobKey is null ,batch jobKey is: {}, domain jobKey is: {}", batchId, domainId);
             return Hret.error(421, "domain_id is empty or batch_id is empty", null);
         }
-        String retMsg =  taskExecutorFeign.start(batchId,domainId);
+        ResultBody retMsg =  taskExecutorFeign.start(batchId,domainId);
         log.info("启动批次调度，返回信息是 ： {}", retMsg);
         if (retMsg == null) {
             return Hret.error(415,"启动批次调度服务失败", retMsg);
