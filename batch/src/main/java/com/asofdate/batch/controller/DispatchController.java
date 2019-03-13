@@ -48,11 +48,17 @@ public class DispatchController {
             log.info("batch id or domain jobKey is null ,batch jobKey is: {}, domain jobKey is: {}", batchId, domainId);
             return Hret.error(421, "domain_id is empty or batch_id is empty", null);
         }
-        ResultBody retMsg =  taskExecutorFeign.start(batchId,domainId);
-        log.info("启动批次调度，返回信息是 ： {}", retMsg);
-        if (retMsg == null) {
-            return Hret.error(415,"启动批次调度服务失败", retMsg);
+        try {
+            ResultBody retMsg =  taskExecutorFeign.start(batchId,domainId);
+            if (retMsg == null){
+                log.info("调用执行节点，返回值为空");
+                return Hret.success();
+            }
+            return Hret.success(retMsg.getCode(), retMsg.getMessage(), retMsg.getData());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("调用执行节点失败，失败原因是：{}", e.getMessage());
+            return Hret.success();
         }
-        return Hret.success();
     }
 }
