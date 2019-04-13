@@ -9,6 +9,15 @@
 
 **在下Java水平有限,项目中出现错误和不规范的地方,请不吝赐教,感激不尽**
 
+
+相关项目：
+
+[独立部署调度引擎](https://github.com/hzwy23/task-executor)
+
+web上发起调度任务，将会使用feign调用调度引擎的接口启动批次。
+
+本项目注册中心采用 consul，如果有需要使用eureka的，可以自行修改pom文件，将注册中心切换到eureka
+
 ## Java版本
 > **JDK1.8**
 
