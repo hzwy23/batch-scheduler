@@ -1985,8 +1985,8 @@ CREATE TABLE `sys_user_info` (
 -- Records of sys_user_info
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user_info` VALUES ('admin', '超级管理员', '2016-01-01 00:00:00', 'sys', 'hzwy23@163.com', 18986110550, '512345423', '2016-12-19 13:34:32', 'sys');
-INSERT INTO `sys_user_info` VALUES ('demo', '演示用户', '2019-03-05 23:43:33', 'admin', 'hzwy23@163.com', 18581530028, '101000', '2019-03-05 23:43:33', 'admin');
+INSERT INTO `sys_user_info` VALUES ('admin', '超级管理员', '2016-01-01 00:00:00', 'sys', 'hzwy23@sina.com', 15684851256, '512345423', '2016-12-19 13:34:32', 'sys');
+INSERT INTO `sys_user_info` VALUES ('demo', '演示用户', '2019-03-05 23:43:33', 'admin', 'hzwy23@sina.com', 18581530028, '101000', '2019-03-05 23:43:33', 'admin');
 COMMIT;
 
 -- ----------------------------
